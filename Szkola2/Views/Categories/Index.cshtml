@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Szkola2.Models.Category>
+
+@{
+    ViewData["Title"] = "Spis kategori";
+}
+
+<h1>Spis</h1>
+
+<p>
+    <a asp-action="Create">Utwórz nową kategorię</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-warning" >Edycja</a> 
+                <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-primary">Szczegóły</a> 
+                <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-danger" >Usuwanie</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

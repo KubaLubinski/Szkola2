@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Szkola2.Models.History>
+
+@{
+    ViewData["Title"] = "Spis";
+}
+
+<h1>Spis</h1>
+
+<p>
+    <a asp-action="Create">Stwórz nowy wpis </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edycja</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Usuwanie</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
