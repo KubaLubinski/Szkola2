@@ -74,12 +74,12 @@ namespace Szkola2.Data
 
         private static void SeedUsers(ApplicationDbContext dbContext)
         {
-            if (!dbContext.Users.Any(u => u.UserName == "administrator"))
+            if (!dbContext.Users.Any(u => u.UserName == "admin@szkola.pl"))
             {
                 var user = new AppUser
                 {
-                    UserName = "administrator",
-                    NormalizedUserName = "administrator",
+                    UserName = "admin@szkola.pl",
+                    NormalizedUserName = "admin@szkola.pl",
                     Email = "admin@szkola.pl",
                     EmailConfirmed = true,
                     LockoutEnabled = false,
@@ -98,12 +98,12 @@ namespace Szkola2.Data
                 dbContext.SaveChanges();
             }
 
-            if (!dbContext.Users.Any(u => u.UserName == "nauczyciel"))
+            if (!dbContext.Users.Any(u => u.UserName == "nauczyciel@szkola.pl"))
             {
                 var user = new AppUser
                 {
-                    UserName = "nauczyciel",
-                    NormalizedUserName = "nauczyciel",
+                    UserName = "nauczyciel@szkola.pl",
+                    NormalizedUserName = "nauczyciel@szkola.pl",
                     Email = "nauczyciel@szkola.pl",
                     EmailConfirmed = true,
                     LockoutEnabled = false,
@@ -122,12 +122,12 @@ namespace Szkola2.Data
                 dbContext.SaveChanges();
             }
 
-            if (!dbContext.Users.Any(u => u.UserName == "dyrektor"))
+            if (!dbContext.Users.Any(u => u.UserName == "dyrektor@szkola.pl"))
             {
                 var user = new AppUser
                 {
-                    UserName = "dyrektor",
-                    NormalizedUserName = "dyrektor",
+                    UserName = "dyrektor@szkola.pl",
+                    NormalizedUserName = "dyrektor@szkola.pl",
                     Email = "dyrektor@szkola.pl",
                     EmailConfirmed = true,
                     LockoutEnabled = false,
@@ -146,12 +146,12 @@ namespace Szkola2.Data
                 dbContext.SaveChanges();
             }
 
-            if (!dbContext.Users.Any(u => u.UserName == "rodzic"))
+            if (!dbContext.Users.Any(u => u.UserName == "rodzic@szkola.pl"))
             {
                 var user = new AppUser
                 {
-                    UserName = "rodzic",
-                    NormalizedUserName = "rodzic",
+                    UserName = "rodzic@szkola.pl",
+                    NormalizedUserName = "rodzic@szkola.pl",
                     Email = "rodzic@szkola.pl",
                     EmailConfirmed = true,
                     LockoutEnabled = false,
@@ -170,12 +170,12 @@ namespace Szkola2.Data
                 dbContext.SaveChanges();
             }
 
-            if (!dbContext.Users.Any(u => u.UserName == "uczen"))
+            if (!dbContext.Users.Any(u => u.UserName == "uczen@szkola.pl"))
             {
                 var user = new AppUser
                 {
-                    UserName = "uczen",
-                    NormalizedUserName = "uczen",
+                    UserName = "uczen@szkola.pl",
+                    NormalizedUserName = "uczen@szkola.pl",
                     Email = "uczen@szkola.pl",
                     EmailConfirmed = true,
                     LockoutEnabled = false,
@@ -232,7 +232,7 @@ namespace Szkola2.Data
                 for(int i = 1; i <= 3; i++)
                 {
                     var idUser1 = dbContext.AppUsers
-                        .Where(u => u.UserName == "administrator")
+                        .Where(u => u.UserName == "admin@szkola.pl")
                         .FirstOrDefault()
                         .Id;
 
@@ -252,7 +252,7 @@ namespace Szkola2.Data
                     dbContext.SaveChanges();
 
                     var idUser2 = dbContext.AppUsers
-                        .Where(u => u.UserName == "dyrektor")
+                        .Where(u => u.UserName == "dyrektor@szkola.pl")
                         .FirstOrDefault()
                         .Id;
 
@@ -272,7 +272,7 @@ namespace Szkola2.Data
                     dbContext.SaveChanges();
 
                     var idUser3 = dbContext.AppUsers
-                        .Where(u => u.UserName == "nauczyciel")
+                        .Where(u => u.UserName == "nauczyciel@szkola.pl")
                         .FirstOrDefault()
                         .Id;
 
@@ -292,7 +292,7 @@ namespace Szkola2.Data
                     dbContext.SaveChanges();
 
                     var idUser4 = dbContext.AppUsers
-                        .Where(u => u.UserName == "rodzic")
+                        .Where(u => u.UserName == "rodzic@szkola.pl")
                         .FirstOrDefault()
                         .Id;
 
@@ -312,7 +312,7 @@ namespace Szkola2.Data
                     dbContext.SaveChanges();
 
                     var idUser5 = dbContext.AppUsers
-                        .Where(u => u.UserName == "uczen")
+                        .Where(u => u.UserName == "uczen@szkola.pl")
                         .FirstOrDefault()
                         .Id;
 
