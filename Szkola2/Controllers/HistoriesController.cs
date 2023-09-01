@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Data;
 using Szkola2.Models;
@@ -22,9 +17,9 @@ namespace Szkola2.Controllers
         // GET: Histories
         public async Task<IActionResult> Index()
         {
-              return _context.History != null ? 
-                          View(await _context.History.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.History'  is null.");
+            return _context.History != null ?
+                        View(await _context.History.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.History'  is null.");
         }
 
         // GET: Histories/Details/5
@@ -150,14 +145,14 @@ namespace Szkola2.Controllers
             {
                 _context.History.Remove(history);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool HistoryExists(int id)
         {
-          return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -11,7 +11,7 @@ using Szkola2.Models;
 
 namespace Szkola2.Controllers
 {
-    [Authorize(Roles = "admin")]
+    
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,6 +48,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         public IActionResult Create()
         {
             return View();
@@ -56,20 +57,31 @@ namespace Szkola2.Controllers
         // POST: Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,Description,IsActive")] Category category)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!CategoryNameExists(category.CategoryName))
+                {
+                    _context.Add(category);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Kategoria o takiej nazwie już istnieje";
+                    return (View("Create"));
+                }
             }
             return View(category);
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -88,6 +100,7 @@ namespace Szkola2.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CategoryId,CategoryName,Description,IsActive")] Category category)
@@ -121,6 +134,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -134,11 +148,16 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
+            if (TextsInCategory((int)id))
+            {
+                ViewBag.DeleteMessage = "Nie można usunąć wybranej kategori, ponieważ pisaiada przypisane teksty";
+            }
 
             return View(category);
         }
 
         // POST: Categories/Delete/5
+        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -160,6 +179,14 @@ namespace Szkola2.Controllers
         private bool CategoryExists(int id)
         {
           return (_context.Categories?.Any(e => e.CategoryId == id)).GetValueOrDefault();
+        }
+        private bool CategoryNameExists(string? name)
+        {
+            return (_context.Categories?.Any(e => e.CategoryName == name)).GetValueOrDefault();
+        }
+        private bool TextsInCategory(int id)
+        {
+            return (_context.Texts?.Any( t => t.CategoryId == id)).GetValueOrDefault();
         }
     }
 }
