@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Histories\**" />
+    <Content Remove="Views\Histories\**" />
+    <EmbeddedResource Remove="Views\Histories\**" />
+    <None Remove="Views\Histories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\HistoriesController.cs" />
   </ItemGroup>
 

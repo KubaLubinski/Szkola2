@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Szkola2.Models.Text>
+
+@{
+    ViewData["Title"] = "Teksty";
+}
+
+<h1>Teksty</h1>
+
+<p>
+    <a asp-action="Create">Stwórz nowy</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TextName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateAdded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MainGraphic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TextName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MainGraphic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TextId" class="btn btn-warning">Edycja</a> |
+                <a asp-action="Details" asp-route-id="@item.TextId" class="btn btn-primary">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.TextId" class="btn btn-danger">Usuwanie</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

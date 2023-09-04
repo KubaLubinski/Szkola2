@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Szkola2.Models.Text>
+@{
+    ViewData["Title"] = "Lista tekstów";
+}
+
+<div class="container">
+    <div class="row">
+        <!-- wyszukiwarka-->
+        <div class="d-none d-md-block col-md-12 col-xl-3">
+            <div class="card mt-2 shadow-sm">
+                <div class="card-body">
+                    Wyszukiwarka
+                </div>
+            </div>
+        </div>
+        <!-- L tekstow-->
+        <div class="col-xl-9">
+            <div class="card mt-2">
+                <div class="card-header">
+                    <h4 class="text-primary oswald">Tytuł tekstu</h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- zdjęcie-->
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">Autor tekstu</h5>
+                            <p class="card-text fst-italic">Streszczenie tekstu</p>
+                            <p class="card-text"><small class="text-muted"> Opublikowany: ... </small></p>
+                            <div class="position-relative">
+                                <a href="#" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
