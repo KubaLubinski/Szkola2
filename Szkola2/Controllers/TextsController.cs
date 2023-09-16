@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Data;
 using Szkola2.Models;
+using Szkola2.Models.ViewModels;
 
 namespace Szkola2.Controllers
 {
@@ -20,10 +21,27 @@ namespace Szkola2.Controllers
         }
 
         // GET: Texts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int PageNumber = 1)
         {
-            var applicationDbContext = _context.Texts.Include(t => t.Category).Include(t => t.User);
-            return View(await applicationDbContext.ToListAsync());
+            TextsViewModel textsViewModel = new();
+            
+            textsViewModel.TextsView = new TextsView();
+
+            textsViewModel.TextsView.TextCount = _context.Texts
+                .Where(t => t.IsActive == true)
+                .Count();
+
+            textsViewModel.TextsView.PageNumber = PageNumber;
+
+            textsViewModel.Texts = (IEnumerable<Text>?) await _context.Texts
+                .Include(t => t.Category)
+                .Include(t => t.User)
+                .Where(t => t.IsActive == true)
+                .OrderByDescending(t => t.DateAdded)
+                .Skip((PageNumber -1) * textsViewModel.TextsView.PageSize)
+                .Take(textsViewModel.TextsView.PageSize)
+                .ToListAsync();
+            return View(textsViewModel);
         }
         // GET: Texts
         public async Task<IActionResult> List()

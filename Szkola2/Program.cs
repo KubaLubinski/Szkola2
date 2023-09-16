@@ -43,6 +43,14 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllerRoute(
+    name: "pages",
+    pattern: "Teksty_szkolne/Strona{PageNumber}",
+    defaults: new { controller = "Texts", action = "Index" });
+app.MapControllerRoute(
+    name: "texts",
+    pattern: "Teksty_szkolne",
+    defaults: new { controller = "Texts", action = "Index" });
 
 app.MapControllerRoute(
     name: "default",

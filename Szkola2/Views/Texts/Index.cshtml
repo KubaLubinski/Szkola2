@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Szkola2.Models.Text>
+﻿@model TextsViewModel
 @{
     ViewData["Title"] = "Lista tekstów";
 }
@@ -14,27 +14,69 @@
             </div>
         </div>
         <!-- L tekstow-->
+        
         <div class="col-xl-9">
+        @foreach (var item in Model.Texts)
+        {
             <div class="card mt-2">
                 <div class="card-header">
-                    <h4 class="text-primary oswald">Tytuł tekstu</h4>
+                    <h4 class="text-primary oswald">@item.TextName</h4>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <!-- zdjęcie-->
+                        <!--tu if ze zdjęcie-->
+                        <!--
+
+                            <img src="~/img/mini/ Małpka item.Graphic" class="img-fluid" alt=" Małpka item.Category.Name" /> <-- wstawić małpke i usunąć spacje
+
+
+                        -->
+                        <!-- Rozwiązać problem?-->
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title text-success">Autor tekstu</h5>
-                            <p class="card-text fst-italic">Streszczenie tekstu</p>
-                            <p class="card-text"><small class="text-muted"> Opublikowany: ... </small></p>
+                            <h5 class="card-title text-success">@item.User.FullName</h5>
+                            <p class="card-text fst-italic">@item.Content</p>
+                            <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
                             <div class="position-relative">
                                 <a href="#" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
                             </div>
-                        </div>
+                        </div> <!-- card body-->
                     </div>
-                </div>
-            </div>
-        </div>
+                </div> <!-- row -->
+            </div> <!-- card-->
+            }<!-- petla -->
+        </div> 
+         
+    </div> <!-- obszar z danymi-->
+
+    <!-- stronnicowanie -->
+    <div class ="row mt-3">
+        <nav aria-label="Nawigacja między stronami">
+            <ul class="pagination">
+            @{
+                    if (Model.TextsView.PageNumber > 1)
+                    {
+
+                        <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1})">Poprzednia </a>
+                        </li>
+                    }
+               for (var i=1; i<Model.TextsView.PageCount; i++)
+                {
+                <li class="@(i == @Model.TextsView.PageNumber ? "page-item active" : "pageactive")">
+                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber = i})">@i </a>
+                </li>
+                }
+                if(Model.TextsView.PageNumber <Model.TextsView.PageCount)
+                {
+                <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1})">Następna </a>
+                </li>
+                }
+            }
+            </ul>
+        </nav>
     </div>
+
 </div>
