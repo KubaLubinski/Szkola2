@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Szkola2.Data;
+using Szkola2.Infrastructure;
 using Szkola2.Models;
 using Szkola2.Models.ViewModels;
 
@@ -14,10 +17,12 @@ namespace Szkola2.Controllers
     public class TextsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment _hostEnvironment;
 
-        public TextsController(ApplicationDbContext context)
+        public TextsController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _hostEnvironment = environment;
         }
 
         // GET: Texts
@@ -82,17 +87,51 @@ namespace Szkola2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,MainGraphic,CategoryId,IsActive,Id")] Text text)
+        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(text);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                text.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                text.DateAdded = DateTime.Now;
+
+                //zapisanie obrazka i skalowanie
+                if (picture != null && picture.Length > 0)
+                {
+                    ImageFileUpload imageFileResult = new(_hostEnvironment);
+                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
+
+                    if (fileSendResult.Success)
+                    {
+                        text.MainGraphic = fileSendResult.Name;
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
+                        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                        return View(text);
+                    }
+                    //_context.Add(text);
+                    //await _context.SaveChangesAsync();
+                    //return RedirectToAction(nameof(Index));
+                }
+
+                if (!TextNameExist(text.TextName))
+                {
+                    _context.Add(text);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
+                    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                    return View(text);
+                }
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
             ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id", text.Id);
             return View(text);
+            
         }
 
         // GET: Texts/Edit/5
@@ -192,6 +231,11 @@ namespace Szkola2.Controllers
         private bool TextExists(int id)
         {
           return (_context.Texts?.Any(e => e.TextId == id)).GetValueOrDefault();
+        }
+
+        private bool TextNameExist(string? name)
+        {
+            return (_context.Texts?.Any(e => e.TextName == name)).GetValueOrDefault();
         }
     }
 }
