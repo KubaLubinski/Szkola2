@@ -11,5 +11,10 @@
         public int PageSize { get; set; }  
         public int PageNumber { get; set; }
         public int PageCount => (int) Math.Ceiling((decimal)TextCount/PageSize);
+
+        public int? Category { get; set; }
+        public string? Author { get; set; }
+        public string? Pharse { get; set; }
+
     }
 }

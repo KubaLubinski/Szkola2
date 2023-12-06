@@ -9,7 +9,24 @@
         <div class="d-none d-md-block col-md-12 col-xl-3">
             <div class="card mt-2 shadow-sm">
                 <div class="card-body">
-                    Wyszukiwarka
+                   @using (Html.BeginForm("Index","Texts",FormMethod.Get))
+                    {
+                    <div class="row gt-3">
+                        <div class="form-group col-auto">
+                            <label for="Kategoria">Kategoria</label>
+                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie---", htmlAttributes:new{ @class = "form-control"})
+                        </div>
+                        <div class="form-group col-auto">
+                            <label for="Autor">Autor(ka)</label>
+                            @Html.DropDownList("Autor",ViewBag.Author, "--- Wszyscy ---", htmlAttributes:new{@class = "form-control"})
+                        </div>
+                        <div class="form-group col-auto">
+                            <label for="Fraza">Fragment tekstu</label>
+                           <input type="text" class="form-control" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
+                        </div>
+                        <button type="submit"class="btn btn-primary mt-4 col-auto">Filtruj</button>
+                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -25,14 +42,7 @@
                 <div class="row">
                     <div class="col-md-4">
                             <img src="~/img/mini/@item.MainGraphic" class="img-fluid" />
-                        <!--tu if ze zdjęcie-->
-                        <!--
-
-                            <img src="~/img/mini/ Małpka item.Graphic" class="img-fluid" alt=" Małpka item.Category.Name" /> <-- wstawić małpke i usunąć spacje
-
-
-                        -->
-                        <!-- Rozwiązać problem?-->
+          
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
