@@ -75,7 +75,7 @@ namespace Szkola2.Controllers
                 .Include(u => u.User)
                 .Select(u => u.User)
                 .Distinct(),
-                "Id","FirstName", Autor);
+                "Id","LastName", Autor);
 
             return View(textsViewModel);
         }
