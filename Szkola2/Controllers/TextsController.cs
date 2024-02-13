@@ -118,7 +118,7 @@ namespace Szkola2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture)
+        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles)
         {
             if (ModelState.IsValid)
             {
@@ -144,6 +144,25 @@ namespace Szkola2.Controllers
                     //_context.Add(text);
                     //await _context.SaveChangesAsync();
                     //return RedirectToAction(nameof(Index));
+                }
+
+                //dodawanie wielu grafik
+                if (GalleryFiles != null)
+                {
+                    string folder = "gallery/";
+
+                    text.Gallerys = new List<Gallery>();
+                    
+                    foreach (var file in GalleryFiles)
+                    {
+                        var gallery = new Gallery()
+                        {
+                            Name = file.Name,
+                            URL = await UploadImage(folder, file)
+                        };
+
+                        text.Gallerys.Add(gallery);
+                    }
                 }
 
                 if (!TextNameExist(text.TextName))
@@ -268,5 +287,14 @@ namespace Szkola2.Controllers
         {
             return (_context.Texts?.Any(e => e.TextName == name)).GetValueOrDefault();
         }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+            return "/" + folderPath;
+        }
+
     }
 }

@@ -289,6 +289,30 @@ namespace Szkola2.Migrations
                     b.ToTable("Documents");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.Gallery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TextId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TextId");
+
+                    b.ToTable("Gallery");
+                });
+
             modelBuilder.Entity("Szkola2.Models.History", b =>
                 {
                     b.Property<int>("Id")
@@ -459,6 +483,15 @@ namespace Szkola2.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Szkola2.Models.Gallery", b =>
+                {
+                    b.HasOne("Szkola2.Models.Text", "Texts")
+                        .WithMany("Gallerys")
+                        .HasForeignKey("TextId");
+
+                    b.Navigation("Texts");
+                });
+
             modelBuilder.Entity("Szkola2.Models.Photo", b =>
                 {
                     b.HasOne("Szkola2.Models.History", "History")
@@ -466,7 +499,7 @@ namespace Szkola2.Migrations
                         .HasForeignKey("Id");
 
                     b.HasOne("Szkola2.Models.Text", "Text")
-                        .WithMany("Photos")
+                        .WithMany()
                         .HasForeignKey("TextId");
 
                     b.Navigation("History");
@@ -505,7 +538,7 @@ namespace Szkola2.Migrations
 
             modelBuilder.Entity("Szkola2.Models.Text", b =>
                 {
-                    b.Navigation("Photos");
+                    b.Navigation("Gallerys");
                 });
 
             modelBuilder.Entity("Szkola2.Models.AppUser", b =>

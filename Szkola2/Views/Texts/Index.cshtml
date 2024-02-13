@@ -50,7 +50,7 @@
                             <p class="card-text fst-italic">@item.Content</p>
                             <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
                             <div class="position-relative">
-                                <a href="#" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
+                                    <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
                             </div>
                         </div> <!-- card body-->
                     </div>

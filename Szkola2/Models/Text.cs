@@ -50,6 +50,10 @@ namespace Szkola2.Models
         [ForeignKey("Id")]
         public virtual AppUser? User { get; set; }
 
-        public virtual List<Photo>? Photos { get; set; }
+        [NotMapped]
+        public virtual IFormFileCollection? GalleryFiles { get; set; }
+
+        public virtual List<Gallery>? Gallerys { get; set; }
     }
 }
+
