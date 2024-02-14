@@ -45,11 +45,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "pages",
-    pattern: "Teksty_szkolne/Strona{PageNumber}",
+    pattern: "Texts/Strona{PageNumber}",
     defaults: new { controller = "Texts", action = "Index" });
 app.MapControllerRoute(
     name: "texts",
-    pattern: "Teksty_szkolne",
+    pattern: "Texts",
     defaults: new { controller = "Texts", action = "Index" });
 
 app.MapControllerRoute(

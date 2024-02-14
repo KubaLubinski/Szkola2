@@ -9,7 +9,7 @@
         <div class="d-none d-md-block col-md-12 col-xl-3">
             <div class="card mt-2 shadow-sm">
                 <div class="card-body">
-                   @using (Html.BeginForm("Index","Texts",FormMethod.Get))
+                    @using (Html.BeginForm("Index","Texts", new { PageNumber = "1" }, FormMethod.Get))
                     {
                     <div class="row gt-3">
                         <div class="form-group col-auto">
@@ -33,31 +33,42 @@
         <!-- L tekstow-->
         
         <div class="col-xl-9">
-        @foreach (var item in Model.Texts)
-        {
-            <div class="card mt-2">
-                <div class="card-header">
-                    <h4 class="text-primary oswald">@item.TextName</h4>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                            <img src="~/img/mini/@item.MainGraphic" class="img-fluid" />
-          
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title text-success">@item.User.FullName</h5>
-                            <p class="card-text fst-italic">@item.Content</p>
-                            <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
-                            <div class="position-relative">
-                                    <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
+      @if (Model.TextsView.TextCount > 0)
+            {
+                @foreach (var item in Model.Texts)
+                {
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h4 class="text-primary oswald">@item.TextName</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="~/img/mini/@item.MainGraphic" class="img-fluid" />
+
                             </div>
-                        </div> <!-- card body-->
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">@item.User.FullName</h5>
+                                    <p class="card-text fst-italic">@Html.Raw(item.Content)</p>
+                                    <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
+                                    <div class="position-relative">
+                                        <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
+                                    </div>
+                                </div> <!-- card body-->
                     </div>
-                </div> <!-- row -->
+                        </div> <!-- row -->
             </div> <!-- card-->
-            }<!-- petla -->
+                }
+                <!-- petla -->
+
+            } else
+            {
+                <div class="alert alert-info d-flex align-items-center mt2" role="alert">
+                    <i class="bi bi-info-circle-fill me-3">Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
+                </div>
+            }
         </div> 
+        
          
     </div> <!-- obszar z danymi-->
 

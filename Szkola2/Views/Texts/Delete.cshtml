@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Content)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
+            @Html.Raw(Model.Content)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DateAdded)
@@ -33,7 +33,7 @@
             @Html.DisplayNameFor(model => model.MainGraphic)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MainGraphic)
+             <img src="@Url.Content(Model.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+Model.MainGraphic)" width="150" alt="@Model.Category.CategoryName")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)

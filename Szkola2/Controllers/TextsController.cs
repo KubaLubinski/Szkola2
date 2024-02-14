@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +81,7 @@ namespace Szkola2.Controllers
             return View(textsViewModel);
         }
         // GET: Texts
+        [Authorize(Roles ="admin,dyrektor")]
         public async Task<IActionResult> List()
         {
             var applicationDbContext = _context.Texts.Include(t => t.Category).Include(t => t.User);
@@ -197,9 +199,17 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
+            if (string.Compare(User.FindFirstValue(ClaimTypes.NameIdentifier), text.Id) == 0 || User.IsInRole("admin") || User.IsInRole("dyrektor"))
+            {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-            ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id", text.Id);
+             ViewData["Author"] = text.Id;
             return View(text);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+           
         }
 
         // POST: Texts/Edit/5
