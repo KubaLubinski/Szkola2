@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using LazZiya.ImageResize;
+using Microsoft.Extensions.Hosting;
 
 
 namespace Szkola2.Infrastructure
