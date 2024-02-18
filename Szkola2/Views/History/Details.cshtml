@@ -1,0 +1,30 @@
+﻿@model Szkola2.Models.History
+
+@{
+    ViewData["Title"] = "Szczegóły";
+}
+
+<h1>Szczegóły</h1>
+
+<div>
+    <h4>Historia z @Html.DisplayFor(model => model.Year) roku</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.Raw(Model.Content)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edycja</a> |
+    <a asp-action="Index" class="btn btn-light">Powrót do histori</a>
+</div>

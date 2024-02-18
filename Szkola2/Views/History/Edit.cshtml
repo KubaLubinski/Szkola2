@@ -1,0 +1,48 @@
+﻿@model Szkola2.Models.History
+
+@{
+    ViewData["Title"] = "Edycja";
+}
+
+<h1>Edycja</h1>
+
+<h4>Histori</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea id="editor" asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Zapisz zmiany" class="btn btn-primary" /> |
+                <a asp-action="Index" class="btn btn-light">Powrót do historii</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+     <script src="~/lib/ckeditor5/ckeditor.min.js"></script>
+    <script src="~/lib/ckeditor5/translations/pl.min.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'),{
+                language: 'pl'
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    </script>
+}
+

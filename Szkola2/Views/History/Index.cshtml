@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Szkola2.Models.History>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Historia szkoły</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-warning">Stwórz nowy wpis</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @if (item.Content.Length <= 80)
+                    {
+                        @Html.Raw(item.Content)
+                    }
+                    else
+                    {
+                      @Html.Raw(item.Content.Substring(0,80)+" ...")  
+                    }
+            </td>
+            <td>
+                <a class="btn btn-outline-primary rounded-circle my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id"><i class="bi-eye" aria-label="Szczegóły">Szczegóły</i></a> 
+                @{
+                    if(User.IsInRole("admin") || User.IsInRole("dyrektor"))
+                {
+                <a class="btn btn-outline-warning rounded-circle my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pen-fill" aria-label="Edycja tekstu">Edycja</i></a>
+                <a class="btn btn-outline-danger rounded-circle my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-eye" aria-label="Usuwanie">Usuwanie</i></a>
+                }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

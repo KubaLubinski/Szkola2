@@ -172,19 +172,20 @@ namespace Szkola2.Controllers
 
                         string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
 
-                        Image img = null;
-                        FileStream fs = null;
-                        fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-                        img = Image.FromStream(fs);//te 4 linie maja ten obrazek skopiowac w pamieci ale wyskakuje ze plik jest juz w uzyciu przez inny proces
+                       // Image img = null;
+                       // FileStream fs = null;
+                       // fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                       // img = Image.FromStream(fs);
+                       // te 4 linie maja ten obrazek skopiowac w pamieci ale wyskakuje ze plik jest juz w uzyciu przez inny proces
                         
 
-                        var imgFile = Image.FromFile(path); 
-                        using (var imgFilEe = Image.FromFile(path))
-                        {
-                            var miniFile = imgFile.ScaleByWidth(800);
-                            miniFile.SaveAs("miniGallery\\" + gallery.URL);
-
-                        }
+                       // var imgFile = Image.FromFile(path); 
+                       // using (var imgFilEe = Image.FromFile(path))
+                       // {
+                       //    var miniFile = imgFile.ScaleByWidth(800);
+                      //      miniFile.SaveAs("miniGallery\\" + gallery.URL);
+                      //
+                      //  }
 
 
                         //var img = Image.FromFile(path);
