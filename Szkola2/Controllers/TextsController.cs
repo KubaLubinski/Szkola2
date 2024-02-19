@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -155,6 +156,7 @@ namespace Szkola2.Controllers
                 //dodawanie wielu grafik
                 if (GalleryFiles != null)
                 {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
                     string folder = "gallery\\";
 
                     text.Gallerys = new List<Gallery>();
@@ -164,7 +166,7 @@ namespace Szkola2.Controllers
                         var gallery = new Gallery()
                         {
                             Name = file.FileName,
-                            URL = await UploadImage(folder, file)
+                            URL = imageFileUpload.UploadImage(folder, file)
                         };
 
 
@@ -172,26 +174,44 @@ namespace Szkola2.Controllers
 
                         string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
 
-                       // Image img = null;
-                       // FileStream fs = null;
-                       // fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-                       // img = Image.FromStream(fs);
-                       // te 4 linie maja ten obrazek skopiowac w pamieci ale wyskakuje ze plik jest juz w uzyciu przez inny proces
-                        
+                        /*using (var imgFile = Image.FromFile(path))
+                        {
+                            var miniFile = imgFile.ScaleByWidth(800);
+                            var upload = Path.Combine(_hostEnvironment.WebRootPath + "miniGallery\\" + gallery.URL);
+                            miniFile.SaveAs(upload);
 
-                       // var imgFile = Image.FromFile(path); 
-                       // using (var imgFilEe = Image.FromFile(path))
-                       // {
-                       //    var miniFile = imgFile.ScaleByWidth(800);
-                      //      miniFile.SaveAs("miniGallery\\" + gallery.URL);
-                      //
-                      //  }
+                        }*/
+
+                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        {
+                            using (Image imgFile = Image.FromStream(fs))
+                            {
+                                var miniFile = imgFile.ScaleByWidth(800);
+                                var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                miniFile.SaveAs(upload);
+                            }
+                        }
+
+                                // Image img = null;
+                                // FileStream fs = null;
+                                // fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                                // img = Image.FromStream(fs);
+                                // te 4 linie maja ten obrazek skopiowac w pamieci ale wyskakuje ze plik jest juz w uzyciu przez inny proces
 
 
-                        //var img = Image.FromFile(path);
-                        //var scaleImage = img.ScaleByWidth(800);
-                        //scaleImage.SaveAs("miniGallery/" + gallery.URL);
-                    }
+                                // var imgFile = Image.FromFile(path); 
+                                // using (var imgFilEe = Image.FromFile(path))
+                                // {
+                                //    var miniFile = imgFile.ScaleByWidth(800);
+                                //      miniFile.SaveAs("miniGallery\\" + gallery.URL);
+                                //
+                                //  }
+
+
+                                //var img = Image.FromFile(path);
+                                //var scaleImage = img.ScaleByWidth(800);
+                                //scaleImage.SaveAs("miniGallery/" + gallery.URL);
+                            }
                 }
 
                 if (!TextNameExist(text.TextName))
@@ -325,13 +345,7 @@ namespace Szkola2.Controllers
             return (_context.Texts?.Any(e => e.TextName == name)).GetValueOrDefault();
         }
 
-        private async Task<string> UploadImage(string folderPath, IFormFile file)
-        {
-            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName; 
-            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
-            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-            return "\\" + folderPath;
-        }
+
 
     }
 }
