@@ -50,7 +50,11 @@
                                 <li>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>
                                        
-                                    </li> 
+                                </li> 
+                                <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdvertisingPhotoes" asp-action="Index">Zdjęcia</a>
+                                       
+                                </li>
                             }
                             </ul>
                            
@@ -64,6 +68,7 @@
         </nav>
     </header>
     <div class="container">
+        <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -71,7 +76,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Szkola2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Szkola2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
