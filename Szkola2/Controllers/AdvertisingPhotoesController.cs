@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Data;
+using Szkola2.Infrastructure;
 using Szkola2.Models;
 
 namespace Szkola2.Controllers
@@ -13,10 +14,12 @@ namespace Szkola2.Controllers
     public class AdvertisingPhotoesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment _hostEnvironment;
 
-        public AdvertisingPhotoesController(ApplicationDbContext context)
+        public AdvertisingPhotoesController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _hostEnvironment = environment;
         }
 
         // GET: AdvertisingPhotoes
@@ -56,10 +59,24 @@ namespace Szkola2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto)
+        public async Task<IActionResult> Create([Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto, IFormFile photo)
         {
             if (ModelState.IsValid)
             {
+                if(photo != null && photo.Length >0)
+                {
+                    ImageFileUpload imageFileResult = new(_hostEnvironment);
+                    FileSendResult fileSendResult = imageFileResult.SendFile(photo, "img", 600);
+                    if(fileSendResult.Success)
+                    {
+                        advertisingPhoto.Photo = fileSendResult.Name;
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "wybrany plik nie jest obrazkiem, lub zawiera złe rozszerzenie!";
+                        return View(advertisingPhoto);
+                    }
+                }
                 _context.Add(advertisingPhoto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

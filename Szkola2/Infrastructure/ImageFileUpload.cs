@@ -52,15 +52,54 @@ namespace Szkola2.Infrastructure
                 upload = Path.Combine(hostingEnvironment.WebRootPath, destination + "\\mini");
                 filePath = Path.Combine(upload, SendingFile.Name);
                 miniFile.SaveAs(filePath);
-            
+
             }
 
             SendingFile.Success = true;
 
             return SendingFile;
-        }
 
-        public string UploadImage(string folderPath, IFormFile file)
+        }
+        public FileSendResult SendPhoto(IFormFile photo, string destination, int width)
+        {
+            FileSendResult sendingFile = new();
+
+            string extension = Path.GetExtension(photo.FileName);
+            if (!FileTypeCheck(extension))
+            {
+                sendingFile.Name = Path.GetFileName(photo.FileName);
+                sendingFile.Success = false;
+                sendingFile.Error = "Niepoprawny typ pliku graficznego.";
+                return sendingFile;
+            }
+
+            sendingFile.Name = Guid.NewGuid().ToString() + extension;
+
+            var upload = Path.Combine(hostingEnvironment.WebRootPath, destination);
+            var filePath = Path.Combine(upload, sendingFile.Name);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                photo.CopyTo(fileStream);
+            }
+
+            string path = Path.Combine(filePath);
+
+            using (var imgFile = Image.FromFile(path))
+            {
+                var miniFile = imgFile.ScaleByWidth(width);
+                upload = Path.Combine(hostingEnvironment.WebRootPath, destination + "\\zdjecia");
+                filePath = Path.Combine(upload, sendingFile.Name);
+                miniFile.SaveAs(filePath);
+            }
+
+            sendingFile.Success = true;
+
+            return sendingFile;
+        }
+    
+
+            public string UploadImage(string folderPath, IFormFile file)
         {
             folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
             string serverFolder = Path.Combine(hostingEnvironment.WebRootPath, folderPath);
