@@ -10,11 +10,8 @@
     
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Photo)
-        </dt>
         <dd class = "col-sm-10">
-            <img src="@Url.Content(Model.Photo = "~/img/zdjecia/"+Model.Photo)" width="150" />
+            <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)"/>
         </dd>
     </dl>
 </div>

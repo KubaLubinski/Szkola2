@@ -4,18 +4,12 @@
     ViewData["Title"] = "Usuwanie";
 }
 
-<h1>Usuwanie</h1>
-
-<h3>Czy na pewno chcesz usunąć to zdjęcia?</h3>
+<h3>Czy na pewno chcesz usunąć to zdjęcie?</h3>
 <div>
-   
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Photo)
-        </dt>
         <dd class = "col-sm-10">
-            <img src="@Url.Content(Model.Photo = "~/img/zdjecia/"+Model.Photo)" width="150" />
+            <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)" />
         </dd>
     </dl>
     

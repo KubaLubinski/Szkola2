@@ -9,7 +9,6 @@ namespace Szkola2.Models
         [Display(Name = "Identyfikator obrazu")]
         public int PhotoId { get; set; }
 
-        [Required]
         [Display(Name = "Obraz:")]
         [MaxLength(128)]
         [FileExtensions(Extensions = ".jpg,.png,.gif", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]

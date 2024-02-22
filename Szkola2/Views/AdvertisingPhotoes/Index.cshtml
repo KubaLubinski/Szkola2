@@ -22,7 +22,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Photo)
+                    @Html.DisplayFor(modelItem => item.Photo)
+               <img src="@Url.Content(item.Photo = "~/img/mini/"+item.Photo)" width="250"/>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PhotoId">Zmiana</a> |
