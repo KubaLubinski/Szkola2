@@ -17,7 +17,7 @@ namespace Szkola2.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.21")
+                .HasAnnotation("ProductVersion", "6.0.27")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -239,7 +239,6 @@ namespace Szkola2.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhotoId"), 1L, 1);
 
                     b.Property<string>("Photo")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -331,6 +330,30 @@ namespace Szkola2.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("History");
+                });
+
+            modelBuilder.Entity("Szkola2.Models.HistoryGallery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("HistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HistoryId");
+
+                    b.ToTable("HistoryGalleries");
                 });
 
             modelBuilder.Entity("Szkola2.Models.Photo", b =>
@@ -492,10 +515,19 @@ namespace Szkola2.Migrations
                     b.Navigation("Texts");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.HistoryGallery", b =>
+                {
+                    b.HasOne("Szkola2.Models.History", "History")
+                        .WithMany("HistoryGallerys")
+                        .HasForeignKey("HistoryId");
+
+                    b.Navigation("History");
+                });
+
             modelBuilder.Entity("Szkola2.Models.Photo", b =>
                 {
                     b.HasOne("Szkola2.Models.History", "History")
-                        .WithMany("Photos")
+                        .WithMany()
                         .HasForeignKey("Id");
 
                     b.HasOne("Szkola2.Models.Text", "Text")
@@ -533,7 +565,7 @@ namespace Szkola2.Migrations
 
             modelBuilder.Entity("Szkola2.Models.History", b =>
                 {
-                    b.Navigation("Photos");
+                    b.Navigation("HistoryGallerys");
                 });
 
             modelBuilder.Entity("Szkola2.Models.Text", b =>

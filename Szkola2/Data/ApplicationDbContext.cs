@@ -19,6 +19,7 @@ namespace Szkola2.Data
         public DbSet<Text>? Texts { get; set; }
         public DbSet<AppUser>? AppUsers { get; set; }
         public DbSet<Gallery>? Gallery { get; set; }
+        public DbSet<HistoryGallery> HistoryGalleries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -41,12 +42,12 @@ namespace Szkola2.Data
                 .WithMany(t => t.Gallerys);
 
             modelbuilder.Entity<History>()
-                .HasMany(h => h.Photos)
+                .HasMany(h => h.HistoryGallerys)
                 .WithOne(p => p.History);
 
-            modelbuilder.Entity<Photo>()
+            modelbuilder.Entity<HistoryGallery>()
                 .HasOne(p => p.History)
-                .WithMany(h => h.Photos);
+                .WithMany(h => h.HistoryGallerys);
 
             modelbuilder.Entity<AppUser>()
                 .HasMany(u => u.Texts)

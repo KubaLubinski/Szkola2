@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace Szkola2.Models
@@ -17,6 +18,9 @@ namespace Szkola2.Models
         [Display(Name = "Opis wydarzeń w danym roku")]
         public string? Content { get; set; }
 
-        public virtual List<Photo>? Photos { get; set; }
+        [NotMapped]
+        public virtual IFormFileCollection? HistoryGalleryFiles { get; set; }
+
+        public virtual List<HistoryGallery>? HistoryGallerys { get; set; }
     }
 }
