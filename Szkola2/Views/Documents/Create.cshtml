@@ -1,0 +1,52 @@
+﻿@model Szkola2.Models.Document
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+@{
+    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage</div>
+    }
+   
+}
+<h4>Document</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DocumentDownload" class="control-label"></label>
+                <input asp-for="DocumentDownload" class="form-control" />
+                <span asp-validation-for="DocumentDownload" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocumentName" class="control-label"></label>
+                <input type="file" name="documents" id="documents" class="form-control" accept=".pdf,.docx,.doc,.txt" />
+                <span asp-validation-for="DocumentName" class="text-danger"></span>
+            </div>  
+            <div class="form-group">
+                <label asp-for="DocumentType" class="control-label"></label>
+                <select asp-for="DocumentType" class="form-control">             
+                    <option value="Przeglądarka internetowa rozszerzenie .pdf">Przeglądarka internetowa rozszerzenie .pdf</option>
+                    <option value="Microsoft Word rozszerzenie .docx">Microsoft Word rozszerzenie .docx .doc</option>
+                    <option value="Dokument tekstowy rozszerzenie .txt">Dokument tekstowy rozszerzenie .txt</option>
+                </select>
+                <span asp-validation-for="DocumentType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Dodaj" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-light">Powrót do Dokumentów</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+

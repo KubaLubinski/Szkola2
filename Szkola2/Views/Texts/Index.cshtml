@@ -43,7 +43,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="~/img/mini/@item.MainGraphic" class="img-fluid" />
+                                
+                                <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" class="img-fluid" />
 
                             </div>
                             <div class="col-md-8">
@@ -81,19 +82,19 @@
                     {
 
                         <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1})">Poprzednia </a>
+                        <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1, Kategoria = Model.TextsView.Category, Autor = Model.TextsView.Author, Fraza = Model.TextsView.Pharse})">Poprzednia </a>
                         </li>
                     }
                for (var i=1; i<Model.TextsView.PageCount; i++)
                 {
                 <li class="@(i == @Model.TextsView.PageNumber ? "page-item active" : "pageactive")">
-                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber = i})">@i </a>
+                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber = i, Kategoria = Model.TextsView.Category, Autor = Model.TextsView.Author, Fraza = Model.TextsView.Pharse} )">@i </a>
                 </li>
                 }
                 if(Model.TextsView.PageNumber <Model.TextsView.PageCount)
                 {
                 <li class="page-item">
-                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1})">Następna </a>
+                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1, Kategoria = Model.TextsView.Category, Autor = Model.TextsView.Author, Fraza = Model.TextsView.Pharse})">Następna </a>
                 </li>
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Photos/Details/5
+        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Photos == null)
@@ -47,6 +49,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Photos/Create
+        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen")]
         public IActionResult Create()
         {
             ViewData["TextId"] = new SelectList(_context.Texts, "TextId", "Content");
@@ -56,6 +59,7 @@ namespace Szkola2.Controllers
         // POST: Photos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhotoId,TextId,HistoryId")] Photo photo, IFormFile? picture)
@@ -71,6 +75,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Photos/Edit/5
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Photos == null)
@@ -90,6 +95,7 @@ namespace Szkola2.Controllers
         // POST: Photos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PhotoId,Graphic,TextId,HistoryId")] Photo photo)
@@ -124,6 +130,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Photos/Delete/5
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Photos == null)
@@ -143,6 +150,7 @@ namespace Szkola2.Controllers
         }
 
         // POST: Photos/Delete/5
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

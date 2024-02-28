@@ -67,7 +67,7 @@ namespace Szkola2.Controllers
             textsViewModel.TextsView.Category = Kategoria;
 
             textsViewModel.Texts = (IEnumerable<Text>?) await SelectedTexts
-                .Skip((PageNumber -1) * textsViewModel.TextsView.PageSize)
+                .Skip((PageNumber - 1) * textsViewModel.TextsView.PageSize)
                 .Take(textsViewModel.TextsView.PageSize)
                 .ToListAsync();
 

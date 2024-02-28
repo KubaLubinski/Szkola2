@@ -5,10 +5,15 @@
 }
 
 <h1>Historia szkoły</h1>
+@{
+    if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel"))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-warning">Stwórz nowy wpis</a>
+        </p>
+    }
+}
 
-<p>
-    <a asp-action="Create" class="btn btn-warning">Stwórz nowy wpis</a>
-</p>
 <table class="table">
     <thead>
         <tr>
