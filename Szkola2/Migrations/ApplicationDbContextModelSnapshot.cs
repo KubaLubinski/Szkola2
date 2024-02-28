@@ -338,6 +338,30 @@ namespace Szkola2.Migrations
                     b.ToTable("History");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.HistoryGallery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("HistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HistoryId");
+
+                    b.ToTable("HistoryGalleries");
+                });
+
             modelBuilder.Entity("Szkola2.Models.Photo", b =>
                 {
                     b.Property<int>("PhotoId")
@@ -497,10 +521,19 @@ namespace Szkola2.Migrations
                     b.Navigation("Texts");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.HistoryGallery", b =>
+                {
+                    b.HasOne("Szkola2.Models.History", "History")
+                        .WithMany("HistoryGallerys")
+                        .HasForeignKey("HistoryId");
+
+                    b.Navigation("History");
+                });
+
             modelBuilder.Entity("Szkola2.Models.Photo", b =>
                 {
                     b.HasOne("Szkola2.Models.History", "History")
-                        .WithMany("Photos")
+                        .WithMany()
                         .HasForeignKey("Id");
 
                     b.HasOne("Szkola2.Models.Text", "Text")
@@ -538,7 +571,7 @@ namespace Szkola2.Migrations
 
             modelBuilder.Entity("Szkola2.Models.History", b =>
                 {
-                    b.Navigation("Photos");
+                    b.Navigation("HistoryGallerys");
                 });
 
             modelBuilder.Entity("Szkola2.Models.Text", b =>

@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using LazZiya.ImageResize;
 using Szkola2.Data;
+using Szkola2.Infrastructure;
 using Szkola2.Models;
+using static System.Net.Mime.MediaTypeNames;
+using Image = System.Drawing.Image;
 
 namespace Szkola2.Controllers
 {
     public class HistoryController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment _hostEnvironment;
 
-        public HistoryController(ApplicationDbContext context)
+        public HistoryController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _hostEnvironment = environment;
         }
 
         // GET: History
@@ -37,6 +45,7 @@ namespace Szkola2.Controllers
             }
 
             var history = await _context.History
+                .Include(t => t.HistoryGallerys)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (history == null)
             {
@@ -59,13 +68,58 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Content")] History history)
+        public async Task<IActionResult> Create([Bind("Id,Year,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(history);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //_context.Add(history);
+                //await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+
+                if (HistoryGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+
+                    history.HistoryGallerys = new List<HistoryGallery>();
+
+                    foreach (var file in HistoryGalleryFiles)
+                    {
+                        var gallery = new HistoryGallery()
+                        {
+                            Name = file.FileName,
+                            URL = imageFileUpload.UploadImage(folder, file)
+                        };
+
+
+                        history.HistoryGallerys.Add(gallery);
+
+                        string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        {
+                            using (Image imgFile = Image.FromStream(fs))
+                            {
+                                var miniFile = imgFile.ScaleByWidth(800);
+                                var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                miniFile.SaveAs(upload);
+                            }
+                        }
+;
+                    }
+                }
+
+                if (!YearExist(history.Year))
+                {
+                    _context.Add(history);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Wpis o takim roku już istnieje!";
+                    return View(history);
+                }
             }
             return View(history);
         }
@@ -165,6 +219,11 @@ namespace Szkola2.Controllers
         private bool HistoryExists(int id)
         {
           return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private bool YearExist(int? year)
+        {
+            return (_context.History?.Any(e => e.Year == year)).GetValueOrDefault();
         }
     }
 }

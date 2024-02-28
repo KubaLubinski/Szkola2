@@ -174,14 +174,6 @@ namespace Szkola2.Controllers
 
                         string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
 
-                        /*using (var imgFile = Image.FromFile(path))
-                        {
-                            var miniFile = imgFile.ScaleByWidth(800);
-                            var upload = Path.Combine(_hostEnvironment.WebRootPath + "miniGallery\\" + gallery.URL);
-                            miniFile.SaveAs(upload);
-
-                        }*/
-
                         using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                         {
                             using (Image imgFile = Image.FromStream(fs))
@@ -191,27 +183,8 @@ namespace Szkola2.Controllers
                                 miniFile.SaveAs(upload);
                             }
                         }
-
-                                // Image img = null;
-                                // FileStream fs = null;
-                                // fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-                                // img = Image.FromStream(fs);
-                                // te 4 linie maja ten obrazek skopiowac w pamieci ale wyskakuje ze plik jest juz w uzyciu przez inny proces
-
-
-                                // var imgFile = Image.FromFile(path); 
-                                // using (var imgFilEe = Image.FromFile(path))
-                                // {
-                                //    var miniFile = imgFile.ScaleByWidth(800);
-                                //      miniFile.SaveAs("miniGallery\\" + gallery.URL);
-                                //
-                                //  }
-
-
-                                //var img = Image.FromFile(path);
-                                //var scaleImage = img.ScaleByWidth(800);
-                                //scaleImage.SaveAs("miniGallery/" + gallery.URL);
-                            }
+;
+                    }
                 }
 
                 if (!TextNameExist(text.TextName))
