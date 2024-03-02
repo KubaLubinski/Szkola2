@@ -260,7 +260,14 @@ namespace Szkola2.Controllers
                 foreach(var image in ImagesToDelete)
                 {
                     var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
+                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
                     DeleteImage(DeleteImagePath);
+                    DeleteImage(DeleteMiniImagePath);
+                }
+                var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
+                foreach(var item in HistoryGalleriesItemToDelete)
+                {
+                    _context.HistoryGalleries.Remove(item);
                 }
                 _context.History.Remove(history);
             }
@@ -271,8 +278,10 @@ namespace Szkola2.Controllers
 
         private void DeleteImage(string deleteImagePath)
         {
+            bool test = System.IO.File.Exists(deleteImagePath);
             if (System.IO.File.Exists(deleteImagePath))
             {
+                string tak = "dziala";
                 System.IO.File.Delete(deleteImagePath);
             }
         }
