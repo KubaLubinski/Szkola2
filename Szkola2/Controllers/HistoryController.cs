@@ -138,6 +138,8 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
+
+            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
 
@@ -147,7 +149,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Content")] History history)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
         {
             if (id != history.Id)
             {
@@ -158,6 +160,38 @@ namespace Szkola2.Controllers
             {
                 try
                 {
+                    if (HistoryGalleryFiles != null)
+                    {
+                        ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                        string folder = "gallery\\";
+
+                        history.HistoryGallerys = new List<HistoryGallery>();
+
+                        foreach (var file in HistoryGalleryFiles)
+                        {
+                            var gallery = new HistoryGallery()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+
+
+                            history.HistoryGallerys.Add(gallery);
+
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            }
+        ;
+                        }
+                    }
                     _context.Update(history);
                     await _context.SaveChangesAsync();
                 }
@@ -174,6 +208,19 @@ namespace Szkola2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+
+
+            /*if (history.HistoryGalleryFiles != null)
+            {
+                foreach (var file in history.HistoryGalleryFiles)
+                {
+                    string tempFileName = file.FileName;
+                    if (!tempFileName.Contains)
+                }
+            }*/
+
+
             return View(history);
         }
 
@@ -209,11 +256,25 @@ namespace Szkola2.Controllers
             var history = await _context.History.FindAsync(id);
             if (history != null)
             {
+                var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
+                foreach(var image in ImagesToDelete)
+                {
+                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
+                    DeleteImage(DeleteImagePath);
+                }
                 _context.History.Remove(history);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private void DeleteImage(string deleteImagePath)
+        {
+            if (System.IO.File.Exists(deleteImagePath))
+            {
+                System.IO.File.Delete(deleteImagePath);
+            }
         }
 
         private bool HistoryExists(int id)
