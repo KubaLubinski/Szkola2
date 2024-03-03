@@ -70,7 +70,7 @@ namespace Szkola2.Controllers
         {
             if (ModelState.IsValid)
             {
-                if ( document!= null)
+                if ( document.DocumentDownload!= null || document.DocumentName!=null)
                 {
                     DocumentFileUpload documentFileResult = new(_hostEnvironment);
                     FileSendResult fileSendResult = documentFileResult.DocumentSend(documents, "documents");
@@ -88,6 +88,12 @@ namespace Szkola2.Controllers
                         ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
                         return View(document);
                     }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Należy podać nazwe dokumentu, lub dokument nie został załadowany";
+                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
+                    return View(document);
                 }
 
 
@@ -130,35 +136,51 @@ namespace Szkola2.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (document.DocumentDownload != null || document.DocumentName != null)
                 {
-                    if(newDocumentFile != null && newDocumentFile.Length >0 )
+
+                    try
                     {
-                        DocumentFileUpload documentFileResult = new(_hostEnvironment);
-                        FileSendResult fileSendResult = documentFileResult.DocumentSend(newDocumentFile, "documents");
-                        if(fileSendResult.Success)
+                        if (newDocumentFile != null && newDocumentFile.Length > 0)
                         {
-                            document.DocumentName = fileSendResult.Name;
+                            DocumentFileUpload documentFileResult = new(_hostEnvironment);
+                            FileSendResult fileSendResult = documentFileResult.DocumentSend(newDocumentFile, "documents");
+                            if (fileSendResult.Success)
+                            {
+                                
+                                
+                               document.DocumentName = fileSendResult.Name;
+                                
+                                
+                            }
+                            else
+                            {
+                                ViewBag.ErrorMessage = "Wybrany plik nie jest żądanym typem tekstowym. Mozna przesyłać pliki z rozszerzeniami .pdf .docx .doc .txt";
+                                return View(document);
+                            }           
+                        }
+                        
+                       
+                        _context.Update(document);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!DocumentExists(document.DocumentId))
+                        {
+                            return NotFound();
                         }
                         else
                         {
-                            ViewBag.ErrorMessage = "Wybrany plik nie jest żądanym typem tekstowym. Mozna przesyłać pliki z rozszerzeniami .pdf .docx .doc .txt";
-                            return View(document);
+                            throw;
                         }
                     }
-                    _context.Update(document);
-                    await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!DocumentExists(document.DocumentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ViewBag.ErrorMessage = "Należy podać nazwe dokumentu, lub dokument nie został załadowany";
+                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
+                    return View(document);
                 }
                 return RedirectToAction(nameof(Index));
             }
