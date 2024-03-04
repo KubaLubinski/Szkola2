@@ -257,7 +257,7 @@ namespace Szkola2.Controllers
             if (history != null)
             {
                 var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
-                foreach(var image in ImagesToDelete)
+                foreach (var image in ImagesToDelete)
                 {
                     var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
                     var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
@@ -265,17 +265,29 @@ namespace Szkola2.Controllers
                     DeleteImage(DeleteMiniImagePath);
                 }
                 var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
-                foreach(var item in HistoryGalleriesItemToDelete)
+                foreach (var item in HistoryGalleriesItemToDelete)
                 {
                     _context.HistoryGalleries.Remove(item);
                 }
                 _context.History.Remove(history);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult DeleteOneImage(int Id)
+        {
+            var ImageToDelete = _context.HistoryGalleries.FirstOrDefault(u => u.Id == Id);
+            var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
+            var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
+            DeleteImage(DeleteImagePath);
+            DeleteImage(DeleteMiniImagePath);
+
+            _context.HistoryGalleries.Remove(ImageToDelete);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Edit));
+        }
         private void DeleteImage(string deleteImagePath)
         {
             bool test = System.IO.File.Exists(deleteImagePath);
