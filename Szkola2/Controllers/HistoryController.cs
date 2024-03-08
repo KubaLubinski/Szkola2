@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
-using System.Threading.Tasks;
+﻿using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using LazZiya.ImageResize;
 using Szkola2.Data;
 using Szkola2.Infrastructure;
 using Szkola2.Models;
-using static System.Net.Mime.MediaTypeNames;
 using Image = System.Drawing.Image;
 
 namespace Szkola2.Controllers
@@ -31,9 +23,9 @@ namespace Szkola2.Controllers
         // GET: History
         public async Task<IActionResult> Index()
         {
-              return _context.History != null ? 
-                          View(await _context.History.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.History'  is null.");
+            return _context.History != null ?
+                        View(await _context.History.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.History'  is null.");
         }
 
         // GET: History/Details/5
@@ -246,34 +238,46 @@ namespace Szkola2.Controllers
         // POST: History/Delete/5
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost, ActionName("Delete")]
+        [HttpDelete]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_context.History == null)
+            if (id != 0)
             {
-                return Problem("Entity set 'ApplicationDbContext.History'  is null.");
+                if (_context.History == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.History'  is null.");
+                }
+                var history = await _context.History.FindAsync(id);
+                if (history != null)
+                {
+                    var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
+                    foreach (var image in ImagesToDelete)
+                    {
+                        var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
+                        var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
+                        DeleteImage(DeleteImagePath);
+                        DeleteImage(DeleteMiniImagePath);
+                    }
+                    var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
+                    foreach (var item in HistoryGalleriesItemToDelete)
+                    {
+                        _context.HistoryGalleries.Remove(item);
+                    }
+                    _context.History.Remove(history);
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Usuwanie powiodło się" });
+                //return RedirectToAction(nameof(Index));
             }
-            var history = await _context.History.FindAsync(id);
-            if (history != null)
+            else
             {
-                var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
-                foreach (var image in ImagesToDelete)
-                {
-                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
-                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
-                    DeleteImage(DeleteImagePath);
-                    DeleteImage(DeleteMiniImagePath);
-                }
-                var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
-                foreach (var item in HistoryGalleriesItemToDelete)
-                {
-                    _context.HistoryGalleries.Remove(item);
-                }
-                _context.History.Remove(history);
+                return Json(new { success = false, message = "Nie udało się ususnąć wpisu" });
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+
         }
 
         public IActionResult DeleteOneImage(int Id)
@@ -300,7 +304,7 @@ namespace Szkola2.Controllers
 
         private bool HistoryExists(int id)
         {
-          return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         private bool YearExist(int? year)
