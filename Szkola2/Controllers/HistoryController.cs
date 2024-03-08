@@ -237,10 +237,10 @@ namespace Szkola2.Controllers
 
         // POST: History/Delete/5
         [Authorize(Roles = "admin,dyrektor")]
-        [HttpPost, ActionName("Delete")]
+        //[HttpPost, ActionName("DeleteConfirm")]
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
             if (id != 0)
             {
@@ -268,7 +268,7 @@ namespace Szkola2.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "Usuwanie powiodło się" });
+
                 //return RedirectToAction(nameof(Index));
             }
             else
@@ -276,7 +276,7 @@ namespace Szkola2.Controllers
                 return Json(new { success = false, message = "Nie udało się ususnąć wpisu" });
             }
 
-
+                return Json(new { success = true, message = "Usuwanie powiodło się" });
 
         }
 

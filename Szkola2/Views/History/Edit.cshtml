@@ -32,7 +32,8 @@
                                 <img class="card-img-top rounded" src="@Model.HistoryGallerys[i].URL" alt="@Model.HistoryGallerys[i].Name" width="150" height="150">
                             </a>
                             <div class="card-body">
-                                <a class="card-title" asp-action="DeleteOneImage" asp-route-Id="@Model.HistoryGallerys[i].Id">Usuń zdjęcie</a>
+                                @*<a class="card-title" asp-action="DeleteOneImage" asp-route-Id="@Model.HistoryGallerys[i].Id">Usuń zdjęcie</a>*@
+                                <a class="btn btn-danger card-title form-control" onclick="Delete('/History/DeleteOneImage/@Model.HistoryGallerys[i].Id')">Usuń</a>
                             </div>
                         </div>
                     </div>
@@ -57,6 +58,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
      <script src="~/lib/ckeditor5/ckeditor.min.js"></script>
+     <script src="~/js/History.js"></script>
     <script src="~/lib/ckeditor5/translations/pl.min.js"></script>
     <script>
         ClassicEditor

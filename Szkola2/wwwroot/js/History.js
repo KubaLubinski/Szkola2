@@ -7,13 +7,14 @@
         dangerMode: true
     }).then((willDelete) => {
         if (willDelete) {
+            setTimeout(reloadPage(), 3000);
             $.ajax({
                 type: "DELETE",
                 url: url,
                 success: function (data) {
                     if (data.success) {
-                        toastr.success(data.message);
-                        reloadPage();
+                        toastr.info(data.message);
+                        setTimeout(reloadPage(),3000);
                     }
                     else {
                         toastr.error(data.message);
