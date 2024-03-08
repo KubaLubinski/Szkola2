@@ -6,8 +6,8 @@
         buttons: true,
         dangerMode: true
     }).then((willDelete) => {
-        if (willDelete) {
-            setTimeout(reloadPage(), 3000);
+        if (willDelete == true) {
+            setTimeout(reloadPage(), 1000);
             $.ajax({
                 type: "DELETE",
                 url: url,

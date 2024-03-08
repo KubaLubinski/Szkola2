@@ -184,9 +184,10 @@ namespace Szkola2.Controllers
         ;
                         }
                     }
-                    _context.Update(history);
-                    await _context.SaveChangesAsync();
-                }
+                            _context.Update(history);
+                            await _context.SaveChangesAsync();
+                
+            }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!HistoryExists(history.Id))
@@ -199,7 +200,7 @@ namespace Szkola2.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+                }
 
 
 
@@ -237,47 +238,35 @@ namespace Szkola2.Controllers
 
         // POST: History/Delete/5
         [Authorize(Roles = "admin,dyrektor")]
-        //[HttpPost, ActionName("DeleteConfirm")]
+        [HttpPost, ActionName("Delete")]
         [HttpDelete]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
-            if (id != 0)
+            if (_context.History == null)
             {
-                if (_context.History == null)
-                {
-                    return Problem("Entity set 'ApplicationDbContext.History'  is null.");
-                }
-                var history = await _context.History.FindAsync(id);
-                if (history != null)
-                {
-                    var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
-                    foreach (var image in ImagesToDelete)
-                    {
-                        var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
-                        var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
-                        DeleteImage(DeleteImagePath);
-                        DeleteImage(DeleteMiniImagePath);
-                    }
-                    var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
-                    foreach (var item in HistoryGalleriesItemToDelete)
-                    {
-                        _context.HistoryGalleries.Remove(item);
-                    }
-                    _context.History.Remove(history);
-                }
-
-                await _context.SaveChangesAsync();
-
-                //return RedirectToAction(nameof(Index));
+                return Problem("Entity set 'ApplicationDbContext.History'  is null.");
             }
-            else
+            var history = await _context.History.FindAsync(id);
+            if (history != null)
             {
-                return Json(new { success = false, message = "Nie udało się ususnąć wpisu" });
+                var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
+                foreach (var image in ImagesToDelete)
+                {
+                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
+                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
+                    DeleteImage(DeleteImagePath);
+                    DeleteImage(DeleteMiniImagePath);
+                }
+                var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
+                foreach (var item in HistoryGalleriesItemToDelete)
+                {
+                    _context.HistoryGalleries.Remove(item);
+                }
+                _context.History.Remove(history);
             }
-
-                return Json(new { success = true, message = "Usuwanie powiodło się" });
-
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult DeleteOneImage(int Id)

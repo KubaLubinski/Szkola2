@@ -223,7 +223,8 @@ namespace Szkola2.Controllers
             {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
              ViewData["Author"] = text.Id;
-            return View(text);
+             text.Gallerys = _context.Gallery.Where(g => g.TextId == id).ToList();
+                return View(text);
             }
             else
             {
@@ -237,7 +238,7 @@ namespace Szkola2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TextId,TextName,Content,DateAdded,MainGraphic,CategoryId,IsActive,Id")] Text text)
+        public async Task<IActionResult> Edit(int id, [Bind("TextId,TextName,Content,DateAdded,MainGraphic,CategoryId,IsActive,Id")] Text text, IFormFileCollection? TextGalleryFiles)
         {
             if (id != text.TextId)
             {
@@ -248,8 +249,39 @@ namespace Szkola2.Controllers
             {
                 try
                 {
-                    _context.Update(text);
-                    await _context.SaveChangesAsync();
+                    if (TextGalleryFiles != null)
+                    {
+                        ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                        string folder = "gallery\\";
+
+                        text.Gallerys = new List<Gallery>();
+
+                        foreach (var file in TextGalleryFiles)
+                        {
+                            var gallery = new Gallery()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+
+
+                            text.Gallerys.Add(gallery);
+
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            }
+                        }
+                    }
+                        _context.Update(text);
+                        await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -266,6 +298,7 @@ namespace Szkola2.Controllers
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
             ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id", text.Id);
+            //return RedirectToAction(nameof(Index));
             return View(text);
         }
 
