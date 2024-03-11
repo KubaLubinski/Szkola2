@@ -252,6 +252,23 @@ namespace Szkola2.Controllers
 
             if (ModelState.IsValid)
             {
+                //zapisanie obrazka i skalowanie
+                if (picture != null && picture.Length > 0)
+                {
+                    ImageFileUpload imageFileResult = new(_hostEnvironment);
+                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
+
+                    if (fileSendResult.Success)
+                    {
+                        text.MainGraphic = fileSendResult.Name;
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
+                        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                        return View(text);
+                    }
+                }
                 if (GalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
