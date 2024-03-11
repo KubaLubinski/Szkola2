@@ -12,9 +12,31 @@ html {
   position: relative;
   min-height: 100%;
 }
+.back{
+    background: url("../img/logo/Tlo_zapasowe.jpg") center no-repeat;
+    background-size: cover;
+    height: 420px;
+}
+.transparency {
+    background-color: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 8px 8px 32px 0 rgba(0, 0, 0, 0.36);
+    border-radius: 20px;
+}
+.szkola-title{
+    font-size: 4rem;
+    font-weight: 700;
+
+}
+.roboto{
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+}
 
 body {
   margin-bottom: 60px;
+  font-family: 'Roboto', sens-serif;
+  font-weight: 400;
 }
 .ck-editor__editable {
     min-height: 500px !important;
