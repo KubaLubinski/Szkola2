@@ -219,69 +219,74 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
-            if (string.Compare(User.FindFirstValue(ClaimTypes.NameIdentifier), text.Id) == 0 || User.IsInRole("admin") || User.IsInRole("dyrektor"))
-            {
+            //if (string.Compare(User.FindFirstValue(ClaimTypes.NameIdentifier), text.Id) == 0 || User.IsInRole("admin") || User.IsInRole("dyrektor"))
+            //{
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+            // ViewData["Author"] = text.Id;
+            // text.Gallerys = _context.Gallery.Where(g => g.TextId == id).ToList();
+            //    return View(text);
+            //}
+            //else
+            //{
+            //    return RedirectToAction(nameof(Index));
+            //}
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-             ViewData["Author"] = text.Id;
-             text.Gallerys = _context.Gallery.Where(g => g.TextId == id).ToList();
-                return View(text);
-            }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
-           
+            ViewData["Author"] = text.Id;
+            text.Gallerys = _context.Gallery.Where(g => g.TextId == id).ToList();
+            return View(text);
+
         }
 
         // POST: Texts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TextId,TextName,Content,DateAdded,MainGraphic,CategoryId,IsActive,Id")] Text text, IFormFileCollection? TextGalleryFiles)
+        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles)
         {
-            if (id != text.TextId)
+            if (textid != text.TextId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                if (GalleryFiles != null)
                 {
-                    if (TextGalleryFiles != null)
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+
+                    text.Gallerys = new List<Gallery>();
+
+                    foreach (var file in GalleryFiles)
                     {
-                        ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                        string folder = "gallery\\";
-
-                        text.Gallerys = new List<Gallery>();
-
-                        foreach (var file in TextGalleryFiles)
+                        var gallery = new Gallery()
                         {
-                            var gallery = new Gallery()
+                            Name = file.FileName,
+                            URL = imageFileUpload.UploadImage(folder, file)
+                        };
+
+
+                        text.Gallerys.Add(gallery);
+
+                        string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        {
+                            using (Image imgFile = Image.FromStream(fs))
                             {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-
-
-                            text.Gallerys.Add(gallery);
-
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByWidth(800);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
+                                var miniFile = imgFile.ScaleByWidth(800);
+                                var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                miniFile.SaveAs(upload);
                             }
                         }
                     }
-                        _context.Update(text);
-                        await _context.SaveChangesAsync();
+                }
+                try
+                {
+                    _context.Update(text);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -294,10 +299,10 @@ namespace Szkola2.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(List));
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-            ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id", text.Id);
+            ViewData["Author"] = text.Id;
             //return RedirectToAction(nameof(Index));
             return View(text);
         }
@@ -334,13 +339,48 @@ namespace Szkola2.Controllers
             var text = await _context.Texts.FindAsync(id);
             if (text != null)
             {
+                var ImagesToDelete = _context.Gallery.Where(u => u.Id == id).ToList();
+                foreach (var image in ImagesToDelete)
+                {
+                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
+                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
+                    DeleteImage(DeleteImagePath);
+                    DeleteImage(DeleteMiniImagePath);
+                }
+                var TextGalleriesItemToDelete = _context.Gallery.Where(i => i.TextId == id).ToList();
+                foreach (var item in TextGalleriesItemToDelete)
+                {
+                    _context.Gallery.Remove(item);
+                }
+                var MainGraphicDelete = Path.Combine(_hostEnvironment.WebRootPath + text.MainGraphic);
+                DeleteImage(MainGraphicDelete);
                 _context.Texts.Remove(text);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
+        public IActionResult DeleteOneImage(int Id)
+        {
+            var ImageToDelete = _context.Gallery.FirstOrDefault(u => u.Id == Id);
+            var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
+            var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
+            DeleteImage(DeleteImagePath);
+            DeleteImage(DeleteMiniImagePath);
+
+            _context.Gallery.Remove(ImageToDelete);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Edit));
+        }
+        private void DeleteImage(string deleteImagePath)
+        {
+            bool test = System.IO.File.Exists(deleteImagePath);
+            if (System.IO.File.Exists(deleteImagePath))
+            {
+                System.IO.File.Delete(deleteImagePath);
+            }
+        }
         private bool TextExists(int id)
         {
           return (_context.Texts?.Any(e => e.TextId == id)).GetValueOrDefault();

@@ -12,7 +12,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TextId" />
             <input type="hidden" asp-for="DateAdded" />
-            <input type="hidden" asp-for="Id" value="@ViewBag.Id" />
+            <input type="hidden" asp-for="Id" value="@ViewBag.Author" />
             <input type="hidden" asp-for="MainGraphic" />
 
             <div class="form-group">
@@ -31,6 +31,7 @@
                 <label asp-for="MainGraphic" class="control-label"></label>
                 <img src="@Url.Content(Model.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+Model.MainGraphic)" width="150"/>
                 <input type="file" name="picture" id="picture" class="from-control" accept=".jpg,.gif,.png"/>
+                <span asp-validation-for="MainGraphic" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -38,7 +39,7 @@
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-5">
                 @for (int i = 0; i < Model.Gallerys.Count(); i++)
                 {
                     <div>
@@ -48,7 +49,7 @@
                             </a>
                             <div class="card-body">
                                 @*<a class="card-title" asp-action="DeleteOneImage" asp-route-Id="@Model.HistoryGallerys[i].Id">Usuń zdjęcie</a>*@
-                                <a class="btn btn-danger card-title form-control" onclick="Delete('/Text/DeleteOneImage/@Model.Gallerys[i].Id')">Usuń</a>
+                                  <a class="btn btn-danger card-title form-control" onclick="Delete('/Texts/DeleteOneImage/@Model.Gallerys[i].Id')">Usuń</a>
                             </div>
                         </div>
                     </div>
@@ -80,6 +81,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
      <script src="~/lib/ckeditor5/ckeditor.min.js"></script>
+    <script src="~/js/History.js"></script>
     <script src="~/lib/ckeditor5/translations/pl.min.js"></script>
     <script>
         ClassicEditor
