@@ -9,6 +9,10 @@
         "ckeditor.min.js",
         "translations/pl.min.js"
       ]
+    },
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap/dist"
     }
   ]
 }

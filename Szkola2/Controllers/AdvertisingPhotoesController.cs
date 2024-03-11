@@ -39,6 +39,7 @@ namespace Szkola2.Controllers
             }
 
             var advertisingPhoto = await _context.AdvertisingPhotos
+                
                 .FirstOrDefaultAsync(m => m.PhotoId == id);
             if (advertisingPhoto == null)
             {
@@ -97,6 +98,8 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
+            // advertisingPhoto.Photo = _context.AdvertisingPhotos.ToList(); <-- nie wiem jak
+            
             return View(advertisingPhoto);
         }
 
