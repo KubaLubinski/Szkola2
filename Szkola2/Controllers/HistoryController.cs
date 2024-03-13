@@ -64,40 +64,40 @@ namespace Szkola2.Controllers
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(history);
-                //await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-
                 if (HistoryGalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
                     string folder = "gallery\\";
-
                     history.HistoryGallerys = new List<HistoryGallery>();
 
                     foreach (var file in HistoryGalleryFiles)
                     {
-                        var gallery = new HistoryGallery()
+                        string extension = Path.GetExtension(file.FileName);
+
+                        if (imageFileUpload.FileTypeCheck(extension))
                         {
-                            Name = file.FileName,
-                            URL = imageFileUpload.UploadImage(folder, file)
-                        };
-
-
-                        history.HistoryGallerys.Add(gallery);
-
-                        string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
-                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                        {
-                            using (Image imgFile = Image.FromStream(fs))
+                            var gallery = new HistoryGallery()
                             {
-                                var miniFile = imgFile.ScaleByWidth(800);
-                                var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                miniFile.SaveAs(upload);
-                            }
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+                            history.HistoryGallerys.Add(gallery);
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            };
                         }
-;
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            return View(history);
+                        }
                     }
                 }
 
@@ -150,28 +150,30 @@ namespace Szkola2.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (YearExist(history.Year, history.Id))
                 {
-                    if (HistoryGalleryFiles != null)
+                    ViewBag.ErrorMessage = "Wpis o takim roku już istnieje!";
+                    history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
+                    return View(history);
+                }
+                if (HistoryGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+                    history.HistoryGallerys = new List<HistoryGallery>();
+                    foreach (var file in HistoryGalleryFiles)
                     {
-                        ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                        string folder = "gallery\\";
+                        string extension = Path.GetExtension(file.FileName);
 
-                        history.HistoryGallerys = new List<HistoryGallery>();
-
-                        foreach (var file in HistoryGalleryFiles)
+                        if (imageFileUpload.FileTypeCheck(extension))
                         {
                             var gallery = new HistoryGallery()
                             {
                                 Name = file.FileName,
                                 URL = imageFileUpload.UploadImage(folder, file)
                             };
-
-
                             history.HistoryGallerys.Add(gallery);
-
                             string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
                             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                             {
                                 using (Image imgFile = Image.FromStream(fs))
@@ -180,14 +182,21 @@ namespace Szkola2.Controllers
                                     var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
                                     miniFile.SaveAs(upload);
                                 }
-                            }
-        ;
+                            };
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
+                            return View(history);
                         }
                     }
-                            _context.Update(history);
-                            await _context.SaveChangesAsync();
-                
-            }
+                }
+                try
+                {
+                     _context.Update(history);
+                    await _context.SaveChangesAsync();
+                }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!HistoryExists(history.Id))
@@ -200,20 +209,7 @@ namespace Szkola2.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-                }
-
-
-
-            /*if (history.HistoryGalleryFiles != null)
-            {
-                foreach (var file in history.HistoryGalleryFiles)
-                {
-                    string tempFileName = file.FileName;
-                    if (!tempFileName.Contains)
-                }
-            }*/
-
-
+            }
             return View(history);
         }
 
@@ -283,7 +279,6 @@ namespace Szkola2.Controllers
         }
         private void DeleteImage(string deleteImagePath)
         {
-            bool test = System.IO.File.Exists(deleteImagePath);
             if (System.IO.File.Exists(deleteImagePath))
             {
                 string tak = "dziala";
@@ -299,6 +294,10 @@ namespace Szkola2.Controllers
         private bool YearExist(int? year)
         {
             return (_context.History?.Any(e => e.Year == year)).GetValueOrDefault();
+        }
+        private bool YearExist(int? year, int? id)
+        {
+            return (_context.History?.Any(e => e.Year == year & e.Id != id)).GetValueOrDefault();
         }
     }
 }

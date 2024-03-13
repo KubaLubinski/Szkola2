@@ -4,6 +4,13 @@
     ViewData["Title"] = "Edycja tekstu";
 }
 
+@{
+    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert"> @ViewBag.ErrorMessage</div>
+    }
+}
+
 <h1 class="text-primary">Edycja tekstu</h1>
 <hr />
 <div class="row">

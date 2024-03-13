@@ -12,7 +12,7 @@ namespace Szkola2.Infrastructure
         {
             hostingEnvironment = environment;
         }
-        private static bool FileTypeCheck(string extension)
+        public bool FileTypeCheck(string extension)
         {
             return extension.ToLower() switch
             {

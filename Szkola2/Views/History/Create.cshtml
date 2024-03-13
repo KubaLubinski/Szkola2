@@ -4,6 +4,13 @@
     ViewData["Title"] = "Stwórz";
 }
 
+@{
+    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert"> @ViewBag.ErrorMessage</div>
+    }
+}
+
 <h1>Dodaj</h1>
 
 <h4>Historie</h4>
