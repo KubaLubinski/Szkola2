@@ -325,6 +325,7 @@ namespace Szkola2.Controllers
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
             ViewData["Author"] = text.Id;
+            text.Gallerys = _context.Gallery.Where(g => g.TextId == textid).ToList();
             //return RedirectToAction(nameof(Index));
             return View(text);
         }

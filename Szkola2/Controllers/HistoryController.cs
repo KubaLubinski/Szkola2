@@ -210,6 +210,7 @@ namespace Szkola2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
 
