@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: AdvertisingPhotoes
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Index()
         {
               return _context.AdvertisingPhotos != null ? 
@@ -31,6 +34,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: AdvertisingPhotoes/Details/5
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.AdvertisingPhotos == null)
@@ -50,6 +54,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: AdvertisingPhotoes/Create
+        [Authorize(Roles = "admin,dyrektor")]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +63,7 @@ namespace Szkola2.Controllers
         // POST: AdvertisingPhotoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto, IFormFile photo)
@@ -86,6 +92,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: AdvertisingPhotoes/Edit/5
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.AdvertisingPhotos == null)
@@ -106,6 +113,7 @@ namespace Szkola2.Controllers
         // POST: AdvertisingPhotoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto)
@@ -139,6 +147,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: AdvertisingPhotoes/Delete/5
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.AdvertisingPhotos == null)
@@ -157,6 +166,7 @@ namespace Szkola2.Controllers
         }
 
         // POST: AdvertisingPhotoes/Delete/5
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

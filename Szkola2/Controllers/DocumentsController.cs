@@ -34,7 +34,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Documents/Details/5
-        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen")]
+        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen,rodzic")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Documents == null)
@@ -53,8 +53,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Documents/Create
-        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen")]
-
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public IActionResult Create()
         {
             return View();
@@ -63,7 +62,7 @@ namespace Szkola2.Controllers
         // POST: Documents/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin,dyrektor,nauczyciel,uczen")]
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DocumentId,DocumentDownload,DocumentName,DocumentType")] Document document, IFormFile documents)

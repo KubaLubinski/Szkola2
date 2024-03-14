@@ -22,6 +22,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Index()
         {
               return _context.Categories != null ? 
@@ -30,6 +31,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Details/5
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -48,7 +50,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Create
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         public IActionResult Create()
         {
             return View();
@@ -57,10 +59,9 @@ namespace Szkola2.Controllers
         // POST: Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,Description,IsActive")] Category category)
         {
             if (ModelState.IsValid)
@@ -81,7 +82,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Edit/5
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -100,7 +101,7 @@ namespace Szkola2.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CategoryId,CategoryName,Description,IsActive")] Category category)
@@ -134,7 +135,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Categories/Delete/5
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -157,7 +158,7 @@ namespace Szkola2.Controllers
         }
 
         // POST: Categories/Delete/5
-        [Authorize(Roles = "admin,nauczyciel,dyrektor")]
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

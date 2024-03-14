@@ -105,6 +105,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Texts/Create
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
@@ -115,6 +116,7 @@ namespace Szkola2.Controllers
         // POST: Texts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles)
@@ -197,6 +199,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Texts/Edit/5
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Texts == null)
@@ -224,6 +227,7 @@ namespace Szkola2.Controllers
         // POST: Texts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost, ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -331,6 +335,7 @@ namespace Szkola2.Controllers
         }
 
         // GET: Texts/Delete/5
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Texts == null)
@@ -349,6 +354,7 @@ namespace Szkola2.Controllers
         }
 
         // POST: Texts/Delete/5
+        [Authorize(Roles = "admin,dyrektor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
