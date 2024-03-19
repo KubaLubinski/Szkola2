@@ -37,6 +37,7 @@
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\miniGallery\gallery\" />
     <Folder Include="wwwroot\documents\" />
+    <Folder Include="wwwroot\Relationship Diagram\" />
   </ItemGroup>
 
 </Project>

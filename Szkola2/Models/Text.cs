@@ -30,10 +30,6 @@ namespace Szkola2.Models
         [FileExtensions(Extensions = ".jpg,.png,.gif", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]
         public string? MainGraphic { get; set; }
 
-        //[Display(Name = "Zdjęcia dodane do tekstu: ")]
-        //[FileExtensions(Extensions = ".jpg,.png,.gif", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]
-        //public int? AdditionalGraphics { get; set; }
-
         [Display(Name = "Kategoria tekstu:")]
         public int CategoryId { get; set; }
 

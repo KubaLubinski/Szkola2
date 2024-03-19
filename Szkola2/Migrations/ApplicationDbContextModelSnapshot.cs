@@ -362,37 +362,6 @@ namespace Szkola2.Migrations
                     b.ToTable("HistoryGalleries");
                 });
 
-            modelBuilder.Entity("Szkola2.Models.Photo", b =>
-                {
-                    b.Property<int>("PhotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhotoId"), 1L, 1);
-
-                    b.Property<string>("Graphic")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("HistoryId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TextId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PhotoId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("TextId");
-
-                    b.ToTable("Photos");
-                });
-
             modelBuilder.Entity("Szkola2.Models.Text", b =>
                 {
                     b.Property<int>("TextId")
@@ -528,21 +497,6 @@ namespace Szkola2.Migrations
                         .HasForeignKey("HistoryId");
 
                     b.Navigation("History");
-                });
-
-            modelBuilder.Entity("Szkola2.Models.Photo", b =>
-                {
-                    b.HasOne("Szkola2.Models.History", "History")
-                        .WithMany()
-                        .HasForeignKey("Id");
-
-                    b.HasOne("Szkola2.Models.Text", "Text")
-                        .WithMany()
-                        .HasForeignKey("TextId");
-
-                    b.Navigation("History");
-
-                    b.Navigation("Text");
                 });
 
             modelBuilder.Entity("Szkola2.Models.Text", b =>

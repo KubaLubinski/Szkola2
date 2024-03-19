@@ -15,7 +15,6 @@ namespace Szkola2.Data
         public DbSet<AdvertisingPhoto>? AdvertisingPhotos { get; set; }
         public DbSet<Document>? Documents { get; set; }
         public DbSet<History>? History { get; set; }
-        public DbSet<Photo>? Photos { get; set; }
         public DbSet<Text>? Texts { get; set; }
         public DbSet<AppUser>? AppUsers { get; set; }
         public DbSet<Gallery>? Gallery { get; set; }
