@@ -11,11 +11,12 @@ namespace Szkola2.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Rok w historii szkoły")]
-        public int Year { get; set; }
+        [Display(Name = "Tytuł wpisu:")]
+        [MaxLength(75, ErrorMessage = "Tytuł nie może przekraczać 75 znaków")]
+        public string? TextName { get; set; }
 
         [Required]
-        [Display(Name = "Opis wydarzeń w danym roku")]
+        [Display(Name = "Opis historii szkoły")]
         public string? Content { get; set; }
 
         [NotMapped]

@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                @Html.DisplayNameFor(model => model.TextName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Content)
@@ -30,7 +30,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Year)
+                    @Html.DisplayFor(modelItem => item.TextName)
             </td>
             <td>
                 @if (item.Content.Length <= 80)
@@ -44,12 +44,11 @@
             </td>
             <td>
                 <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id"><i aria-label="Szczegóły"> Szczegóły</i></a> 
-                        @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
-                        {
-                            <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id"><i  aria-label="Edycja tekstu"> Edycja</i></a>
-                            <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i  aria-label="Usuwanie"> Usuwanie</i></a>
-                            @*<a onclick=Delete("/History/DeleteConfirm/@item.Id") class="btn btn-outline-danger rounded-circle my-1" title="Usuwanie"><i class="bi-eye" aria-label="Usuwanie">Usuwanie</i></a>*@
-                        }
+                @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
+                {
+                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id"><i  aria-label="Edycja tekstu"> Edycja</i></a>
+                    <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i  aria-label="Usuwanie"> Usuwanie</i></a>
+                }
             </td>
         </tr>
 }

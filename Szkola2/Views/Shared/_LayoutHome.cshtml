@@ -53,7 +53,10 @@
                         </li>   
                          <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Documents" asp-action="Index">Dokumenty</a>
-                        </li>   
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="Index">Z życia szkoły</a>
+                        </li>
                         @{
                             @if ((User.IsInRole("admin"))  || (User.IsInRole("dyrektor")) || (User.IsInRole("nauczyciel")) || (User.IsInRole("uczen")))
                             {                     
@@ -67,22 +70,21 @@
                             </li>                          
                             @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")))
                             {
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>   
+                                    <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
                                     <li>
                                         <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="List">Lista tekstów</a>
-                                    </li>               
-                               
-                            
-                                <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>
-                                       
-                                </li> 
-                                <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="AdvertisingPhotoes" asp-action="Index">Zdjęcia</a>
-                                       
-                                </li>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="AdvertisingPhotoes" asp-action="Index">Zdjęcia</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEventsContoller" asp-action="Index">Kalendarium wydarzeń</a>
+                                    </li>
                             }
                             </ul>
                            

@@ -1,0 +1,90 @@
+﻿@model Szkola2.Models.PastSchoolEvent
+
+@{
+    ViewData["Title"] = "Edycja tekstu";
+}
+
+@{
+    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert"> @ViewBag.ErrorMessage</div>
+    }
+}
+
+<h1>Edycja</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8 interspace">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="MainGraphic" />
+            <div class="form-group">
+                <label asp-for="EventName" class="control-label"></label>
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EventDate" class="control-label"></label>
+                <input asp-for="EventDate" class="form-control" />
+                <span asp-validation-for="EventDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MainGraphic" class="control-label"></label>
+                <img src="@Url.Content(Model.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+Model.MainGraphic)" width="150" />
+                <input type="file" name="picture" id="picture" class="form-control" accept=".jpg,.gif,.png" />
+                <span asp-validation-for="MainGraphic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea id="editor" asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group col-md-5">
+                @for (int i = 0; i < Model.PastEventGallerys.Count(); i++)
+                {
+                    <div>
+                        <div class="card">
+                            <a asp-action="Details" asp-route-Id="@Model.Id" class="card-img-top">
+                                <img class="card-img-top rounded" src="@Model.PastEventGallerys[i].URL" alt="@Model.PastEventGallerys[i].Name" width="150" height="150">
+                            </a>
+                            <div class="card-body">
+                                <a class="btn btn-danger card-title form-control" onclick="Delete('/PastSchoolEvents/DeleteOneImage/@Model.PastEventGallerys[i].Id')">Usuń</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="PastEventGalleryFiles" class="control-label">Dodaj więcej zdjęć</label>
+                <div class="custom-file">
+                    <input asp-for="PastEventGalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
+                    <hr />
+                </div>
+                <span asp-validation-for="PastEventGalleryFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-light">Powrót do tekstu</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/ckeditor5/ckeditor.min.js"></script>
+    <script src="~/js/History.js"></script>
+    <script src="~/lib/ckeditor5/translations/pl.min.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                language: 'pl'
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    </script>
+}

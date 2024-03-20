@@ -16,9 +16,11 @@ namespace Szkola2.Data
         public DbSet<Document>? Documents { get; set; }
         public DbSet<History>? History { get; set; }
         public DbSet<Text>? Texts { get; set; }
+        public DbSet<PastSchoolEvent>? PastSchoolEvents { get; set; }
         public DbSet<AppUser>? AppUsers { get; set; }
         public DbSet<Gallery>? Gallery { get; set; }
-        public DbSet<HistoryGallery> HistoryGalleries { get; set; }
+        public DbSet<HistoryGallery>? HistoryGalleries { get; set; }
+        public DbSet<EventsTimelineGraphic>? PastEventGallery { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -55,6 +57,14 @@ namespace Szkola2.Data
             modelbuilder.Entity<Text>()
                 .HasOne(u => u.User)
                 .WithMany(t => t.Texts);
+
+            modelbuilder.Entity<PastSchoolEvent>()
+                .HasMany(g => g.PastEventGallerys)
+                .WithOne(e => e.PastEvent);
+
+            modelbuilder.Entity<EventsTimelineGraphic>()
+                .HasOne(e => e.PastEvent)
+                .WithMany(g => g.PastEventGallerys);
         }
     }
 }

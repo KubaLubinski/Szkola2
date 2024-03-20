@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Szkola2.Models.PastSchoolEvent>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Kalendarium wydarzeń z życia szkoły</h1>
+
+<p>
+    <a asp-action="Create">Dodaj nowy wpis</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EventDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventDate)
+            </td>
+            <td>
+                @if (item.Content.Length <= 80)
+                {
+                    @Html.Raw(item.Content)
+                }
+                else
+                {
+                    @Html.Raw(item.Content.Substring(0,80)+" ...")
+                }
+            </td>
+            <td>
+                <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id"><i aria-label="Szczegóły"> Szczegóły</i></a>
+                @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
+                {
+                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id"><i aria-label="Edycja tekstu"> Edycja</i></a>
+                    <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i aria-label="Usuwanie"> Usuwanie</i></a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -60,7 +60,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
+        public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
         {
             if (ModelState.IsValid)
             {
@@ -100,8 +100,7 @@ namespace Szkola2.Controllers
                         }
                     }
                 }
-
-                if (!YearExist(history.Year))
+                if (!TextNameExist(history.TextName))
                 {
                     _context.Add(history);
                     await _context.SaveChangesAsync();
@@ -109,7 +108,7 @@ namespace Szkola2.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "Wpis o takim roku już istnieje!";
+                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
                     return View(history);
                 }
             }
@@ -141,7 +140,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
         {
             if (id != history.Id)
             {
@@ -150,9 +149,9 @@ namespace Szkola2.Controllers
 
             if (ModelState.IsValid)
             {
-                if (YearExist(history.Year, history.Id))
+                if (TextNameExist(history.TextName, history.Id))
                 {
-                    ViewBag.ErrorMessage = "Wpis o takim roku już istnieje!";
+                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
                     history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
                     return View(history);
                 }
@@ -282,7 +281,6 @@ namespace Szkola2.Controllers
         {
             if (System.IO.File.Exists(deleteImagePath))
             {
-                string tak = "dziala";
                 System.IO.File.Delete(deleteImagePath);
             }
         }
@@ -292,13 +290,13 @@ namespace Szkola2.Controllers
             return (_context.History?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private bool YearExist(int? year)
+        private bool TextNameExist(string? textName)
         {
-            return (_context.History?.Any(e => e.Year == year)).GetValueOrDefault();
+            return (_context.History?.Any(e => e.TextName == textName)).GetValueOrDefault();
         }
-        private bool YearExist(int? year, int? id)
+        private bool TextNameExist(string? textName, int? id)
         {
-            return (_context.History?.Any(e => e.Year == year & e.Id != id)).GetValueOrDefault();
+            return (_context.History?.Any(e => e.TextName == textName & e.Id != id)).GetValueOrDefault();
         }
     }
 }
