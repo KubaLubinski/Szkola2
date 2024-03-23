@@ -37,7 +37,6 @@ namespace Szkola2.Controllers
             }
 
             var history = await _context.History
-                .Include(t => t.HistoryGallerys)
                 .Include(g => g.GraphicGallery)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (history == null)
@@ -61,47 +60,10 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles, IFormFileCollection GraphicGalleryFiles)
+        public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection GraphicGalleryFiles)
         {
             if (ModelState.IsValid)
             {
-                if (HistoryGalleryFiles != null)
-                {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-                    history.HistoryGallerys = new List<HistoryGallery>();
-
-                    foreach (var file in HistoryGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new HistoryGallery()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-                            history.HistoryGallerys.Add(gallery);
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByWidth(800);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            };
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            return View(history);
-                        }
-                    }
-                }
-                //test graphic
                 if (GraphicGalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
@@ -167,8 +129,6 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
-
-            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
             history.GraphicGallery = _context.GraphicGallery?.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
@@ -179,7 +139,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles, IFormFileCollection GraphicGalleryFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection GraphicGalleryFiles)
         {
             if (id != history.Id)
             {
@@ -192,46 +152,8 @@ namespace Szkola2.Controllers
                 {
                     ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
                     history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
-                    history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
                     return View(history);
                 }
-                if (HistoryGalleryFiles != null)
-                {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-                    history.HistoryGallerys = new List<HistoryGallery>();
-                    foreach (var file in HistoryGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new HistoryGallery()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-                            history.HistoryGallerys.Add(gallery);
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByWidth(800);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            };
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
-                            return View(history);
-                        }
-                    }
-                }
-                //test graphic
                 if (GraphicGalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
@@ -275,7 +197,7 @@ namespace Szkola2.Controllers
                 }
                 try
                 {
-                     _context.Update(history);
+                    _context.Update(history);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -292,7 +214,6 @@ namespace Szkola2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
-            history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
 
@@ -329,7 +250,7 @@ namespace Szkola2.Controllers
             var history = await _context.History.FindAsync(id);
             if (history != null)
             {
-                var ImagesToDelete = _context.HistoryGalleries.Where(u => u.Id == id).ToList();
+                var ImagesToDelete = _context.GraphicGallery.Where(u => u.Id == id).ToList();
                 foreach (var image in ImagesToDelete)
                 {
                     var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
@@ -337,10 +258,10 @@ namespace Szkola2.Controllers
                     DeleteImage(DeleteImagePath);
                     DeleteImage(DeleteMiniImagePath);
                 }
-                var HistoryGalleriesItemToDelete = _context.HistoryGalleries.Where(i => i.HistoryId == id).ToList();
+                var HistoryGalleriesItemToDelete = _context.GraphicGallery.Where(i => i.HistoryId == id).ToList();
                 foreach (var item in HistoryGalleriesItemToDelete)
                 {
-                    _context.HistoryGalleries.Remove(item);
+                    _context.GraphicGallery.Remove(item);
                 }
                 _context.History.Remove(history);
             }

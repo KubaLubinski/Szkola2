@@ -47,11 +47,6 @@ namespace Szkola2.Models
         public virtual AppUser? User { get; set; }
 
         [NotMapped]
-        public virtual IFormFileCollection? GalleryFiles { get; set; }
-
-        public virtual List<Gallery>? Gallerys { get; set; }
-
-        [NotMapped]
         public virtual IFormFileCollection? GraphicGalleryFiles { get; set; }
 
         public virtual List<Graphic>? GraphicGallery { get; set; }

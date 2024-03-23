@@ -46,30 +46,6 @@
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-5">
-                @for (int i = 0; i < Model.Gallerys.Count(); i++)
-                {
-                    <div>
-                        <div class="card">
-                            <a asp-action="Details" asp-route-Id="@Model.Id" class="card-img-top">
-                                <img class="card-img-top rounded" src="@Model.Gallerys[i].URL" alt="@Model.Gallerys[i].Name" width="150" height="150">
-                            </a>
-                            <div class="card-body">
-                                @*<a class="card-title" asp-action="DeleteOneImage" asp-route-Id="@Model.HistoryGallerys[i].Id">Usuń zdjęcie</a>*@
-                                  <a class="btn btn-danger card-title form-control" onclick="Delete('/Texts/DeleteOneImage/@Model.Gallerys[i].Id')">Usuń</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="form-group">
-                <label asp-for="GalleryFiles" class="control-label">Dodaj więcej zdjęć</label>
-                <div class="custom-file">
-                    <input asp-for="GalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
-                    <hr />
-                </div>
-                <span asp-validation-for="GalleryFiles" class="text-danger"></span>
-            </div>
             <hr />
             <div class="form-group col-md-5">
                 @for (int i = 0; i < Model.GraphicGallery.Count(); i++)

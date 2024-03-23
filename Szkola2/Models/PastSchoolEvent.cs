@@ -31,11 +31,6 @@ namespace Szkola2.Models
         public string? MainGraphic { get; set; }
 
         [NotMapped]
-        public virtual IFormFileCollection? PastEventGalleryFiles { get; set; }
-
-        public virtual List<EventsTimelineGraphic>? PastEventGallerys { get; set; }
-
-        [NotMapped]
         public virtual IFormFileCollection? GraphicGalleryFiles { get; set; }
 
         public virtual List<Graphic>? GraphicGallery { get; set; }

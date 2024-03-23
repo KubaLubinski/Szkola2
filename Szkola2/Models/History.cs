@@ -20,11 +20,6 @@ namespace Szkola2.Models
         public string? Content { get; set; }
 
         [NotMapped]
-        public virtual IFormFileCollection? HistoryGalleryFiles { get; set; }
-
-        public virtual List<HistoryGallery>? HistoryGallerys { get; set; }
-
-        [NotMapped]
         public virtual IFormFileCollection? GraphicGalleryFiles { get; set; }
 
         public virtual List<Graphic>? GraphicGallery { get; set; }

@@ -43,30 +43,6 @@
             </div>
             <hr />
             <div class="form-group col-md-5">
-                @for (int i = 0; i < Model.PastEventGallerys.Count(); i++)
-                {
-                    <div>
-                        <div class="card">
-                            <a asp-action="Details" asp-route-Id="@Model.Id" class="card-img-top">
-                                <img class="card-img-top rounded" src="@Model.PastEventGallerys[i].URL" alt="@Model.PastEventGallerys[i].Name" width="150" height="150">
-                            </a>
-                            <div class="card-body">
-                                <a class="btn btn-danger card-title form-control" onclick="Delete('/PastSchoolEvents/DeleteOneImage/@Model.PastEventGallerys[i].Id')">Usuń</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="form-group">
-                <label asp-for="PastEventGalleryFiles" class="control-label">Dodaj więcej zdjęć</label>
-                <div class="custom-file">
-                    <input asp-for="PastEventGalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
-                    <hr />
-                </div>
-                <span asp-validation-for="PastEventGalleryFiles" class="text-danger"></span>
-            </div>
-            <hr />
-            <div class="form-group col-md-5">
                 @for (int i = 0; i < Model.GraphicGallery.Count(); i++)
                 {
                     <div>
