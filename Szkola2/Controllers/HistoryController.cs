@@ -38,6 +38,7 @@ namespace Szkola2.Controllers
 
             var history = await _context.History
                 .Include(t => t.HistoryGallerys)
+                .Include(g => g.GraphicGallery)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (history == null)
             {
@@ -60,7 +61,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
+        public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles, IFormFileCollection GraphicGalleryFiles)
         {
             if (ModelState.IsValid)
             {
@@ -82,6 +83,43 @@ namespace Szkola2.Controllers
                                 URL = imageFileUpload.UploadImage(folder, file)
                             };
                             history.HistoryGallerys.Add(gallery);
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            };
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            return View(history);
+                        }
+                    }
+                }
+                //test graphic
+                if (GraphicGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+                    history.GraphicGallery = new List<Graphic>();
+
+                    foreach (var file in GraphicGalleryFiles)
+                    {
+                        string extension = Path.GetExtension(file.FileName);
+
+                        if (imageFileUpload.FileTypeCheck(extension))
+                        {
+                            var gallery = new Graphic()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+                            history.GraphicGallery.Add(gallery);
                             string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
                             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                             {
@@ -131,6 +169,7 @@ namespace Szkola2.Controllers
             }
 
             history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
+            history.GraphicGallery = _context.GraphicGallery?.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
 
@@ -140,7 +179,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection? HistoryGalleryFiles, IFormFileCollection GraphicGalleryFiles)
         {
             if (id != history.Id)
             {
@@ -152,6 +191,7 @@ namespace Szkola2.Controllers
                 if (TextNameExist(history.TextName, history.Id))
                 {
                     ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
+                    history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
                     history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
                     return View(history);
                 }
@@ -191,6 +231,48 @@ namespace Szkola2.Controllers
                         }
                     }
                 }
+                //test graphic
+                if (GraphicGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+
+                    history.GraphicGallery = new List<Graphic>();
+
+                    foreach (var file in GraphicGalleryFiles)
+                    {
+                        string extension = Path.GetExtension(file.FileName);
+
+                        if (imageFileUpload.FileTypeCheck(extension))
+                        {
+                            var gallery = new Graphic()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+
+                            history.GraphicGallery.Add(gallery);
+
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
+                            return View(history);
+                        }
+                    }
+                }
                 try
                 {
                      _context.Update(history);
@@ -209,6 +291,7 @@ namespace Szkola2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
             history.HistoryGallerys = _context.HistoryGalleries.Where(g => g.HistoryId == id).ToList();
             return View(history);
         }
@@ -267,13 +350,13 @@ namespace Szkola2.Controllers
 
         public IActionResult DeleteOneImage(int Id)
         {
-            var ImageToDelete = _context.HistoryGalleries.FirstOrDefault(u => u.Id == Id);
+            var ImageToDelete = _context.GraphicGallery.FirstOrDefault(u => u.Id == Id);
             var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
             var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
             DeleteImage(DeleteImagePath);
             DeleteImage(DeleteMiniImagePath);
 
-            _context.HistoryGalleries.Remove(ImageToDelete);
+            _context.GraphicGallery.Remove(ImageToDelete);
             _context.SaveChanges();
             return RedirectToAction(nameof(Edit));
         }

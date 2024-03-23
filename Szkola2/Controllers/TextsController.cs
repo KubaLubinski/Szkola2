@@ -95,6 +95,7 @@ namespace Szkola2.Controllers
                 .Include(t => t.Category)
                 .Include(t => t.User)
                 .Include(t => t.Gallerys)
+                .Include(g => g.GraphicGallery)
                 .FirstOrDefaultAsync(m => m.TextId == id);
             if (text == null)
             {
@@ -119,7 +120,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles)
+        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles, IFormFileCollection? GraphicGalleryFiles)
         {
             if (ModelState.IsValid)
             {
@@ -180,6 +181,44 @@ namespace Szkola2.Controllers
                         }
                     }
                 }
+                //test graphic
+                if (GraphicGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+                    text.GraphicGallery = new List<Graphic>();
+
+                    foreach (var file in GraphicGalleryFiles)
+                    {
+                        string extension = Path.GetExtension(file.FileName);
+
+                        if (imageFileUpload.FileTypeCheck(extension))
+                        {
+                            var gallery = new Graphic()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+                            text.GraphicGallery.Add(gallery);
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            };
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                            return View(text);
+                        }
+                    }
+                }
                 if (!TextNameExist(text.TextName))
                 {
                     _context.Add(text);
@@ -216,6 +255,7 @@ namespace Szkola2.Controllers
                 ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
                 ViewData["Author"] = text.Id;
                 text.Gallerys = _context.Gallery.Where(g => g.TextId == id).ToList();
+                text.GraphicGallery = _context.GraphicGallery?.Where(g => g.TextId == id).ToList();
                 return View(text);
             }
             else
@@ -231,7 +271,7 @@ namespace Szkola2.Controllers
         [HttpPost, ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles)
+        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GalleryFiles, IFormFileCollection? GraphicGalleryFiles)
         {
             if (textid != text.TextId)
             {
@@ -245,6 +285,7 @@ namespace Szkola2.Controllers
                     ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
                     ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
                     ViewData["Author"] = text.Id;
+                    text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
                     text.Gallerys = _context.Gallery.Where(g => g.TextId == textid).ToList();
                     return View(text);
                 }
@@ -262,6 +303,7 @@ namespace Szkola2.Controllers
                         ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
                         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
                         ViewData["Author"] = text.Id;
+                        text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
                         text.Gallerys = _context.Gallery.Where(g => g.TextId == textid).ToList();
                         return View(text);
                     }
@@ -309,6 +351,50 @@ namespace Szkola2.Controllers
                         }
                     }
                 }
+                //test graphic
+                if (GraphicGalleryFiles != null)
+                {
+                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
+                    string folder = "gallery\\";
+
+                    text.GraphicGallery = new List<Graphic>();
+
+                    foreach (var file in GraphicGalleryFiles)
+                    {
+                        string extension = Path.GetExtension(file.FileName);
+
+                        if (imageFileUpload.FileTypeCheck(extension))
+                        {
+                            var gallery = new Graphic()
+                            {
+                                Name = file.FileName,
+                                URL = imageFileUpload.UploadImage(folder, file)
+                            };
+
+                            text.GraphicGallery.Add(gallery);
+
+                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
+
+                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                            {
+                                using (Image imgFile = Image.FromStream(fs))
+                                {
+                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
+                                    miniFile.SaveAs(upload);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
+                            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                            ViewData["Author"] = text.Id;
+                            text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
+                            return View(text);
+                        }
+                    }
+                }
                 try
                 {
                     _context.Update(text);
@@ -329,6 +415,7 @@ namespace Szkola2.Controllers
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
             ViewData["Author"] = text.Id;
+            text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
             text.Gallerys = _context.Gallery.Where(g => g.TextId == textid).ToList();
             //return RedirectToAction(nameof(Index));
             return View(text);
@@ -390,13 +477,13 @@ namespace Szkola2.Controllers
 
         public IActionResult DeleteOneImage(int Id)
         {
-            var ImageToDelete = _context.Gallery.FirstOrDefault(u => u.Id == Id);
+            var ImageToDelete = _context.GraphicGallery.FirstOrDefault(u => u.Id == Id);
             var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
             var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
             DeleteImage(DeleteImagePath);
             DeleteImage(DeleteMiniImagePath);
 
-            _context.Gallery.Remove(ImageToDelete);
+            _context.GraphicGallery.Remove(ImageToDelete);
             _context.SaveChanges();
             return RedirectToAction(nameof(Edit));
         }

@@ -342,6 +342,40 @@ namespace Szkola2.Migrations
                     b.ToTable("Gallery");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.Graphic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TextId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("HistoryId");
+
+                    b.HasIndex("TextId");
+
+                    b.ToTable("GraphicGallery");
+                });
+
             modelBuilder.Entity("Szkola2.Models.History", b =>
                 {
                     b.Property<int>("Id")
@@ -554,6 +588,27 @@ namespace Szkola2.Migrations
                     b.Navigation("Texts");
                 });
 
+            modelBuilder.Entity("Szkola2.Models.Graphic", b =>
+                {
+                    b.HasOne("Szkola2.Models.PastSchoolEvent", "PastEvent")
+                        .WithMany("GraphicGallery")
+                        .HasForeignKey("EventId");
+
+                    b.HasOne("Szkola2.Models.History", "History")
+                        .WithMany("GraphicGallery")
+                        .HasForeignKey("HistoryId");
+
+                    b.HasOne("Szkola2.Models.Text", "Texts")
+                        .WithMany("GraphicGallery")
+                        .HasForeignKey("TextId");
+
+                    b.Navigation("History");
+
+                    b.Navigation("PastEvent");
+
+                    b.Navigation("Texts");
+                });
+
             modelBuilder.Entity("Szkola2.Models.HistoryGallery", b =>
                 {
                     b.HasOne("Szkola2.Models.History", "History")
@@ -589,17 +644,23 @@ namespace Szkola2.Migrations
 
             modelBuilder.Entity("Szkola2.Models.History", b =>
                 {
+                    b.Navigation("GraphicGallery");
+
                     b.Navigation("HistoryGallerys");
                 });
 
             modelBuilder.Entity("Szkola2.Models.PastSchoolEvent", b =>
                 {
+                    b.Navigation("GraphicGallery");
+
                     b.Navigation("PastEventGallerys");
                 });
 
             modelBuilder.Entity("Szkola2.Models.Text", b =>
                 {
                     b.Navigation("Gallerys");
+
+                    b.Navigation("GraphicGallery");
                 });
 
             modelBuilder.Entity("Szkola2.Models.AppUser", b =>

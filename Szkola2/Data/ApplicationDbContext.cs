@@ -21,6 +21,7 @@ namespace Szkola2.Data
         public DbSet<Gallery>? Gallery { get; set; }
         public DbSet<HistoryGallery>? HistoryGalleries { get; set; }
         public DbSet<EventsTimelineGraphic>? PastEventGallery { get; set; }
+        public DbSet<Graphic>? GraphicGallery { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -65,6 +66,30 @@ namespace Szkola2.Data
             modelbuilder.Entity<EventsTimelineGraphic>()
                 .HasOne(e => e.PastEvent)
                 .WithMany(g => g.PastEventGallerys);
+
+            modelbuilder.Entity<History>()
+                .HasMany(h => h.GraphicGallery)
+                .WithOne(p => p.History);
+
+            modelbuilder.Entity<Graphic>()
+                .HasOne(p => p.History)
+                .WithMany(h => h.GraphicGallery);
+
+            modelbuilder.Entity<Text>()
+                .HasMany(t => t.GraphicGallery)
+                .WithOne(p => p.Texts);
+
+            modelbuilder.Entity<Graphic>()
+                .HasOne(p => p.Texts)
+                .WithMany(t => t.GraphicGallery);
+
+            modelbuilder.Entity<PastSchoolEvent>()
+                .HasMany(g => g.GraphicGallery)
+                .WithOne(e => e.PastEvent);
+
+            modelbuilder.Entity<Graphic>()
+                .HasOne(e => e.PastEvent)
+                .WithMany(g => g.GraphicGallery);
         }
     }
 }
