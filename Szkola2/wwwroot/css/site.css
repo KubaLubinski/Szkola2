@@ -17,6 +17,15 @@ html {
     background-size: cover;
     height: 420px;
 }
+body nav{
+    background-color: #F2E857;
+}
+.dropdown-color{
+    background-color: #F2E857;
+}
+body footer {
+    background-color: #F2E857;
+}
 .transparency {
     background-color: rgba(0,0,0,0.5);
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -34,10 +43,18 @@ html {
 }
 
 body {
+  background-color: #F2F2F2;
   margin-bottom: 60px;
   font-family: 'Roboto', sens-serif;
   font-weight: 400;
 }
+.bg-color {
+    background-color: #F2F2F2;
+}
+.head-color {
+    background-color: #BBD8F2; 
+}
+
 .ck-editor__editable {
     min-height: 500px !important;
 }
