@@ -3,18 +3,18 @@
     ViewData["Title"] = "Lista tekstów";
 }
 
-<div class="container">
+<div class="container ">
     <div class="row">
         <!-- wyszukiwarka-->
         <div class="d-none d-md-block col-md-12 col-xl-3">
-            <div class="card mt-2 shadow-sm">
-                <div class="card-body">
+            <div class="card mt-2 shadow-sm ">
+                <div class="card-body bg-color">
                     @using (Html.BeginForm("Index","Texts", new { PageNumber = "1" }, FormMethod.Get))
                     {
                     <div class="row gt-3">
                         <div class="form-group col-auto">
                             <label for="Kategoria">Kategoria</label>
-                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie---", htmlAttributes:new{ @class = "form-control"})
+                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie ---", htmlAttributes:new{ @class = "form-control"})
                         </div>   
                         <div class="form-group col-auto">
                             <label for="Fraza">Fragment tekstu</label>
@@ -33,11 +33,11 @@
         {
             @foreach (var item in Model.Texts)
             {
-                <div class="card mt-2">
+                <div class="card mt-2 head-color shadow-sm ">
                     <div class="card-header">
                         <h4 class="text-primary oswald">@item.TextName</h4>
                     </div>
-                    <div class="row">
+                    <div class="row bg-color">
                         <div class="col-md-4">    
                             <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" class="img-fluid" />
                         </div>
@@ -66,7 +66,7 @@
             } else
             {
                 <div class="alert alert-info d-flex align-items-center mt2" role="alert">
-                    <i class="bi bi-info-circle-fill me-3">Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
+                    <i class="bi bi-info-circle-fill me-3"> Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
                 </div>
             }
         </div> 
@@ -76,7 +76,7 @@
 
     <!-- stronnicowanie -->
     <div class ="row mt-3">
-        <nav aria-label="Nawigacja między stronami">
+        <navi aria-label="Nawigacja między stronami">
             <ul class="pagination">
             @{
                 if (Model.TextsView.PageNumber > 1)
@@ -100,7 +100,7 @@
                 }
             }
             </ul>
-        </nav>
+        </navi>
     </div>
 
 </div>
