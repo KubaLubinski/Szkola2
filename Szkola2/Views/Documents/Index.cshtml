@@ -14,7 +14,7 @@
         </p>
     }
 }
-<table class="table">
+<table class="table text-color">
     <thead>
         <tr>
             <th>
@@ -23,7 +23,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.DocumentName)
             </th>
-            <th>
+            <th class="d-none d-md-block">
                 @Html.DisplayNameFor(model => model.DocumentType)
             </th>
             <th></th>
@@ -38,7 +38,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DocumentDownload)
             </td>
-            <td>
+            <td >
                 @Html.DisplayFor(modelItem => item.DocumentType)
             </td>
             <td>
