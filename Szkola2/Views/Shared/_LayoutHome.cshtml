@@ -25,8 +25,12 @@
                 <h4 class="lh-base text-light" >
                     Witamy na stronie udostępniającej państwu informacje z życia szkoły. Zapraszamy. </br>
                     <div>
-                    <a href='#navbar' class="btn btn-success rounded-circle roboto mt-3 mb-4"  onclick="scrollToNavbar()"> Przejdz do strony głównej</a>
-                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success rounded-circle roboto mt-3 mb-4">Zaloguj się</a>
+                    <a href='#navbar' class="btn btn-dark rounded-circle roboto mt-3 mb-4"  onclick="scrollToNavbar()"> Przejdz do strony głównej</a>
+                    @if(!User.Identity.IsAuthenticated)
+                        {
+                             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success rounded-circle roboto mt-3 mb-4">Zaloguj się</a>
+                        }
+                       
                     </div>
                     
                 </h4>
@@ -92,6 +96,9 @@
                         }
                         }
                     </ul>
+                    <div >
+                        <img src="~/img/logo/moon.png" id="ldmode"></i> 
+                    </div>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -109,6 +116,8 @@
             &copy; 2023 - Szkola2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
         </div>
     </footer>
+
+    <script src="/js/light-dark-mode.js" ></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -125,6 +134,7 @@
              });
         }
     </script>   
+    
 </body>
 </html>
    

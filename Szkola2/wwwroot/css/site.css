@@ -7,49 +7,66 @@ html {
     font-size: 16px;
   }
 }
+:root { 
+    --primary-bg-color: #F2F2F2;
+    --secondary-bg-color: #F2E857;
+    --primary-text-color: #000000;
+}
+.dark-theme {
+    --primary-bg-color: #010326;
+    --secondary-bg-color: #BBD8F2;
+    --primary-text-color: #ffffff;
+}
 
 html {
   position: relative;
   min-height: 100%;
 }
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
+    margin-bottom: 60px;
+    font-family: 'Roboto', sens-serif;
+    font-weight: 400;
+}
+
+body nav {
+    background-color: var(--secondary-bg-color);
+}
+
+    body footer {
+        background-color: var(--secondary-bg-color);
+    }
+
 .back{
     background: url("../img/logo/Tlo_zapasowe.jpg") center no-repeat;
     background-size: cover;
     height: 420px;
 }
-body nav{
-    background-color: #F2E857;
+
+.dropdown-color {
+    background-color: var(--secondary-bg-color);
 }
-.dropdown-color{
-    background-color: #F2E857;
-}
-body footer {
-    background-color: #F2E857;
-}
+
 .transparency {
     background-color: rgba(0,0,0,0.5);
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 8px 8px 32px 0 rgba(0, 0, 0, 0.36);
     border-radius: 20px;
 }
-.szkola-title{
+.szkola-title {
     font-size: 4rem;
     font-weight: 700;
 
 }
-.roboto{
+.roboto {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
 }
 
-body {
-  background-color: #F2F2F2;
-  margin-bottom: 60px;
-  font-family: 'Roboto', sens-serif;
-  font-weight: 400;
-}
 .bg-color {
-    background-color: #F2F2F2;
+    background-color: var(--primary-bg-color);
 }
 .head-color {
     background-color: #BBD8F2; 
@@ -57,4 +74,14 @@ body {
 
 .ck-editor__editable {
     min-height: 500px !important;
+}
+#ldmode {
+    width: 40px;
+    cursor: pointer;
+}
+.text-color {
+    color: var(--primary-text-color);
+}
+.editor-color {
+    color: #000000
 }
