@@ -1,7 +1,9 @@
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Data;
 using Szkola2.Models;
+using static Szkola2.Controllers.JobsController;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,17 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddHangfire((sp, config) =>
+    {
+        config.UseSqlServerStorage(connectionString);
+    });
+builder.Services.AddHangfireServer();
+builder.Services.BuildServiceProvider().GetRequiredService<IGlobalConfiguration>();
+
+RecurringJob.AddOrUpdate<DataTransferJob>("CopyAndArchiveTexts", job => job.CopyAndArchiveTextsAsync(), "0 0 1 1 *");
+
+//RecurringJob.AddOrUpdate<DataTransferJob>("CopyAndArchiveTexts",jobjob.CopyAndArchiveTextsAsync(),Cron.Yearly, TimeZoneInfo.Local);
+
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -46,7 +59,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCookiePolicy();
-
+app.UseHangfireDashboard();
 app.UseRouting();
 
 app.UseAuthentication();

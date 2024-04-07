@@ -30,6 +30,11 @@ namespace Szkola2.Models
         [FileExtensions(Extensions = ".jpg,.png,.gif", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]
         public string? MainGraphic { get; set; }
 
+        [Display(Name = "Data wydarzenia:")]
+        [DataType(DataType.Date, ErrorMessage = "Niepoprawny format daty")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
+        public System.DateTime EventDate { get; set; }
+
         [Display(Name = "Kategoria tekstu:")]
         public int CategoryId { get; set; }
 

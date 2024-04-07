@@ -397,6 +397,9 @@ namespace Szkola2.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Id")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

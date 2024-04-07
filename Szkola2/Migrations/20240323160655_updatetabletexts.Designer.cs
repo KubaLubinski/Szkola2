@@ -12,8 +12,8 @@ using Szkola2.Data;
 namespace Szkola2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240323122527_usunieteTabeleGalerie")]
-    partial class usunieteTabeleGalerie
+    [Migration("20240323160655_updatetabletexts")]
+    partial class updatetabletexts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -397,6 +397,9 @@ namespace Szkola2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Id")
