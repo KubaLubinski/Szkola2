@@ -1,7 +1,6 @@
 html {
   font-size: 14px;
 }
-
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -17,12 +16,10 @@ html {
     --secondary-bg-color: #BBD8F2;
     --primary-text-color: #ffffff;
 }
-
 html {
   position: relative;
   min-height: 100%;
 }
-
 body {
     background-color: var(--primary-bg-color);
     color: var(--primary-text-color);
@@ -30,25 +27,25 @@ body {
     font-family: 'Roboto', sens-serif;
     font-weight: 400;
 }
-
 body nav {
     background-color: var(--secondary-bg-color);
 }
 
-    body footer {
+body footer {
         background-color: var(--secondary-bg-color);
-    }
-
+}
+#ldmode {
+    width: 40px;
+    cursor: pointer;
+}
 .back{
     background: url("../img/logo/Tlo_zapasowe.jpg") center no-repeat;
     background-size: cover;
     height: 420px;
 }
-
 .dropdown-color {
     background-color: var(--secondary-bg-color);
 }
-
 .transparency {
     background-color: rgba(0,0,0,0.5);
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -64,20 +61,14 @@ body nav {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
 }
-
 .bg-color {
     background-color: var(--primary-bg-color);
 }
 .head-color {
     background-color: #BBD8F2; 
 }
-
 .ck-editor__editable {
     min-height: 500px !important;
-}
-#ldmode {
-    width: 40px;
-    cursor: pointer;
 }
 .text-color {
     color: var(--primary-text-color);
@@ -85,3 +76,18 @@ body nav {
 .editor-color {
     color: #000000
 }
+.big-small{
+
+}
+.transparent-button {
+    background-color: transparent; 
+    border: 2px solid transparent; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
+    margin-left: 3px;
+}
+    .transparent-button:hover {
+        background-color: rgba(0, 0, 0, 0.2); 
+        border-color: #000; 
+    }
