@@ -9,7 +9,7 @@
 <h4>Kategorie</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CategoryId" />
@@ -28,6 +28,7 @@
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                 </label>
             </div>
+            <hr />
             <div class="form-group">
                 <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>

@@ -119,8 +119,13 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,EventDate,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
+            if (!(text.CategoryId == 1 || text.CategoryId == 2))
+            {
+                ModelState.Remove("EventDate");
+            }
+
             if (ModelState.IsValid)
             {
                 text.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -231,11 +236,16 @@ namespace Szkola2.Controllers
         [HttpPost, ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
             if (textid != text.TextId)
             {
                 return NotFound();
+            }
+
+            if (!(text.CategoryId == 1 || text.CategoryId == 2))
+            {
+                ModelState.Remove("EventDate");
             }
 
             if (ModelState.IsValid)
