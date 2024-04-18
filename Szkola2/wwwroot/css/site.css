@@ -91,3 +91,15 @@ body footer {
         background-color: rgba(0, 0, 0, 0.2); 
         border-color: #000; 
     }
+.tooltip {
+    display: none;
+    position: absolute;
+    padding: 8px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+
+.show {
+    display: block;
+}

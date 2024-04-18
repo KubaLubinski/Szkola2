@@ -35,7 +35,7 @@
             {
                 <div class="card mt-2 head-color shadow-sm ">
                     <div class="card-header">
-                        <h4 class="text-primary oswald">@item.TextName</h4>
+                        <h3 class="text-primary roboto">@item.TextName</h3>
                     </div>
                     <div class="row bg-color">
                         <div class="col-md-4">    
@@ -43,14 +43,14 @@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title text-success">@item.User.FullName</h5>
+                                <p class="card-title text-success roboto">@item.User.FullName</p>
                                 @if (item.Content.Length <= 100)
                                 {
-                                    <p class="card-text fst-italic">@Html.Raw(item.Content)</p>
+                                    <p class="card-text roboto">@Html.Raw(item.Content)</p>
                                 }
                                 else
                                 {
-                                    <p class="card-text fst-italic">@Html.Raw(item.Content.Substring(0, 100) + "...")</p>
+                                    <p class="card-text roboto">@Html.Raw(item.Content.Substring(0, 100) + "...")</p>
                                 }
                                 <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
                                 <div class="position-relative">
