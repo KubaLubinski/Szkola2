@@ -33,7 +33,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download>@item.DocumentDownload</a>
+                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" > @item.DocumentDownload </a>
+                 <div class="tooltip" id="tooltips">Podpowiedź</div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DocumentDownload)
@@ -58,29 +59,30 @@
     </tbody>
 </table>
 @section Scripts{ 
-    <script >
-        function showtip(element, text) {
-            var tooltip = document.getElementById('tooltip');
-            tooltip.innerText = text;
-            tooltip.classList.add('show');
+    <script src="/js/Mouseover-out.js" > </script>
+    <script> // ten skrypt odnosi sie tylko do linku do pobrania
+        function showtips(element, text) {
+            var tooltips = document.getElementById('tooltips');
+            tooltips.innerText = text;
+            tooltips.classList.add('show');
 
-            // Pobierz pozycję myszki
+             // Pobierz pozycję myszki
             var rect = element.getBoundingClientRect();
             var mouseX = rect.left + window.scrollX;
             var mouseY = rect.top + window.scrollY;
 
             // Ustaw przesunięcie w poziomie i pionie
             var offsetX = 45; // Przesunięcie w poziomie
-            var offsetY = 0; // Przesunięcie w pionie
+            var offsetY = 20; // Przesunięcie w pionie
 
             // Ustaw pozycję dymku podpowiedzi
-            tooltip.style.left = (mouseX + offsetX) + 'px';
-            tooltip.style.top = (mouseY + offsetY) + 'px';
+            tooltips.style.left = (mouseX + offsetX) + 'px';
+            tooltips.style.top = (mouseY + offsetY) + 'px';
         }
 
-        function hidetip() {
-            var tooltip = document.getElementById('tooltip');
-            tooltip.classList.remove('show');
+        function hidetips() {
+            var tooltips = document.getElementById('tooltips');
+            tooltips.classList.remove('show');
         }
     </script>
 }
