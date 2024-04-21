@@ -23,7 +23,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.DocumentName)
             </th>
-            <th class="d-none d-md-block">
+            <th>
                 @Html.DisplayNameFor(model => model.DocumentType)
             </th>
             <th></th>
@@ -33,7 +33,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download>@item.DocumentDownload</a>
+                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" > @item.DocumentDownload </a>
+                 <div class="tooltip" id="tooltips">Podpowiedź</div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DocumentDownload)
@@ -46,13 +47,43 @@
                 @{
                     if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
                     {
-                            <a asp-action="Edit" asp-route-id="@item.DocumentId" class="btn btn-outline-primary rounded-circle bi-pencil-fill" > Edycja</a> <br>
-                            <a asp-action="Delete" asp-route-id="@item.DocumentId" class="btn btn-outline-danger rounded-circle bi-trash-fill" > Usuwanie</a><br>
+                            <a asp-action="Edit" asp-route-id="@item.DocumentId" class="btn btn-outline-primary rounded-circle bi-pencil-fill" onmouseover="showtip(this, 'Edytuj ')" onmouseout="hidetip()" > </a> <br>
+                            <a asp-action="Delete" asp-route-id="@item.DocumentId" class="btn btn-outline-danger rounded-circle bi-trash-fill" onmouseover="showtip(this, 'Usuń ')" onmouseout="hidetip()" > </a><br>
                     }
                  }
+                 <div class="tooltip" id="tooltip">Podpowiedź</div>
 
             </td>
         </tr>
 }
     </tbody>
 </table>
+@section Scripts{ 
+    <script src="/js/Mouseover-out.js" > </script>
+    <script> // ten skrypt odnosi sie tylko do linku do pobrania
+        function showtips(element, text) {
+            var tooltips = document.getElementById('tooltips');
+            tooltips.innerText = text;
+            tooltips.classList.add('show');
+
+             // Pobierz pozycję myszki
+            var rect = element.getBoundingClientRect();
+            var mouseX = rect.left + window.scrollX;
+            var mouseY = rect.top + window.scrollY;
+
+            // Ustaw przesunięcie w poziomie i pionie
+            var offsetX = 45; // Przesunięcie w poziomie
+            var offsetY = 20; // Przesunięcie w pionie
+
+            // Ustaw pozycję dymku podpowiedzi
+            tooltips.style.left = (mouseX + offsetX) + 'px';
+            tooltips.style.top = (mouseY + offsetY) + 'px';
+        }
+
+        function hidetips() {
+            var tooltips = document.getElementById('tooltips');
+            tooltips.classList.remove('show');
+        }
+    </script>
+}
+

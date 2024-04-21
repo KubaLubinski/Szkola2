@@ -40,13 +40,14 @@
     </dl>
     
     <form asp-action="Delete">
+        <hr />
         @{
              if(String.IsNullOrEmpty(ViewBag.DeleteMessage))
             {
-                 <input type="hidden" asp-for="CategoryId" />
+                 <input type="hidden" asp-for="CategoryId" />  
                  <input type="submit" value="Usuń" class="btn btn-danger" /> 
             }
         }
-        <a asp-action="Index" class="btn btn-light"> Powrót </a>
+       | <a asp-action="Index" class="btn btn-light"> Powrót </a>
     </form>
 </div>

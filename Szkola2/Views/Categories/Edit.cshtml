@@ -28,17 +28,16 @@
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                 </label>
             </div>
-            <hr />
+            
             <div class="form-group">
-                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                <hr />
+                <input type="submit" value="Zapisz" class="btn btn-primary" /> | 
+                <a asp-action="Index" class="btn btn-light">Powrót</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index" class="btn btn-light">Powrót</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

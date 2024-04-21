@@ -4,7 +4,7 @@
     ViewData["Title"] = "Dodawanie teksu";
 }
 
-<h1 class="text-primary">Dodaj Tekst</h1>
+<h1 class="text-primary">Dodaj Nowy Tekst </h1>
 
 @{
     if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
@@ -12,8 +12,6 @@
         <div class="alert alert-danger" role="alert"> @ViewBag.ErrorMessage</div>
     }
 }
-
-<h4 class="text-success">Nowy tekst</h4>
 <hr />
 <div class="row">
     <div class="col-md-8 interspace">
@@ -38,7 +36,7 @@
                 <label asp-for="GraphicGalleryFiles" class="control-label">Dodaj wiele zdjęć do wpisu</label>
                 <div class="custom-file">
                     <input asp-for="GraphicGalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
-                    <label class="custom-file-label" for="customFile">Wybierz pliki</label>
+                    <label class="custom-file-label" for="customFile">Wybierz pliki </label>
                 </div>
                 <span asp-validation-for="GraphicGalleryFiles" class="text-danger"></span>
             </div>
@@ -59,8 +57,10 @@
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                 </label>
             </div>
+            
             <div class="form-group">
-                <input type="submit" value="Dodaj" class="btn btn-primary" />
+                <hr />
+                <input type="submit" value="Dodaj" class="btn btn-primary" /> | 
                 <a asp-action="Index" class="btn btn-light">Powrót do listy</a>
             </div>
         </form>
