@@ -12,7 +12,7 @@ namespace Szkola2.Models
 
         [Required]
         [Display(Name = "Nazwa wydarzenia:")]
-        [MaxLength(75, ErrorMessage = "Nazwa nie może przekraczać 75 znaków")]
+        [MaxLength(100, ErrorMessage = "Nazwa nie może przekraczać 100 znaków")]
         public string? EventName { get; set; }
 
         [Required]

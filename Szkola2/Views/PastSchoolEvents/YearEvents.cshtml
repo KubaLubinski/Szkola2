@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Szkola2.Models.PastSchoolEvent>
+
+@{
+    ViewData["Title"] = "YearEvents";
+}
+
+<h1>Wydarzenia z roku szkolengo @ViewBag.BeforeSelectedYear/@ViewBag.SelectedYear</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var item in Model)
+        {
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    @Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    @Html.Raw(item.Content)
+                    <br>
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < item.GraphicGallery?.Count(); i++)
+                            {
+                                <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
+                                    <img class="d-block" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="500">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+                <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="400" />
+            </div>
+        }
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

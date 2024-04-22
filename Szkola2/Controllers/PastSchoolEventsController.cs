@@ -314,6 +314,32 @@ namespace Szkola2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //public async Task<IActionResult> YearEvents(int? year)
+        //{
+        //    var applicationDbContext = _context.PastSchoolEvents.Where(e => e.EventDate.Year == year.Value);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+
+        public IActionResult YearEvents(int? year)
+        {
+            if (!year.HasValue)
+            {
+                return View("Error"); // lub inne odpowiednie działanie, jeśli rok nie jest określony
+            }
+
+            if (year.HasValue)
+            {
+                ViewBag.SelectedYear = year;
+                ViewBag.BeforeSelectedYear = year - 1;
+            }
+
+            var events = _context.PastSchoolEvents
+                .Where(e => e.EventDate.Year == year.Value)
+                .Include(e => e.GraphicGallery)
+                .ToList();
+
+            return View(events);
+        }
         private bool PastSchoolEventExists(int id)
         {
           return (_context.PastSchoolEvents?.Any(e => e.Id == id)).GetValueOrDefault();
