@@ -4,7 +4,7 @@
     ViewData["Title"] = "YearEvents";
 }
 
-<h1>Wydarzenia z roku szkolengo @ViewBag.BeforeSelectedYear/@ViewBag.SelectedYear</h1>
+<h1 class="text-center text-decoration-underline">Wydarzenia z roku szkolengo @ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</h1>
 
 <div class="row">
     <div class="col-md-12">
@@ -14,7 +14,7 @@
               <div class="accordion-item">
                 <h2 class="accordion-header">
                   <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    @Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)
+                    <p class="fw-medium">@Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)</p>
                   </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">

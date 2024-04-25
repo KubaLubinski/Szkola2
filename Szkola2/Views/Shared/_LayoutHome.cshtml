@@ -63,16 +63,16 @@
                             Wydarzenia z życia szkoły
                         </a>
                         <ul class="dropdown-menu dropdown-color">
-                            @{
-                                int currentYear = DateTime.Now.Year;
-                                for (int year = currentYear - 3; year <= currentYear - 1; year++)
-                                {
-                                    int yearm = year - 1;
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="YearEvents" asp-route-year="@year">Rok szkolny @yearm/@year</a>
-                                    </li>
+                                @{
+                                    int currentYear = DateTime.Now.Year;
+                                    for (int year = currentYear - 4; year <= currentYear - 2; year++)
+                                    {
+                                        int yearm = year + 1;
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="yearEvents" asp-route-year="@year">Rok szkolny @year/@yearm</a>
+                                        </li>
+                                    }
                                 }
-                            }
                         </ul>
                     </li>
                         @{

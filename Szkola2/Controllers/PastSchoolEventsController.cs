@@ -330,11 +330,16 @@ namespace Szkola2.Controllers
             if (year.HasValue)
             {
                 ViewBag.SelectedYear = year;
-                ViewBag.BeforeSelectedYear = year - 1;
+                ViewBag.AfterSelectedYear = year + 1;
             }
 
+            //var events = _context.PastSchoolEvents
+            //    .Where(e => e.EventDate.Year == year.Value)
+            //    .Include(e => e.GraphicGallery)
+            //    .ToList();
+
             var events = _context.PastSchoolEvents
-                .Where(e => e.EventDate.Year == year.Value)
+                .Where(e => e.EventDate >= new DateTime(year.Value, 9, 1) && e.EventDate < new DateTime(year.Value + 1, 9, 1))
                 .Include(e => e.GraphicGallery)
                 .ToList();
 
