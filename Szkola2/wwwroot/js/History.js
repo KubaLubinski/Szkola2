@@ -1,13 +1,12 @@
 ﻿function Delete(url) {
     swal({
-        title: "Wciśnij OK jeżeli chcesz trwale ususnąć wpis",
-        text: "Jeżeli wciśniesz OK, wpis zostanie trwale usunięty",
+        title: "Wciśnij OK jeżeli chcesz trwale ususnąć grafikę",
+        text: "Jeżeli wciśniesz OK, grafika zostanie trwale usunięta",
         icon: "warning",
         buttons: true,
         dangerMode: true
     }).then((willDelete) => {
         if (willDelete == true) {
-            setTimeout(reloadPage, 1000);
             $.ajax({
                 type: "DELETE",
                 url: url,
