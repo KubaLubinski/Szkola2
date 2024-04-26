@@ -103,3 +103,8 @@ body footer {
 .show {
     display: block;
 }
+.center-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
