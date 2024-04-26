@@ -70,6 +70,7 @@ namespace Szkola2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EventName,EventDate,Content")] PastSchoolEvent pastSchoolEvent, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+
         {
             if (ModelState.IsValid)
             {
