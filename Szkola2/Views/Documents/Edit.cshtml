@@ -4,9 +4,8 @@
     ViewData["Title"] = "Edycja";
 }
 
-<h1>Edycja</h1>
+<h1 class="text-primary roboto">Edycja</h1>
 
-<h4>Documentu</h4>
 @{
     if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
     {
@@ -26,11 +25,6 @@
                 <span asp-validation-for="DocumentDownload" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DocumentName" class="control-label"></label>
-                <input type="file" name="newDocumentFile" id="newDocumentFile" class="form-control" accept=".pdf,.docx,.doc,.txt" />
-                <span asp-validation-for="DocumentName" class="text-danger"></span>
-            </div> 
-            <div class="form-group">
                 <label asp-for="DocumentType" class="control-label"></label>
                 <select asp-for="DocumentType" class="form-control">             
                     <option value="Przeglądarka internetowa rozszerzenie .pdf">Przeglądarka internetowa rozszerzenie .pdf</option>
@@ -39,6 +33,11 @@
                 </select>
                 <span asp-validation-for="DocumentType" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="DocumentName" class="control-label"></label>
+                <input type="file" name="newDocumentFile" id="newDocumentFile" class="form-control" accept=".pdf,.docx,.doc,.txt" onchange="checkFileExtension()" />
+                <span asp-validation-for="DocumentName" class="text-danger"></span>
+            </div> 
             <hr />
             <div class="form-group">
                 <input type="submit" value="Zapisz zmiany" class="btn btn-primary" /> | 
@@ -49,4 +48,18 @@
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('documents').addEventListener('change', function () {
+        var selectedFileType = document.getElementById('DocumentType').value;
+        var fileInput = document.getElementById('documents');
+        var fileName = fileInput.value.split('\\').pop(); // Pobierz nazwę pliku z pełnej ścieżki
+
+        // Sprawdź, czy nazwa pliku zawiera wybrane rozszerzenie
+        if (!fileName.endsWith(selectedFileType.substring(selectedFileType.lastIndexOf('.') + 1))) {
+            alert('Wybrany plik ma niezgodne rozszerzenie z wybranym typem dokumentu.');
+            // Możesz dodać dalsze działania, np. zablokować wysyłkę formularza lub wyczyścić pole input pliku.
+            fileInput.value = '';
+        }
+    });
+    </script>
 }

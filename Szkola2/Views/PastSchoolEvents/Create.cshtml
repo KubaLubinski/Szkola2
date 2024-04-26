@@ -4,7 +4,7 @@
     ViewData["Title"] = "Dodawanie wpisu o wydarzeniu z przeszłości";
 }
 
-<h1 class="text-primary">Dodaj wpis</h1>
+<h1 class="text-primary roboto">Dodaj wpis</h1>
 
 <hr />
 <div class="row">
@@ -26,14 +26,14 @@
                 <input type="file" name="picture" id="picture" class="form-control" accept=".jpg,.gif,.png" />
                 <span asp-validation-for="MainGraphic" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
+            <div class="form-group editor-color">
+                <label asp-for="Content" class="control-label text-color"></label>
                 <textarea id="editor" asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <hr />
             <div class="form-group">
-                <label asp-for="GraphicGalleryFiles" class="control-label">Dodaaj wiele zdjęć do wpisu</label>
+                <label asp-for="GraphicGalleryFiles" class="control-label">Dodaj wiele zdjęć do wpisu</label>
                 <div class="custom-file">
                     <input asp-for="GraphicGalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
                     <label class="custom-file-label" for="customFile">Wybierz pliki</label>

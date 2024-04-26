@@ -22,7 +22,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-               <img src="@Url.Content(item.Photo = "~/img/mini/"+item.Photo)" width="250"/>
+               <img src="@Url.Content(item.Photo = "~/img/mini/"+item.Photo)" width="250" height="200"/>@* dodana szerokość nwm ocen po swojemu czy moze byc czy skalowanie tu sie wstawi*@ 
             </td>
             <td>
                <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Zmień')" onmouseout="hidetip()">

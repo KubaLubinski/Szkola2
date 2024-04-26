@@ -16,7 +16,7 @@ namespace Szkola2.Models
         public string? TextName { get; set; }
 
         [Required]
-        [Display(Name = "Opis historii szkoły")]
+        [Display(Name = "Opis historii szkoły:")]
         public string? Content { get; set; }
 
         [NotMapped]

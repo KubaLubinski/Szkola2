@@ -12,13 +12,13 @@
                     @using (Html.BeginForm("Index","Texts", new { PageNumber = "1" }, FormMethod.Get))
                     {
                     <div class="row gt-3">
-                        <div class="form-group col-auto">
+                        <div class="form-group col-auto ">
                             <label for="Kategoria">Kategoria</label>
-                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie ---", htmlAttributes:new{ @class = "form-control"})
+                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie ---", htmlAttributes:new{ @class = "form-control bg-color text-color"})
                         </div>   
                         <div class="form-group col-auto">
                             <label for="Fraza">Fragment tekstu</label>
-                           <input type="text" class="form-control" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
+                           <input type="text" class="form-control bg-color text-color" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
                         </div>
                         <button type="submit"class="btn btn-primary mt-4 col-auto">Filtruj</button>
                     </div>
@@ -83,19 +83,19 @@
                 {
 
                         <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Poprzednia </a>
+                        <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Poprzednia </a>
                         </li>
                     }
-               for (var i=1; i<Model.TextsView.PageCount; i++)
+               for (var i=1; i<Model.TextsView.PageCount +1; i++)
                 {
                 <li class="@(i == @Model.TextsView.PageNumber ? "page-item active" : "pageactive")">
-                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber = i, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse} )">@i </a>
+                <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber = i, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse} )">@i </a>
                 </li>
                 }
                 if(Model.TextsView.PageNumber <Model.TextsView.PageCount)
                 {
                 <li class="page-item">
-                <a class="page-link" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Następna </a>
+                <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Następna </a>
                 </li>
                 }
             }

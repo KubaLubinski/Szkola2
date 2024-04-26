@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Szkola2.Models.Document>
+﻿@using System.IO
+@model IEnumerable<Szkola2.Models.Document>
 
 @{
     ViewData["Title"] = "Index";
@@ -18,10 +19,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DocumentDownload)
+                Pobierz dokument:
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DocumentName)
+                @Html.DisplayNameFor(model => model.DocumentDownload)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DocumentType)
@@ -33,7 +34,12 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" > @item.DocumentDownload </a>
+                @{
+                    string fileName = item.DocumentName;
+                    int lastDotIndex = fileName.LastIndexOf('.');
+                    string extension = lastDotIndex >= 0 ? fileName.Substring(lastDotIndex) : string.Empty;
+                } @* użycie razor do pobrania rozszerzenia *@
+                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" > @item.DocumentDownload @extension </a>
                  <div class="tooltip" id="tooltips">Podpowiedź</div>
             </td>
             <td>
@@ -60,30 +66,5 @@
 </table>
 @section Scripts{ 
     <script src="/js/Mouseover-out.js" > </script>
-    <script> // ten skrypt odnosi sie tylko do linku do pobrania
-        function showtips(element, text) {
-            var tooltips = document.getElementById('tooltips');
-            tooltips.innerText = text;
-            tooltips.classList.add('show');
-
-             // Pobierz pozycję myszki
-            var rect = element.getBoundingClientRect();
-            var mouseX = rect.left + window.scrollX;
-            var mouseY = rect.top + window.scrollY;
-
-            // Ustaw przesunięcie w poziomie i pionie
-            var offsetX = 45; // Przesunięcie w poziomie
-            var offsetY = 20; // Przesunięcie w pionie
-
-            // Ustaw pozycję dymku podpowiedzi
-            tooltips.style.left = (mouseX + offsetX) + 'px';
-            tooltips.style.top = (mouseY + offsetY) + 'px';
-        }
-
-        function hidetips() {
-            var tooltips = document.getElementById('tooltips');
-            tooltips.classList.remove('show');
-        }
-    </script>
 }
 

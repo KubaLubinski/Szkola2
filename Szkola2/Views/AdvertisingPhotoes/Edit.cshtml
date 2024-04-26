@@ -4,7 +4,7 @@
     ViewData["Title"] = "Zamiana";
 }
 
-<h1>Zamień zdjęcie</h1>
+<h1 class="text-primary roboto">Zamień zdjęcie</h1>
 
 
 <hr />
@@ -14,11 +14,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PhotoId" />
             <div>
-                <label asp-for="Photo" class="control-label"></label>
                 <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)"/>
+                <br /><br />@* 2 razy br bo nie ma odstępu miedzy guzikiem a obrazkiem*@
                 <input type="file" name="photo" id="photo" class="from-control" accept=".jpg,.gif,.png"/>
             </div>
             <div class="form-group">
+                <hr />
                 <input type="submit" value="Zapisz" class="btn btn-primary" /> |
                 <a asp-action="Index" class="btn btn-light">Powrót do zdjęć</a>
             </div>

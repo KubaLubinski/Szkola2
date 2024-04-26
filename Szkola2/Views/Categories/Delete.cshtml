@@ -4,7 +4,7 @@
     ViewData["Title"] = "Usuń";
 }
 
-<h1>Usuń</h1>
+<h1 class="text-danger roboto">Usuń</h1>
 @{
     if (!String.IsNullOrEmpty(ViewBag.DeleteMessage))
     {
@@ -16,7 +16,6 @@
     }
 }
 <div>
-    <h4>Kategorie</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -48,6 +47,6 @@
                  <input type="submit" value="Usuń" class="btn btn-danger" /> 
             }
         }
-       | <a asp-action="Index" class="btn btn-light"> Powrót </a>
+        <a asp-action="Index" class="btn btn-light"> Powrót </a>
     </form>
 </div>

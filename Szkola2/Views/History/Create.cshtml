@@ -11,7 +11,7 @@
     }
 }
 
-<h1>Dodaj wpis o historii szkoły</h1>
+<h1  class="text-primary roboto">Dodaj wpis o historii szkoły</h1>
 
 <hr />
 <div class="row">
@@ -30,7 +30,7 @@
             </div>
             <hr />
             <div class="form-group">
-                <label asp-for="GraphicGalleryFiles" class="control-label">Dodaaj wiele zdjęć do wpisu</label>
+                <label asp-for="GraphicGalleryFiles" class="control-label">Dodaj wiele zdjęć do wpisu:</label>
                 <div class="custom-file">
                     <input asp-for="GraphicGalleryFiles" class="custom-file-input" id="customFile" accept=".jpg,.gif,.png">
                     <label class="custom-file-label" for="customFile">Wybierz pliki</label>
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <hr />
                 <input type="submit" value="Dodaj" class="btn btn-primary" /> | 
-                <a asp-action="Index" class="btn btn-light">Powrót do historii</a>
+                <a asp-action="Index" class="btn btn-light">Powrót do histori</a>
             </div>
         </form>
     </div>

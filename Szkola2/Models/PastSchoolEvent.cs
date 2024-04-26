@@ -22,7 +22,7 @@ namespace Szkola2.Models
         public System.DateTime EventDate { get; set; }
 
         [Required]
-        [Display(Name = "Opis wydarzenia")]
+        [Display(Name = "Opis wydarzenia:")]
         public string? Content { get; set; }
 
         [Display(Name = "Grafika tytułowa:")]

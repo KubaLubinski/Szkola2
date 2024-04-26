@@ -8,14 +8,14 @@ namespace Szkola2.Models
         [Display(Name = "Identyfikator dokumentu")]
         public int DocumentId { get; set; }
 
-        [Display(Name = "Pobierz")]
+        [Display(Name = "Nazwa dokumentu:")]
         public string? DocumentDownload { get; set; }
 
-        [Display(Name = "Nazwa dokumentu")]
+        [Display(Name = "Wczytaj dokument:")]
         [FileExtensions(Extensions = ".pdf,.docx,.doc,.txt", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]
         public string? DocumentName { get; set; }
 
-        [Display(Name = "Typ dokumentu")]
+        [Display(Name = "Typ dokumentu:")]
         public string? DocumentType { get; set; }
 
         

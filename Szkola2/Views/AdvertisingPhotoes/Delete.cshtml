@@ -4,7 +4,7 @@
     ViewData["Title"] = "Usuwanie";
 }
 
-<h3>Czy na pewno chcesz usunąć to zdjęcie?</h3>
+<h1 class="text-danger roboto">Czy na pewno chcesz usunąć to zdjęcie?</h1>
 <div>
     <hr />
     <dl class="row">
@@ -12,7 +12,7 @@
             <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)" />
         </dd>
     </dl>
-    
+    <hr />
     <form asp-action="Delete">
         <input type="hidden" asp-for="PhotoId" />
         <input type="submit" value="Usuń" class="btn btn-danger" /> |

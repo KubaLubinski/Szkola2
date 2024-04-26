@@ -4,7 +4,7 @@
     ViewData["Title"] = "YearEvents";
 }
 
-<h1 class="text-center text-decoration-underline">Wydarzenia z roku szkolengo @ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</h1>
+<h1 class="text-center text-decoration-underline roboto">Wydarzenia z roku szkolengo @ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</h1>
 
 <div class="row">
     <div class="col-md-12">
@@ -17,8 +17,8 @@
                     <p class="fw-medium">@Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)</p>
                   </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
+                <div id="collapseOne" class="accordion-collapse collapse show " data-bs-parent="#accordionExample">
+                  <div class="accordion-body bg-color text-color">
                     @Html.Raw(item.Content)
                     <br>
                     <div id="carouselExample" class="carousel slide">
@@ -42,11 +42,12 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> 
 
             <div>
                 <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="400" />
             </div>
+            <hr />
         }
     </div>
 </div>
