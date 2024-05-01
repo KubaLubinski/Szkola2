@@ -21,10 +21,11 @@ namespace Szkola2.Controllers
 
             public async Task CopyAndArchiveTextsAsync()
             {
-                //dodawnaie nowego dropdown
-                var lastYear = DateTime.Now.Year - 1;
+                var endDate = new DateTime(DateTime.Now.Year, 8, 31);
+                var startDate = new DateTime(DateTime.Now.Year - 1, 8, 31);
+
                 var textsFromLastYear = await _dbContext.Texts
-                    .Where(t => t.DateAdded.Year == lastYear && (t.CategoryId == 1 || t.CategoryId == 2))
+                    .Where(t => t.DateAdded >= startDate && t.DateAdded <= endDate && (t.CategoryId == 1 || t.CategoryId == 2))
                     .ToListAsync();
 
                 foreach (var text in textsFromLastYear)
@@ -41,10 +42,10 @@ namespace Szkola2.Controllers
                 }
 
                 var recentTexts = await _dbContext.Texts
+                    .Where(t => t.IsActive == true)
                     .OrderByDescending(t => t.DateAdded)
                     .Take(50)
                     .ToListAsync();
-
                 var allTexts = await _dbContext.Texts.ToListAsync();
                 foreach (var text in allTexts)
                 {

@@ -1,19 +1,20 @@
-ï»¿function Delete(url) {
+function Delete(url) {
     swal({
-        title: "WciÅ›nij OK jeÅ¼eli chcesz trwale ususnÄ…Ä‡ grafikÄ™",
-        text: "JeÅ¼eli wciÅ›niesz OK, grafika zostanie trwale usuniÄ™ta",
+        title: "Wciœnij OK je¿eli chcesz trwale ususn¹æ grafikê",
+        text: "Je¿eli wciœniesz OK, grafika zostanie trwale usuniêta",
         icon: "warning",
         buttons: true,
         dangerMode: true
     }).then((willDelete) => {
         if (willDelete == true) {
+            setTimeout(reloadPage, 1000);
             $.ajax({
                 type: "DELETE",
                 url: url,
                 success: function (data) {
                     if (data.success) {
                         toastr.info(data.message);
-                        setTimeout(reloadPage,3000);
+                        setTimeout(reloadPage, 3000);
                     }
                     else {
                         toastr.error(data.message);

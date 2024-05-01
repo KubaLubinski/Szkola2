@@ -367,8 +367,8 @@ namespace Szkola2.Migrations
 
                     b.Property<string>("EventName")
                         .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MainGraphic")
                         .HasMaxLength(128)

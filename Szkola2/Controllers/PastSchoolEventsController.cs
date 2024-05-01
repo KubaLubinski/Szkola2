@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Humanizer;
 using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -99,7 +101,6 @@ namespace Szkola2.Controllers
                     foreach (var file in GraphicGalleryFiles)
                     {
                         string extension = Path.GetExtension(file.FileName);
-
                         if (imageFileUpload.FileTypeCheck(extension))
                         {
                             var gallery = new Graphic()
@@ -325,7 +326,7 @@ namespace Szkola2.Controllers
         {
             if (!year.HasValue)
             {
-                return View("Error"); // lub inne odpowiednie działanie, jeśli rok nie jest określony
+                return View("Error");
             }
 
             if (year.HasValue)
@@ -334,10 +335,12 @@ namespace Szkola2.Controllers
                 ViewBag.AfterSelectedYear = year + 1;
             }
 
-            //var events = _context.PastSchoolEvents
-            //    .Where(e => e.EventDate.Year == year.Value)
-            //    .Include(e => e.GraphicGallery)
-            //    .ToList();
+            List<string> numberWords = new List<string>();
+            for (int i = 2; i <= 100; i++)
+            {
+                string word = i.ToWords().Transform(To.TitleCase);
+                numberWords.Add(word);
+            }
 
             var events = _context.PastSchoolEvents
                 .Where(e => e.EventDate >= new DateTime(year.Value, 9, 1) && e.EventDate < new DateTime(year.Value + 1, 9, 1))

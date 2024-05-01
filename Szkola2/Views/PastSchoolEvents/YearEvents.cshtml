@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Szkola2.Models.PastSchoolEvent>
+﻿@using Humanizer
+@using System.Globalization
+@model IEnumerable<Szkola2.Models.PastSchoolEvent>
 
 @{
     ViewData["Title"] = "YearEvents";
@@ -6,22 +8,33 @@
 
 <h1 class="text-center text-decoration-underline roboto">Wydarzenia z roku szkolengo @ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</h1>
 
-<div class="row">
-    <div class="col-md-12">
-        @foreach (var item in Model)
-        {
-            <div class="accordion" id="accordionExample">
-              <div class="accordion-item">
+@{
+    var culture = new CultureInfo("en-US");
+    int collapseNumber = 0;
+    List<string> numberWords = new List<string>();
+    for (int i = 2; i <= 100; i++)
+    {
+        string word = i.ToWords(culture).Transform(To.TitleCase).Replace(" ", "");
+        numberWords.Add(word);
+    }
+
+    foreach (var item in Model)
+    {
+        string collapse = numberWords[collapseNumber];
+        string collapseId = $"panelsStayOpen-collapse{collapse}";
+        string carouselId = $"carousel{collapse}";
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <p class="fw-medium">@Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)</p>
-                  </button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        <p class="fs-3 fw-bold text-decoration-none">@Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)</p>
+                    </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show " data-bs-parent="#accordionExample">
-                  <div class="accordion-body bg-color text-color">
-                    @Html.Raw(item.Content)
-                    <br>
-                    <div id="carouselExample" class="carousel slide">
+                <div id="@collapseId" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @Html.Raw(item.Content)
+                        <br>
+                    <div id="@carouselId" class="carousel slide col-md-5 center-img">
                         <div class="carousel-inner">
                             @for (int i = 0; i < item.GraphicGallery?.Count(); i++)
                             {
@@ -30,27 +43,28 @@
                                 </div>
                             }
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>@* skoro ukryte to musi być?*@
+                            <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              </div>
-            </div> 
-            <br />
-            <div class="center-img">
-                <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="400" />
+                <br />
+                <div class="center-img">
+                    <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="600" />
+                </div>
+                <hr />
             </div>
-            <hr />
-        }
-    </div>
-</div>
+        </div>
+        collapseNumber++;
+    }
+}
+
 
 
 <div>

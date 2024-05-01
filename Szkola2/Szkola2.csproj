@@ -9,13 +9,26 @@
 
   <ItemGroup>
     <Compile Remove="Views\Histories\**" />
+    <Compile Remove="wwwroot\Relationship Diagram\**" />
     <Content Remove="Views\Histories\**" />
+    <Content Remove="wwwroot\Relationship Diagram\**" />
     <EmbeddedResource Remove="Views\Histories\**" />
+    <EmbeddedResource Remove="wwwroot\Relationship Diagram\**" />
     <None Remove="Views\Histories\**" />
+    <None Remove="wwwroot\Relationship Diagram\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\HistoriesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\js\ImageDelete.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\ImageDelete.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +52,11 @@
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\miniGallery\gallery\" />
     <Folder Include="wwwroot\documents\" />
-    <Folder Include="wwwroot\Relationship Diagram\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\js\ImageDelete.js" />
   </ItemGroup>
 
 </Project>
