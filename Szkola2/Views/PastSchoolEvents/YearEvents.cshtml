@@ -34,20 +34,20 @@
                     <div class="accordion-body">
                         @Html.Raw(item.Content)
                         <br>
-                    <div id="@carouselId" class="carousel slide col-md-5 center-img">
-                        <div class="carousel-inner">
+                    <div id="@carouselId" class="carousel slide mx-auto">
+                        <div class="carousel-inner  col-md-5">
                             @for (int i = 0; i < item.GraphicGallery?.Count(); i++)
                             {
                                 <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                                    <img class="d-block " src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="500">
+                                        <img class="d-block rounded mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="500">
                                 </div>
                             }
                         </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -55,8 +55,8 @@
                     </div>
                 </div>
                 <br />
-                <div class="center-img">
-                    <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="600" />
+                <div>
+                    <img class="d-block rounded img-fluid mx-auto" src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" />
                 </div>
                 <hr />
             </div>
