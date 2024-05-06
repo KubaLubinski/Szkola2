@@ -39,7 +39,7 @@
                             @for (int i = 0; i < item.GraphicGallery?.Count(); i++)
                             {
                                 <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                                        <img class="d-block rounded mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="500">
+                                        <img class="d-block rounded mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="80%" height="70%">
                                 </div>
                             }
                         </div>
@@ -68,6 +68,6 @@
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-warning">Wróć do strony głównej</a>
 </div>
 
