@@ -15,39 +15,58 @@ function toggleDarkMode() {
 
 // Funkcja do zmiany wyglądu strony na podstawie trybu ciemnego motywu
 function applyDarkMode(isDarkMode) {
-    var ldmodeImage = document.getElementById("ldmode");
+    
     if (isDarkMode) {
-        
-     
         // Dodanie klasy dark-theme do ciała dokumentu
         document.body.classList.add("dark-theme");
-    } else {
-        
+    } else {       
         // Usunięcie klasy dark-theme z ciała dokumentu
         document.body.classList.remove("dark-theme");
     }
 }
 
-// Wczytanie ustawienia trybu ciemnego motywu przy załadowaniu strony
-document.addEventListener("DOMContentLoaded", function () {
+    // Wczytanie ustawienia trybu ciemnego motywu przy załadowaniu strony
+    document.addEventListener("DOMContentLoaded", function () {
     // Pobranie aktualnego trybu ciemnego motywu z lokalnego magazynu
-    var isDarkMode = localStorage.getItem("darkMode") === "true";
+        var isDarkMode = localStorage.getItem("darkMode") === "true";
     // Zastosowanie aktualnego trybu ciemnego motywu
-    applyDarkMode(isDarkMode);
-});
+        applyDarkMode(isDarkMode);
+    });
+
+
+// Funkcja do przełączania trybu ciemnego motywu
+function toggleDarkMode() {
+    // Zmiana trybu ciemnego
+    var isDarkMode = localStorage.getItem("darkMode") === "true";
+    isDarkMode = !isDarkMode;
+    localStorage.setItem("darkMode", isDarkMode);
+
+    // Aktualizacja ikony na podstawie trybu ciemnego
+    updateDarkModeIcon(isDarkMode);
+
+    // Odświeżenie strony
+    window.location.reload();
+}
+
+// Funkcja do zmiany ikony na podstawie trybu ciemnego
+function updateDarkModeIcon(isDarkMode) {
+    var ldmodeIcon = document.getElementById("ldmode");
+
+    if (isDarkMode) {
+        // Ustawienie ikony trybu ciemnego (Bootstrap)
+        ldmodeIcon.setAttribute("class", "bi bi-moon-fill text-warning transparent-button"); // Aktualizacja klasy ikony na tryb ciemny
+    } else {
+        // Ustawienie ikony trybu jasnego (Bootstrap)
+        ldmodeIcon.setAttribute("class", "bi bi-brightness-high transparent-button"); // Aktualizacja klasy ikony na tryb jasny
+    }
+}
 
 // Pobranie przycisku do przełączania trybu ciemnego motywu
-var ldmode = document.getElementById("ldmode");
+    var ldmode = document.getElementById("ldmode");
 
 // Dodanie nasłuchiwania zdarzenia kliknięcia do przycisku
-ldmode.addEventListener("click", toggleDarkMode);
+    ldmode.addEventListener("click", toggleDarkMode);
 
-// Dodanie instrukcji warunkowej if do określenia, który obrazek wyświetlić
-if (localStorage.getItem("darkMode") === "true") {
-    // Wyświetlenie obrazka trybu ciemnego
-    document.getElementById("ldmode").src = "~/img/logo/moon.png";
-} else {
-    // Wyświetlenie obrazka trybu jasnego
-    document.getElementById("ldmode").src = "~/img/logo/sun.png";
-}
+// Wywołanie funkcji do aktualizacji ikony trybu na podstawie aktualnego trybu ciemnego
+    updateDarkModeIcon(localStorage.getItem("darkMode") === "true");
 

@@ -39,7 +39,7 @@
                             @for (int i = 0; i < item.GraphicGallery?.Count(); i++)
                             {
                                 <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                                        <img class="d-block rounded mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="500">
+                                        <img class="d-block rounded mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name" width="80%" height="70%">
                                 </div>
                             }
                         </div>
@@ -47,7 +47,7 @@
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                        <button class="carousel-control-next " type="button" data-bs-target="#@carouselId" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
