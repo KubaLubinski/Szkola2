@@ -70,3 +70,6 @@ function updateDarkModeIcon(isDarkMode) {
 // Wywołanie funkcji do aktualizacji ikony trybu na podstawie aktualnego trybu ciemnego
     updateDarkModeIcon(localStorage.getItem("darkMode") === "true");
 
+
+
+
