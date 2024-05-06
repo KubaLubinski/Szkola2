@@ -17,13 +17,12 @@ function toggleDarkMode() {
 function applyDarkMode(isDarkMode) {
     var ldmodeImage = document.getElementById("ldmode");
     if (isDarkMode) {
-        // Zmiana obrazka na tryb ciemny
-        ldmodeImage.src = "/img/logo/sun.png";
+        
+     
         // Dodanie klasy dark-theme do ciała dokumentu
         document.body.classList.add("dark-theme");
     } else {
-        // Zmiana obrazka na tryb jasny
-        ldmodeImage.src = "/img/logo/moon.png";
+        
         // Usunięcie klasy dark-theme z ciała dokumentu
         document.body.classList.remove("dark-theme");
     }
@@ -51,3 +50,4 @@ if (localStorage.getItem("darkMode") === "true") {
     // Wyświetlenie obrazka trybu jasnego
     document.getElementById("ldmode").src = "~/img/logo/sun.png";
 }
+

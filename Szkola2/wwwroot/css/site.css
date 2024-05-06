@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 @media (min-width: 768px) {
   html {
@@ -35,8 +35,7 @@ body footer {
         background-color: var(--secondary-bg-color);
 }
 #ldmode {
-    width: 40px;
-    cursor: pointer;
+    cursor: pointer;   
 }
 .back{
     background: url("../img/logo/Tlo_zapasowe.jpg") center no-repeat;
@@ -108,3 +107,11 @@ body footer {
     justify-content: center;
     align-items: center;
 }
+.height{
+    height: 40px;
+}
+.left{
+    float:left;
+    margin: 20px 90px 20px 90px;
+}
+

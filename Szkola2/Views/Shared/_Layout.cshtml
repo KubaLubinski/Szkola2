@@ -19,9 +19,9 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-color border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src ="~/img/logo/images.png" alt="logo szkoły" height="40"/></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler height" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="bi bi-stack"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
@@ -98,7 +98,7 @@
                         </button>
                     </div>
                     <div>
-                        <img src="~/img/logo/moon.png" id="ldmode"></i> 
+                        <i class="bi bi-brightness-high transparent-button" id="ldmode"></i> 
                     </div>
                     <partial name="_LoginPartial" />
                 </div>
@@ -114,7 +114,8 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Szkola - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
+             <a asp-area="" asp-controller="Home" asp-action="Contact">Kontakt</a> ||
+             <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
         </div>
     </footer>
 
