@@ -114,3 +114,12 @@ body footer {
     float:left;
     margin: 20px 90px 20px 90px;
 }
+.login-photo{
+    opacity: 50%;
+}
+.login-icon{
+    font-size: 1.2rem;
+}
+.login-width{
+    width: 75%;
+}
