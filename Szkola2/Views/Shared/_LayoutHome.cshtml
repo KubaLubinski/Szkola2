@@ -21,14 +21,14 @@
         </div> *@
         <div class="row text-center col-10 offset-1 col-lg-8 offset-lg-2">
             <div class="transparency mt-4">
-                <h1 class="szkola-title roboto mt-3 text-light">Szkoła podstawowa imienia polskich noblistów w Goleszynie</h1>
+                <h1 class="szkola-title roboto mt-3 text-light">Szkoła Podstawowa imienia Polskich Noblistów w Goleszynie</h1>
                 <h4 class="lh-base text-light" >
                     Witamy na stronie udostępniającej państwu informacje z życia szkoły. Zapraszamy. </br>
                     <div>
-                    <a href='#navbar' class="btn btn-dark rounded-circle roboto mt-3 mb-4"  onclick="scrollToNavbar()"> Przejdz do strony głównej</a>
+                    <a href='#navbar' class="btn btn-dark roboto mt-3 mb-4"  onclick="scrollToNavbar()"> Przejdz do strony głównej</a>
                     @if(!User.Identity.IsAuthenticated)
                         {
-                             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success rounded-circle roboto mt-3 mb-4">Zaloguj się</a>
+                             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success roboto mt-3 mb-4">Zaloguj się</a>
                         }
                        
                     </div>
@@ -87,7 +87,7 @@
                                     </a>
                             <ul class="dropdown-menu dropdown-color">
                                     <li class="nav-item">
-                                         <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Create">Stwórz tekst</a>
+                                         <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Create">Dodaj wpis o wydarzeniach</a>
                                      </li>                          
                             @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")))
                             {

@@ -54,7 +54,7 @@ function updateDarkModeIcon(isDarkMode) {
 
     if (isDarkMode) {
         // Ustawienie ikony trybu ciemnego (Bootstrap)
-        ldmodeIcon.setAttribute("class", "bi bi-moon-fill text-warning transparent-button"); // Aktualizacja klasy ikony na tryb ciemny
+        ldmodeIcon.setAttribute("class", "bi bi-moon-fill transparent-button"); // Aktualizacja klasy ikony na tryb ciemny
     } else {
         // Ustawienie ikony trybu jasnego (Bootstrap)
         ldmodeIcon.setAttribute("class", "bi bi-brightness-high transparent-button"); // Aktualizacja klasy ikony na tryb jasny
