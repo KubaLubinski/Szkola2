@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Szkola2.Models;
@@ -30,12 +31,14 @@ namespace Szkola2.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             IUserStore<AppUser> userStore,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
+            RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -44,6 +47,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -80,6 +84,33 @@ namespace Szkola2.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [Display(Name = "Imię użytkownika")]
+            [MaxLength(30)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Nazwisko użytkownika")]
+            [MaxLength(60)]
+            public string LastName { get; set; }
+
+            [Display(Name = "Informacje o użytkowniku:")]
+            [MaxLength(255, ErrorMessage = "Opis zbyt długi, proszę skrócić do 255 znakow.")]
+            public string Information { get; set; }
+
+            [Required]
+            [Display(Name = "Czy konto jest aktywne?")]
+            public bool IsActive { get; set; }
+
+            [Required]
+            [Display(Name = "Czy konto może dodwawać nowe teksty?")]
+            public bool CanAddTexts { get; set; }
+
+            [Required(ErrorMessage = "Pole rola jest wymagane")]
+            [Display(Name = "Rola użytkownika")]
+            public string UserRole { get; set; }
+
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -100,9 +131,11 @@ namespace Szkola2.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
+        public SelectList RoleItems { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
+            var roles = _roleManager.Roles.ToList();
+            RoleItems = new SelectList(roles, "Name", "Name");
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -115,6 +148,15 @@ namespace Szkola2.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.Information = Input.Information;
+                user.IsActive = Input.IsActive;
+                user.CanAddTexts = Input.CanAddTexts;
+                user.EmailConfirmed = true;
+                user.LockoutEnabled = false;
+
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -122,6 +164,12 @@ namespace Szkola2.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    var roleResult = await _userManager.AddToRoleAsync(user, Input.UserRole);
+                    if (!roleResult.Succeeded)
+                    {
+                        return Page();
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
