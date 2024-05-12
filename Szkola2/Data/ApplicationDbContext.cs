@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Models;
+using Szkola2.Models.ViewModels;
 
 namespace Szkola2.Data
 {
@@ -19,6 +20,7 @@ namespace Szkola2.Data
         public DbSet<PastSchoolEvent>? PastSchoolEvents { get; set; }
         public DbSet<AppUser>? AppUsers { get; set; }
         public DbSet<Graphic>? GraphicGallery { get; set; }
+        public DbSet<UserViewModel>? UserViewModel { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -64,5 +66,7 @@ namespace Szkola2.Data
                 .HasOne(e => e.PastEvent)
                 .WithMany(g => g.GraphicGallery);
         }
+
+
     }
 }
