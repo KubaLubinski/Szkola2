@@ -11,14 +11,10 @@ namespace Szkola2.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<AppUser> userManager)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _context = context;
-            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -33,20 +29,6 @@ namespace Szkola2.Controllers
         public IActionResult Contact()
         {
             return View();
-        }
-        public async Task<IActionResult> UsersList()
-        {
-            var users = await _context.AppUsers.Select(u => new UserViewModel
-            {
-                Id = u.Id,
-                Email = u.Email,
-                FirstName = u.FirstName, // Assuming these properties exist
-                LastName = u.LastName,
-                IsActive = u.IsActive,
-                Role = _userManager.GetRolesAsync(u).Result.FirstOrDefault()
-            }).ToListAsync();
-
-            return View(users);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

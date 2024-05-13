@@ -1,6 +1,6 @@
 ﻿namespace Szkola2.Models.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel:AppUser
     {
         public string Id { get; set; }
         public string Email { get; set; }

@@ -1,0 +1,50 @@
+﻿@model UserViewModel
+
+<h2>Edytuj użytkownika</h2>
+
+<form asp-action="UserEdit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName">Imię</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">Nazwisko</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Information"></label>
+        <textarea asp-for="Information" class="form-control"></textarea>
+        <span asp-validation-for="Information" class="text-danger"></span>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="IsActive" class="form-check-label">Czy konto jest aktywne?</label>
+        <input asp-for="IsActive" class="form-check-input" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="CanAddTexts" class="form-check-label"></label>
+        <input asp-for="CanAddTexts" class="form-check-input" />
+        <span asp-validation-for="CanAddTexts" class="text-danger"></span>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="Role">Rola</label>
+        <select asp-for="Role" class="form-control" asp-items="ViewBag.RoleId">
+            <option value="">-- Wybierz role --</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+    </div>
+</form>

@@ -282,12 +282,11 @@ namespace Szkola2.Migrations
 
                     b.Property<string>("DocumentDownload")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DocumentName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DocumentType")
                         .HasMaxLength(50)
@@ -452,6 +451,17 @@ namespace Szkola2.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.HasDiscriminator().HasValue("AppUser");
+                });
+
+            modelBuilder.Entity("Szkola2.Models.ViewModels.UserViewModel", b =>
+                {
+                    b.HasBaseType("Szkola2.Models.AppUser");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("UserViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
