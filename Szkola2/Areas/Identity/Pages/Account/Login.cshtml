@@ -4,10 +4,10 @@
 @{
     ViewData["Title"] = "Logowanie";
 }
-<div class="row">
+<div class="container d-flex justify-content-center">
     <div class="col-md-6 text-center">
-        <section>
-            <form id="account" method="post">
+        <section class="login-img img-fluid">
+            <form id="account" method="post" class="login">
                 <h2 class="roboto">Witamy na stronie szkoły</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,27 +31,17 @@
                     <label asp-for="Input.Haslo" class="form-label text-dark width"></label>
                 </div>
             </div>
-                    <span asp-validation-for="Input.Haslo" class="text-danger"></span>
-                
-                
+                    <span asp-validation-for="Input.Haslo" class="text-danger"></span>          
                     <div class="checkbox">
                         <label asp-for="Input.RememberMe" class="form-label">
                             <input class="form-check-input" asp-for="Input.RememberMe" />
                             @Html.DisplayNameFor(m => m.Input.RememberMe)
                         </label>
                     </div>
-                
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Zaloguj się</button>
                 </div>          
             </form>
-        </section>
-    </div>
-    <div class="col-md-6 d-none d-sm-block d-flex">
-        <section>
-            <div> 
-                <img src="~/img/logo/logo-goleszyna.png" class="login-photo img-fluid" alt="logo szkoły" height="800" width="480"  ></img>
-            </div>
         </section>
     </div>
 </div>

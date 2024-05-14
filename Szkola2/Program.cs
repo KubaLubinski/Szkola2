@@ -24,7 +24,7 @@ builder.Services.AddHangfire((sp, config) =>
 builder.Services.AddHangfireServer();
 builder.Services.BuildServiceProvider().GetRequiredService<IGlobalConfiguration>();
 
-RecurringJob.AddOrUpdate<DataTransferJob>("CopyAndArchiveTexts", job => job.CopyAndArchiveTextsAsync(), "0 0 31 8 *");
+ RecurringJob.AddOrUpdate<DataTransferJob>("CopyAndArchiveTexts", job => job.CopyAndArchiveTextsAsync(), "0 0 31 8 *");
 
 //RecurringJob.AddOrUpdate<DataTransferJob>("CopyAndArchiveTexts",jobjob.CopyAndArchiveTextsAsync(),Cron.Yearly, TimeZoneInfo.Local);
 
