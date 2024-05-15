@@ -16,6 +16,7 @@ html {
         display: none;
     }
 }
+
 :root { 
     --primary-bg-color: #F2F2F2;
     --secondary-bg-color: #F2E857;
@@ -108,7 +109,10 @@ body footer {
     color: white;
     border-radius: 5px;
 }
-
+.login-text {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 .show {
     display: block;
 }
@@ -127,20 +131,30 @@ body footer {
 .login-img {
     background: url("../img/logo/logo-goleszyna.png") center no-repeat;
     background-size: cover;
-    opacity: 80%;
+    width: 610px;
+    height: 900px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .login-img { 
+        width: 410px;
+        height: 600px;
+    }
 }
 .login{
-    opacity: 95%;
+    opacity: 97%;
     padding-top: 25%;
 }
 .login-icon{
     font-size: 1.7rem;
+    width:13%;
 }
 .icon-size {
     font-size: 1.5rem;
 }
 .login-width{
-    width: 75%;
+    width: 87%;
 }
 .clock-container {
     height: 300px;
