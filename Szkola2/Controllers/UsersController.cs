@@ -63,28 +63,47 @@ namespace Szkola2.Controllers
                                   Role = role.Name
                               }).FirstOrDefaultAsync();
 
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Name", "Name", model.Role);
+            var roles = await _context.Roles.Where(r => r.Name != "admin").ToListAsync();
+            string UserRole = model.Role;
+            ViewData["RoleId"] = new SelectList(roles, "Name", "Name", model.Role);
+            ViewBag.UserRole = UserRole;
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> UserEdit(UserViewModel model)
         {
+            ModelState.Remove("Role");
+
             if (!ModelState.IsValid)
             {
+                var roles = await _context.Roles.Where(r => r.Name != "admin").ToListAsync();
+                string UserRole = model.Role;
+                ViewData["RoleId"] = new SelectList(roles, "Name", "Name", model.Role);
+                ViewBag.UserRole = UserRole;
                 return View(model);
             }
 
             var user = await _context.AppUsers.FindAsync(model.Id);
             if (user != null)
             {
+                user.Id = model.Id;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Information = model.Information;
                 user.IsActive = model.IsActive;
                 user.CanAddTexts = model.CanAddTexts;
+                if(model.Role != null && model.Role != "admin") 
+                {
+                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-                var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
+                    var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
+                }
+                //else
+                //{
+                //    var roleResult = await _userManager.AddToRoleAsync(user, "admin");
+                //}
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(UsersList));

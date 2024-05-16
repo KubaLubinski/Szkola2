@@ -135,7 +135,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
         public SelectList RoleItems { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
-            var roles = _roleManager.Roles.ToList();
+            var roles = _roleManager.Roles.Where(r => r.Name != "admin").ToList();
             RoleItems = new SelectList(roles, "Name", "Name");
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -187,7 +187,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         //return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                        return RedirectToAction("UsersList", "Home");
+                        return RedirectToAction("UsersList", "Users");
                     }
                     else
                     {
