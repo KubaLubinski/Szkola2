@@ -80,17 +80,17 @@ namespace Szkola2.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Email jest wymagany")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Imię jest wymagane")]
             [Display(Name = "Imię użytkownika")]
             [MaxLength(30)]
             public string FirstName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Nazwisko jest wymagane")]
             [Display(Name = "Nazwisko użytkownika")]
             [MaxLength(60)]
             public string LastName { get; set; }
@@ -116,10 +116,10 @@ namespace Szkola2.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Pole hasło jest wymagane")]
+            [StringLength(100, ErrorMessage = "{0} musi mieć minimalnie {2} i maksymalnie {1} znaków", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Hasło")]
             public string Password { get; set; }
 
             /// <summary>
@@ -127,8 +127,8 @@ namespace Szkola2.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Potwierdź hasło")]
+            [Compare("Password", ErrorMessage = "Pola Hasło oraz Potwierdź hasło nie mają takiej samej wartości")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -201,7 +201,8 @@ namespace Szkola2.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            var roles = _roleManager.Roles.Where(r => r.Name != "admin").ToList();
+            RoleItems = new SelectList(roles, "Name", "Name");
             return Page();
         }
 

@@ -69,10 +69,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Create">Dodaj wpis o wydarzeniach</a>
                             </li>                          
                             @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")))
-                            {
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>   
+                            {   
                                 <li>
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="List">Lista tekstów</a>
                                 </li>               
@@ -89,10 +86,7 @@
                             @if (User.IsInRole("admin"))
                             {
                                 <li>
-                                    <a asp-area="Identity" asp-page="/Account/Register" class="roboto mt-3 mb-4">Dodaj użytkownika</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Lista użytkowników</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Zarządzaj użytkownikami</a>
                                 </li>
                             }
                             </ul>
