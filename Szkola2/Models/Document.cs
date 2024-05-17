@@ -21,5 +21,9 @@ namespace Szkola2.Models
         [Display(Name = "Typ dokumentu:")]
         public string? DocumentType { get; set; }
 
+        [MaxLength(250, ErrorMessage = "Opis nie może przekraczać 250 znaków")]
+        [Display(Name = "Opis dokumentu:")]
+        public string? Content { get; set; }
+
     }
 }

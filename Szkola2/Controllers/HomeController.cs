@@ -11,15 +11,23 @@ namespace Szkola2.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var latestTexts = await _context.Texts
+                                .Include(t => t.Category)
+                                .Include(t => t.User)
+                                .OrderByDescending(t => t.DateAdded)
+                                .Take(5)
+                                .ToListAsync();
+            return View(latestTexts);
         }
 
         public IActionResult Privacy()

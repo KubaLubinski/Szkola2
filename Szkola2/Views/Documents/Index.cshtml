@@ -25,6 +25,9 @@
                 @Html.DisplayNameFor(model => model.DocumentDownload)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.DocumentType)
             </th>
             <th></th>
@@ -44,6 +47,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DocumentDownload)
+            </td>
+            <td>
+                @Html.Raw(item.Content)
             </td>
             <td >
                 @Html.DisplayFor(modelItem => item.DocumentType)
@@ -66,5 +72,30 @@
 </table>
 @section Scripts{ 
     <script src="/js/Mouseover-out.js" > </script>
+    <script>
+    function showtips(element, text) {
+    var tooltips = document.getElementById('tooltips');
+    tooltips.innerText = text;
+    tooltips.classList.add('show');
+
+    // Pobierz pozycję myszki
+    var rect = element.getBoundingClientRect();
+    var mouseX = rect.left + window.scrollX;
+    var mouseY = rect.top + window.scrollY;
+
+    // Ustaw przesunięcie w poziomie i pionie
+    var offsetX = 45; // Przesunięcie w poziomie
+    var offsetY = 45; // Przesunięcie w pionie
+
+    // Ustaw pozycję dymku podpowiedzi
+    tooltips.style.left = (mouseX + offsetX) + 'px';
+    tooltips.style.top = (mouseY + offsetY) + 'px';
+}
+
+function hidetips() {
+    var tooltips = document.getElementById('tooltips');
+    tooltips.classList.remove('show');
+}
+    </script>
 }
 

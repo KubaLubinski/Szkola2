@@ -261,5 +261,11 @@ body footer {
 .bip:hover {
      transform: scale(1.1); /* Powiêksza element o 10% */
 }
+.index8-home{
+    padding:0px 20px 0px 20px;
+}
+.index4-home{
+    padding:5px;
+}
 
 

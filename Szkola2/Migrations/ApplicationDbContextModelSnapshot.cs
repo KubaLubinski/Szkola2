@@ -280,6 +280,10 @@ namespace Szkola2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"), 1L, 1);
 
+                    b.Property<string>("Content")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<string>("DocumentDownload")
                         .IsRequired()
                         .HasMaxLength(100)

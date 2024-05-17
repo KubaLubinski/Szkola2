@@ -65,7 +65,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentId,DocumentDownload,DocumentName,DocumentType")] Document document, IFormFile documents)
+        public async Task<IActionResult> Create([Bind("DocumentId,DocumentDownload,DocumentName,DocumentType,Content")] Document document, IFormFile documents)
         {
             if (ModelState.IsValid)
             {
@@ -84,14 +84,14 @@ namespace Szkola2.Controllers
                     else
                     {
                         ViewBag.ErrorMessage = "Wybrany plik nie jest żądanym typem tekstowym. Można przesyłać pliki z rozszerzeniami .pdf .docx .doc .txt";
-                        ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
+                        ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId,"Content");
                         return View(document);
                     }
                 }
                 else
                 {
                     ViewBag.ErrorMessage = "Należy podać nazwe dokumentu, lub dokument nie został załadowany";
-                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
+                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId, "Content");
                     return View(document);
                 }
 
@@ -126,7 +126,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,IFormFile newDocumentFile, [Bind("DocumentId,DocumentDownload,DocumentName,DocumentType")] Document document)
+        public async Task<IActionResult> Edit(int id,IFormFile newDocumentFile, [Bind("DocumentId,DocumentDownload,DocumentName,DocumentType,Content")] Document document)
         {
             if (id != document.DocumentId)
             {
@@ -178,7 +178,7 @@ namespace Szkola2.Controllers
                 else
                 {
                     ViewBag.ErrorMessage = "Należy podać nazwe dokumentu, lub dokument nie został załadowany";
-                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId);
+                    ViewData["DocumentId"] = new SelectList(_context.Documents, "DocumentId", "DocumentName", document.DocumentId, "Content");
                     return View(document);
                 }
                 return RedirectToAction(nameof(Index));
