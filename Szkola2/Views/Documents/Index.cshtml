@@ -15,61 +15,53 @@
         </p>
     }
 }
-<table class="table text-color">
-    <thead>
-        <tr>
-            <th>
-                Pobierz dokument:
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DocumentDownload)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DocumentType)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @{
-                    string fileName = item.DocumentName;
-                    int lastDotIndex = fileName.LastIndexOf('.');
-                    string extension = lastDotIndex >= 0 ? fileName.Substring(lastDotIndex) : string.Empty;
-                } @* użycie razor do pobrania rozszerzenia *@
-                 <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" > @item.DocumentDownload @extension </a>
-                 <div class="tooltip" id="tooltips">Podpowiedź</div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DocumentDownload)
-            </td>
-            <td>
-                @Html.Raw(item.Content)
-            </td>
-            <td >
-                @Html.DisplayFor(modelItem => item.DocumentType)
-            </td>
-            <td>
+@foreach (var item in Model)
+{
+    <div class="card container left-document text-center  bg-color col-sm-4 shadow-document">
+        @{
+            string fileName = item.DocumentName;
+            int lastDotIndex = fileName.LastIndexOf('.');
+            string extension = lastDotIndex >= 0 ? fileName.Substring(lastDotIndex + 1).ToLower() : string.Empty;
 
+            string logoSrc = "";
+            switch (extension)
+                {
+                    case "txt":
+                        logoSrc = Url.Content("~/img/logo/txt-logo.png");
+                        break;
+                    case "docx":
+                        logoSrc = Url.Content("~/img/logo/docx-logo.png");
+                        break;
+                    case "pdf":
+                        logoSrc = Url.Content("~/img/logo/pdf-logo.png");
+                        break;   
+                }
+        }
+        <img id="logo-document" src="@logoSrc" class="card-img-top logo-document" alt="Logo dokumentu">
+        
+        <div class="card-body text-size-document">
+            <h3 class="card-title roboto"> @Html.DisplayFor(modelItem => item.DocumentDownload) </h3>
+            <p class="card-text"> @Html.Raw(item.Content) </p>
+            <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" class="btn btn-info bi bi-file-earmark-arrow-down-fill width-btn-download position-absolute bottom-20-document end-0"  > Pobierz >>> </a>
+            <p>
                 @{
                     if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
                     {
-                            <a asp-action="Edit" asp-route-id="@item.DocumentId" class="btn btn-outline-primary rounded-circle bi-pencil-fill" onmouseover="showtip(this, 'Edytuj ')" onmouseout="hidetip()" > </a> <br>
-                            <a asp-action="Delete" asp-route-id="@item.DocumentId" class="btn btn-outline-danger rounded-circle bi-trash-fill" onmouseover="showtip(this, 'Usuń ')" onmouseout="hidetip()" > </a><br>
+                            <a asp-action="Edit" asp-route-id="@item.DocumentId" class="btn btn-outline-primary rounded-circle bi-pencil-fill position-absolute bottom-0 end-10-document" onmouseover="showtips(this, 'Edytuj ')" onmouseout="hidetips()" > </a>
+                            <a asp-action="Delete" asp-route-id="@item.DocumentId" class="btn btn-outline-danger rounded-circle bi-trash-fill position-absolute bottom-0" onmouseover="showtips(this, 'Usuń ')" onmouseout="hidetips()" > </a><br>
                     }
                  }
                  <div class="tooltip" id="tooltip">Podpowiedź</div>
-
-            </td>
-        </tr>
+           </p>
+        </div>
+        
+    </div>
 }
-    </tbody>
-</table>
+
+
+
+
+
 @section Scripts{ 
     <script src="/js/Mouseover-out.js" > </script>
     <script>
@@ -84,8 +76,8 @@
     var mouseY = rect.top + window.scrollY;
 
     // Ustaw przesunięcie w poziomie i pionie
-    var offsetX = 45; // Przesunięcie w poziomie
-    var offsetY = 45; // Przesunięcie w pionie
+    var offsetX = 20; // Przesunięcie w poziomie
+    var offsetY = 40; // Przesunięcie w pionie
 
     // Ustaw pozycję dymku podpowiedzi
     tooltips.style.left = (mouseX + offsetX) + 'px';

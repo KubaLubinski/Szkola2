@@ -26,11 +26,6 @@
                     Witamy na stronie udostępniającej państwu informacje z życia szkoły. Zapraszamy. </br>
                     <div>
                     <a href='#navbar' class="btn btn-dark roboto mt-3 mb-4"  onclick="scrollToNavbar()"> Przejdz do strony głównej</a>
-                    @if(!User.Identity.IsAuthenticated)
-                        {
-                             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success roboto mt-3 mb-4">Zaloguj się</a>
-                        }
-                       
                     </div>
                     
                 </h4>
@@ -50,7 +45,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Index">Informacje</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Index">Wydażenia z życia szkoły</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="History" asp-action="Index">Historia szkoły</a>
@@ -60,7 +55,7 @@
                         </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Wydarzenia z życia szkoły
+                            Kalendarium wydarzeń
                         </a>
                         <ul class="dropdown-menu dropdown-color">
                                 @{

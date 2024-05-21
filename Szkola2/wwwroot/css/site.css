@@ -121,7 +121,35 @@ body footer {
     justify-content: center;
     align-items: center;
 }
-.height{
+.width-btn-download{
+    width: 100%;
+}
+.bottom-20-document{
+    bottom: 40px;
+}
+.end-10-document {
+    right: 50%;
+}
+.text-size-document {
+    height: 600px;
+}
+.shadow-document {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border:solid 1px;
+}
+.margin-document{
+    margin:60px;
+}
+.logo-document{
+    height: 150px;
+    width: 150px;
+    margin: auto;
+}
+.left-document {
+    float: left;
+    margin: 0 0 65px 0;
+}
+.height {
     height: 40px;
 }
 .left{
