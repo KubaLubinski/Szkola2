@@ -5,19 +5,27 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-@*     <li class="nav-item text-dark">
-        Witaj @User?.Identity?.Name
-    </li> *@
-@*         <li class="nav-item">
+     <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toogle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="mx-3">@UserManager.GetUserAsync(User).Result.FullName</span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="NavbarDropdownMenuLink>">
+            <li class="nav-item"><a class="dropdown-item" asp-area="Identity"
+asp-page="/Account/Manage/ChangePassword">Zmiana hasła</a></li>
+        </ul>
+         
+    </li> 
+       @* <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 Wyloguj
             </a>
         </li> *@//przenosi do okna logout zamiast na strone glowna
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark"><p>Wyloguj</p></button>
+     <li class="nav-item margin-logout">
+        <form id="logout-form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+        <button type="submit" class="d-none"></button>
         </form>
-    </li>
+        <a href="#" class="nav-link-as-button text-dark " role="button" onclick="submitLogoutForm(event)">Wyloguj</a>
+    </li> 
 }
 else
 {
@@ -31,3 +39,9 @@ else
 </ul>
 
 <script src="/js/Font-size.js"></script>
+ <script>
+        function submitLogoutForm(event) {
+            event.preventDefault();
+            document.getElementById('logout-form').submit();
+        }
+    </script>
