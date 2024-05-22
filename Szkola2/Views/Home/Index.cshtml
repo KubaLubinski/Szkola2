@@ -31,8 +31,10 @@
                             }
                             <p class="card-text"><small class="text-muted">@item.DateAdded</small></p>
                             <div class="position-relative">
-                                <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-logoyellow position-absolute bottom-0 end-0">Czytaj >>> </a>
+                                <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-logoyellow position-absolute bottom-0 end-0" title="Czytaj " >Czytaj >>> </a>
+                                
                             </div>
+                            
                         </div> <!-- card body-->
                     </div>
                 </div> <!-- row -->
@@ -79,7 +81,22 @@
             <h3>Biuletyn Informacji Publicznej</h3>
             <div>
                 
-                <img src="/img/logo/bip.png" class="bip" alt="bip" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/bip.png" class="bip" title="Czytaj " alt="bip" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+               
+            </div>
+        </div>
+        <div class="layout_info text-center">
+            <h3>Programy i projekty z których korzystała szkoła</h3>
+            <div>
+                
+                <img src="/img/logo/erazmus.jpg" class="erazmus" title="Czytaj " alt="erazmus+" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/aktywna_tablica.jpg" class="inne" title="Czytaj " alt="aktywna_tablica" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/eTwinning.png" class="inne" title="Czytaj " alt="eTwinning" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/kulturalna.png" class="inne" title="Czytaj " alt="kulturalna szkoła" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/lepsza_szkoła.png" class="inne" title="Czytaj " alt="lepsza_szkoła" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                <img src="/img/logo/labolatoria.jpg" class="inne" title="Czytaj " alt="labolatoria przyszłości" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
+                
+                
                
             </div>
         </div>
@@ -87,7 +104,7 @@
     </div>
 }
 @section Scripts{
-<script src="/js/Day.js"></script>
-    <script src="/js/Clock.js"> </script>
+    <script src="/js/Day.js"></script>
+    <script src="/js/Clock.js"> </script> 
 }
 

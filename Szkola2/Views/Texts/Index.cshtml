@@ -20,7 +20,7 @@
                             <label for="Fraza">Fragment tekstu</label>
                            <input type="text" class="form-control bg-color text-color" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
                         </div>
-                        <button type="submit"class="btn btn-primary mt-4 col-auto">Filtruj</button>
+                        <button type="submit" title="Szukaj "class="btn btn-primary mt-4 col-auto">Filtruj</button>
                     </div>
                     }
                 </div>
@@ -54,7 +54,7 @@
                                 }
                                 <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
                                 <div class="position-relative">
-                                    <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
+                                    <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" title="Czytaj " class="btn btn-outline-primary position-absolute bottom-0 end-0">Czytaj >>></a>
                                 </div>
                             </div> <!-- card body-->
                     </div>
@@ -66,7 +66,7 @@
             } else
             {
                 <div class="alert alert-info d-flex align-items-center mt2" role="alert">
-                    <i class="bi bi-info-circle-fill me-3"> Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
+                    <i class="bi bi-info-circle-fill me-3" > Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
                 </div>
             }
         </div> 
