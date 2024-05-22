@@ -20,7 +20,7 @@ namespace Szkola2.Infrastructure
                 _ => false,
             };
         }
-        public FileSendResult SendFile(IFormFile picture, string destination, int width)
+        public FileSendResult SendFile(IFormFile picture, string destination, int height)
         {
             FileSendResult SendingFile = new();
 
@@ -48,7 +48,7 @@ namespace Szkola2.Infrastructure
 
             using (var imgFile = Image.FromFile(path))
             {
-                var miniFile = imgFile.ScaleByWidth(width);
+                var miniFile = imgFile.ScaleByHeight(height);
                 upload = Path.Combine(hostingEnvironment.WebRootPath, destination + "\\mini");
                 filePath = Path.Combine(upload, SendingFile.Name);
                 miniFile.SaveAs(filePath);
@@ -60,7 +60,7 @@ namespace Szkola2.Infrastructure
             return SendingFile;
 
         }
-        public FileSendResult SendPhoto(IFormFile photo, string destination, int width)
+        public FileSendResult SendPhoto(IFormFile photo, string destination, int height)
         {
             FileSendResult sendingFile = new();
 
@@ -87,7 +87,7 @@ namespace Szkola2.Infrastructure
 
             using (var imgFile = Image.FromFile(path))
             {
-                var miniFile = imgFile.ScaleByWidth(width);
+                var miniFile = imgFile.ScaleByHeight(height);
                 upload = Path.Combine(hostingEnvironment.WebRootPath, destination + "\\zdjecia");
                 filePath = Path.Combine(upload, sendingFile.Name);
                 miniFile.SaveAs(filePath);

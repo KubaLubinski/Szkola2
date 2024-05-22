@@ -250,7 +250,7 @@ body footer {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid;
-    border-color: #ff0000; /* dodaj ramkê wokó³ ca³ej tabeli */
+    border-color: #ff0000;
 }
 
 .calendar_td {
@@ -258,20 +258,20 @@ body footer {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
-    border-right: 1px solid #ccc; /* dodaj ramkê z prawej strony ka¿dej komórki */
-    border-bottom: 1px solid #ccc; /* dodaj ramkê na dole ka¿dej komórki */
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc; 
 }
 .calendar_th {
     font-size: 18px;
     border: 1px solid #ccc;
     text-align: center;
-    border-right: 1px solid #ccc; /* dodaj ramkê z prawej strony ka¿dej komórki */
-    border-bottom: 1px solid #ccc; /* dodaj ramkê na dole ka¿dej komórki */
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .thick-border {
     border: 3px solid #ff0000;
-    font-weight: bold;/* dodaj grubsz¹ ramkê dla aktualnego dnia */
+    font-weight: bold;
 }
 .calendar {
     float: left;
@@ -282,12 +282,12 @@ body footer {
     cursor: pointer;
     height: 90px;
     width: 90px;
-    position: relative; /* Poprawiono: "center" nie jest w³aœciwoœci¹ */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Dodano cieñ */
-    transition: transform 0.3s ease-in-out; /* Dodano animacjê dla transformacji */
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
 }   
 .bip:hover {
-     transform: scale(1.1); /* Powiêksza element o 10% */
+     transform: scale(1.1);
 }
 .index8-home{
     padding:0px 20px 0px 20px;
@@ -295,5 +295,49 @@ body footer {
 .index4-home{
     padding:5px;
 }
+.carousel-inner {
+    position: relative;
+}
 
+.custom-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.carousel-control-prev {
+    left: 0;
+}
+
+.carousel-control-next {
+    right: 0;
+}
+
+.custom-carousel-icon {
+    width: 2rem;
+    height: 2rem;
+    background-size: 100%, 100%;
+    filter: brightness(0) invert(1);
+}
+.carousel-inner img {
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+}
+
+@media (max-width: 576px) {
+    .carousel-inner img {
+        height: auto;
+        max-height: 300px;
+        object-fit: contain;
+    }
+}
 

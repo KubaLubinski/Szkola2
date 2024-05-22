@@ -87,7 +87,7 @@ namespace Szkola2.Controllers
                             {
                                 using (Image imgFile = Image.FromStream(fs))
                                 {
-                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var miniFile = imgFile.ScaleByHeight(600);
                                     var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
                                     miniFile.SaveAs(upload);
                                 }
@@ -181,7 +181,7 @@ namespace Szkola2.Controllers
                             {
                                 using (Image imgFile = Image.FromStream(fs))
                                 {
-                                    var miniFile = imgFile.ScaleByWidth(800);
+                                    var miniFile = imgFile.ScaleByHeight(600);
                                     var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
                                     miniFile.SaveAs(upload);
                                 }
