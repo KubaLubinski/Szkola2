@@ -42,7 +42,7 @@
         <div class="card-body text-size-document">
             <h3 class="card-title roboto"> @Html.DisplayFor(modelItem => item.DocumentDownload) </h3>
             <p class="card-text"> @Html.Raw(item.Content) </p>
-            <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" class="btn btn-info bi bi-file-earmark-arrow-down-fill width-btn-download position-absolute bottom-20-document end-0"  > Pobierz >>> </a>
+            <a href="@Url.Content("~/documents/" + item.DocumentName)" download onmouseover="showtips(this, 'Kliknij aby pobrać ')" onmouseout="hidetips()" class="btn  btn-outline-logoyellow bi bi-file-earmark-arrow-down-fill width-btn-download position-absolute bottom-20-document end-0"> Pobierz >>> </a>
             <p>
                 @{
                     if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
@@ -70,16 +70,13 @@
     tooltips.innerText = text;
     tooltips.classList.add('show');
 
-    // Pobierz pozycję myszki
     var rect = element.getBoundingClientRect();
     var mouseX = rect.left + window.scrollX;
     var mouseY = rect.top + window.scrollY;
 
-    // Ustaw przesunięcie w poziomie i pionie
-    var offsetX = 20; // Przesunięcie w poziomie
-    var offsetY = 40; // Przesunięcie w pionie
+    var offsetX = 20;
+    var offsetY = 40; 
 
-    // Ustaw pozycję dymku podpowiedzi
     tooltips.style.left = (mouseX + offsetX) + 'px';
     tooltips.style.top = (mouseY + offsetY) + 'px';
 }
