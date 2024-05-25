@@ -15,23 +15,15 @@ asp-page="/Account/Manage/ChangePassword">Zmiana hasła</a></li>
         </ul>
          
     </li> 
-       @* <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                Wyloguj
-            </a>
-        </li> *@//przenosi do okna logout zamiast na strone glowna
      <li class="nav-item margin-logout">
         <form id="logout-form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
         <button type="submit" class="d-none"></button>
         </form>
-        <a href="#" class="nav-link-as-button text-dark " role="button" onclick="submitLogoutForm(event)">Wyloguj</a>
+        <a href="#" class="nav-link text-dark" role="button" onclick="submitLogoutForm(event)">Wyloguj</a>
     </li> 
 }
 else
 {
-    // <li class="nav-item">
-    //    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    // </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Zaloguj</a>
     </li>

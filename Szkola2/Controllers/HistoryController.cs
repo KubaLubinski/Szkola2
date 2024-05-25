@@ -1,4 +1,5 @@
-﻿using LazZiya.ImageResize;
+﻿using Humanizer;
+using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -267,6 +268,13 @@ namespace Szkola2.Controllers
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult List()
+        {
+            var HistoryTexts = _context.History.Include(t => t.GraphicGallery).ToList();
+            return View(HistoryTexts);
+
         }
 
         public IActionResult DeleteOneImage(int Id)

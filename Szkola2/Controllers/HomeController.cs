@@ -27,6 +27,8 @@ namespace Szkola2.Controllers
                                 .OrderByDescending(t => t.DateAdded)
                                 .Take(5)
                                 .ToListAsync();
+
+            var advertisingPhotos = _context.AdvertisingPhotos.ToList();
             return View(latestTexts);
         }
 
