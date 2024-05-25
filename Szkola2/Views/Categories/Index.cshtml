@@ -7,7 +7,7 @@
 <h1>Spis</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-warning">Utwórz nową kategorię</a>
+    <a asp-action="Create" title="Utwórz nową kategorie "class="btn btn-warning">Utwórz nową kategorię</a>
 </p>
 <table class="table text-color">
     <thead>
@@ -37,16 +37,14 @@
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-outline-primary rounded-circle bi-pencil-fill"  onmouseover="showtip(this, 'Edytuj ')" onmouseout="hidetip()" > </a> 
-                <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-outline-success rounded-circle bi-eye"  onmouseover="showtip(this, 'Szczegóły ')" onmouseout="hidetip()" > </a> 
-                <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-outline-danger rounded-circle bi-trash-fill"  onmouseover="showtip(this, 'Usuń ')" onmouseout="hidetip()" > </a>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId" title="Edycja " class="btn btn-outline-primary rounded-circle bi-pencil-fill" > </a> 
+                <a asp-action="Details" asp-route-id="@item.CategoryId" title="Szczegóły " class="btn btn-outline-success rounded-circle bi-eye" > </a> 
+                <a asp-action="Delete" asp-route-id="@item.CategoryId"  title="Usuwanie "class="btn btn-outline-danger rounded-circle bi-trash-fill"   > </a>
 
-                <div class="tooltip" id="tooltip">Podpowiedź</div>
+                
             </td>
         </tr>
 }
     </tbody>
 </table>
-@section Scripts{ 
-    <script src="/js/Mouseover-out.js" > </script>
-}
+

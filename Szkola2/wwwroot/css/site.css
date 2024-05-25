@@ -242,11 +242,11 @@ body footer {
     top: 20px;
     left: 92px; 
 }
-.layout_info{
-    margin:2px;
+.layout_info {
+    margin: 2px;
     border: 2px solid;
     border-radius: 10px;
-    border-color: blue;
+    border-color: #BBD8F2;
 }
 .calendar_table {
     font-size: 18px;
@@ -292,6 +292,24 @@ body footer {
 .bip:hover {
      transform: scale(1.1);
 }
+.erazmus {
+    margin: 10px;
+    cursor: pointer;
+    height: 90px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+}
+.inne {
+    margin: 10px;
+    cursor: pointer;
+    height: 300px;
+    width: 300px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+}   
 .index8-home{
     padding:0px 20px 0px 20px;
 }

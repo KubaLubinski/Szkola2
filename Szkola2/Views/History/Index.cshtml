@@ -9,7 +9,7 @@
     if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel"))
     {
         <p>
-            <a asp-action="Create" class="btn btn-warning">Stwórz nowy wpis</a>
+            <a asp-action="Create" class="btn btn-warning" title="Stwórz nowy wpis ">Stwórz nowy wpis</a>
         </p>
     }
 }
@@ -47,15 +47,15 @@
                 
                 @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
                 {
-                    <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id" onmouseover="showtip(this, 'Szczegóły ')" onmouseout="hidetip()"><i aria-label="Szczegóły"> </i></a> 
-                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id" onmouseover="showtip(this, 'Edytuj ')" onmouseout="hidetip()"><i  aria-label="Edycja tekstu"> </i></a>
-                        <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id" onmouseover="showtip(this, 'Usuwanie ')" onmouseout="hidetip()"><i  aria-label="Usuwanie"> </i></a>
+                    <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id" ><i aria-label="Szczegóły"> </i></a> 
+                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id" ><i  aria-label="Edycja tekstu"> </i></a>
+                        <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i  aria-label="Usuwanie"> </i></a>
                     }
                     else
                     {
                         <a class="btn btn-outline-logoyellow" title="Czytaj" asp-action="Details" asp-route-id="@item.Id"><i aria-label="Szczegóły"> </i> Czytaj >>></a>
                     }
-                <div class="tooltip" id="tooltip">Podpowiedź</div>
+                
             </td>
         </tr>
 }
@@ -64,5 +64,5 @@
 
 @section Scripts{
     <script src="~/js/History.js"></script>
-     <script src="/js/Mouseover-out.js" > </script>
+    
 }

@@ -10,7 +10,7 @@
 
     // Ustaw przesunięcie w poziomie i pionie
     var offsetX = 45; // Przesunięcie w poziomie
-    var offsetY = 0; // Przesunięcie w pionie
+    var offsetY = 45; // Przesunięcie w pionie
 
     // Ustaw pozycję dymku podpowiedzi
     tooltip.style.left = (mouseX + offsetX) + 'px';
