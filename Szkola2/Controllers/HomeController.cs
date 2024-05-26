@@ -28,8 +28,16 @@ namespace Szkola2.Controllers
                                 .Take(5)
                                 .ToListAsync();
 
-            var advertisingPhotos = _context.AdvertisingPhotos.ToList();
-            return View(latestTexts);
+            var advertisingPhotos = await _context.AdvertisingPhotos.ToListAsync();
+
+
+            var model = new HomeViewModel
+            {
+                LatestTexts = latestTexts,
+                AdvertisingPhotos = advertisingPhotos
+            };
+
+            return View(model);
         }
 
         public IActionResult Privacy()

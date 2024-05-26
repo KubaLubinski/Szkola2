@@ -1,13 +1,31 @@
-﻿@model IEnumerable<Szkola2.Models.Text>
+﻿@* @model IEnumerable<Szkola2.Models.Text *@
+@model HomeViewModel
 @{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Witamy";
     <div class="row ">
-    <div class="col-2">
+    <div class="col-2 col-sm-0">
     </div>
     <div class="col-6 index8-home">
-
-        @foreach (var item in Model)
+            <div id="carouselExample" class="carousel slide">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
+                    {
+                        <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
+                            <img class="d-block img-fluid mx-auto" src="@Url.Content("~/img/mini/"+Model.AdvertisingPhotos[i].Photo)">
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        @foreach (var item in Model.LatestTexts)
         {
             <div class="card mt-2 head-color shadow-sm">
                 <div class="card-header">
@@ -30,7 +48,7 @@
                             {
                                 <p class="card-text roboto">@Html.Raw(item.Content.Substring(0, 100) + "...")</p>
                             }
-                            <p class="card-text"><small class="text-muted">@item.DateAdded</small></p>
+                            <p class="card-text"><small class="text-muted">@item.DateAdded.ToString("d")</small></p>
                             <div class="position-relative">
                                 <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-logoyellow position-absolute bottom-0 end-0" title="Czytaj " >Czytaj >>> </a>
                                 
