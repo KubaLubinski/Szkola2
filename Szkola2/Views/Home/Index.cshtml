@@ -4,9 +4,9 @@
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Witamy";
     <div class="row ">
-    <div class="col-2 col-sm-0">
+    <div class="col-1">
     </div>
-    <div class="col-6 index8-home">
+    <div class="col-md-6 col-12 index8-home">
             <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
                     @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
@@ -61,12 +61,14 @@
             </div> <!-- card-->
 
         }
-        
-    <div>
-    </div>
+
+            <div class="text-center mb-2 mt-3">
+                <a class="text-dark btn btn-outline-logoyellow" asp-area="" asp-controller="Texts" asp-action="Index">Więcej wydarzeń z życia szkoły</a>
+            </div>
+
     </div>
 
-    <div class="col-4 index4-home">
+    <div class="col-md-4 col-12 index4-home">
         <div class="layout_info">
             <h3 id="current-date-time" class="text-center">Aktualna data i godzina</h3>
             <div class="clock-container">
@@ -99,26 +101,28 @@
         <div class="layout_info text-center">
             <h3>Biuletyn Informacji Publicznej</h3>
             <div>
-                
                 <img src="/img/logo/bip.png" class="bip" title="Czytaj " alt="bip" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
-               
             </div>
         </div>
+            <div class="layout_info text-center">
+                <h3>Fanpage Szkoły</h3>
+                <div>
+                    <img src="/img/logo/fb-icon.png" class="bip" title="Czytaj " alt="bip" onclick="window.location.href = `https://www.facebook.com/p/Szko%C5%82a-Podstawowa-im-Polskich-Noblist%C3%B3w-w-Goleszynie-100063569227821/?_rdr`;" target="_blank" />
+                </div>
+            </div>
         <div class="layout_info text-center">
-            <h3>Programy i projekty z których korzystała szkoła</h3>
-            <div>
-                
+            <h3>Programy i projekty z których uczesniczy szkoła</h3>
+            <div>              
                 <img src="/img/logo/erazmus.jpg" class="erazmus" title="Czytaj " alt="erazmus+" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
                 <img src="/img/logo/aktywna_tablica.jpg" class="inne" title="Czytaj " alt="aktywna_tablica" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
                 <img src="/img/logo/eTwinning.png" class="inne" title="Czytaj " alt="eTwinning" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
                 <img src="/img/logo/kulturalna.png" class="inne" title="Czytaj " alt="kulturalna szkoła" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
                 <img src="/img/logo/lepsza_szkoła.png" class="inne" title="Czytaj " alt="lepsza_szkoła" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
-                <img src="/img/logo/labolatoria.jpg" class="inne" title="Czytaj " alt="labolatoria przyszłości" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
-                
-                
-               
+                <img src="/img/logo/labolatoria.jpg" class="inne" title="Czytaj " alt="labolatoria przyszłości" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />      
             </div>
         </div>
+    </div>
+    <div class="col-1">
     </div>
     </div>
 }

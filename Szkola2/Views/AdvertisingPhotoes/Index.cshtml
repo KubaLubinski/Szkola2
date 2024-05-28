@@ -25,8 +25,8 @@
                <img src="@Url.Content(item.Photo = "~/img/mini/"+item.Photo)" width="250" height="200"/>@* dodana szerokość nwm ocen po swojemu czy moze byc czy skalowanie tu sie wstawi*@ 
             </td>
             <td>
-               <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Zmień')" onmouseout="hidetip()">
-                    <i  aria-label="Edycja"> </i></a>
+               @* <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Zmień')" onmouseout="hidetip()">
+                    <i  aria-label="Edycja"> </i></a> *@
                 <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Podglad" asp-action="Details" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Podgląd')" onmouseout="hidetip()">
                     <i  aria-label="Podgląd"> </i></a>
                 <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Usuń ')" onmouseout="hidetip()">
