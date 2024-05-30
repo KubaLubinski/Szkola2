@@ -21,7 +21,14 @@
             @Html.DisplayNameFor(model => model.Content)
         </dt>
         <dd class = "col-sm-10">
-            @Html.Raw(Model.Content.Substring(0, 200) + " ...")
+            @if (Model.Content.Length <= 200)
+            {
+                @Html.Raw(Model.Content)
+            }
+            else
+            {
+                @Html.Raw(Model.Content.Substring(0, 200) + " ...")
+            }
         </dd>
     </dl>
     

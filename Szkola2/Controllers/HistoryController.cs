@@ -99,7 +99,7 @@ namespace Szkola2.Controllers
                             ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
                             return View(history);
                         }
-                    }
+                    } 
                 }
                 if (!TextNameExist(history.TextName))
                 {
