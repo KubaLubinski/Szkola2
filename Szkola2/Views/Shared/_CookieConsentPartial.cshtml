@@ -12,16 +12,26 @@
         <button id="acceptButton" type="button" class="accept-policy close btn btn-info" aria-label="Zamknij" data-cookie-string="@cookieString">
             <span aria-hidden="true">Zgadzam się</span>
         </button>
+        <button id="rejectButton" type="button" class="reject-policy close btn btn-info" aria-label="Zamknij" data-cookie-string="@cookieString">
+            <span aria-hidden="true">Nie zgadzam się</span>
+        </button>
     </div>
 }
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var acceptButton = document.getElementById("acceptButton");
+        var rejectButton = document.getElementById("rejectButton");
+
         acceptButton.addEventListener("click", function(event) {
             var cookieString = acceptButton.getAttribute("data-cookie-string");
             document.cookie = cookieString;
-            document.getElementById("cookieConsent").style.display = "none"; // Schowanie banera po kliknięciu
+            document.getElementById("cookieConsent").style.display = "none"; 
+        });
+    
+        rejectButton.addEventListener("click", function(event) {     
+            document.getElementById("cookieConsent").style.display = "none";
+            sessionStorage.setItem('cookiesRejected', 'true');
         });
     });
 </script>

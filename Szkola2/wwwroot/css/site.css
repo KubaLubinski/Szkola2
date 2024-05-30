@@ -259,7 +259,7 @@ body footer {
 .calendar_td {
     font-size: 18px;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 3px;
     text-align: center;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc; 
@@ -278,7 +278,7 @@ body footer {
 }
 .calendar {
     float: left;
-    margin: 20px 90px 20px 250px;
+    margin: 50px 90px 20px 250px;
 }
 .bip {
     margin: 10px;
@@ -296,7 +296,7 @@ body footer {
     margin: 10px;
     cursor: pointer;
     height: 90px;
-    width: 400px;
+    width: 300px;
     position: relative;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease-in-out;
