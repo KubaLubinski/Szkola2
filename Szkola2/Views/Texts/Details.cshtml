@@ -28,6 +28,8 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DateAdded)
         </dd>
+        @if (Model.GraphicGallery.Count() > 0)
+        {
         <dt class="col-sm-2">
             Galeria zdjęć:
         </dt>
@@ -51,6 +53,8 @@
                 </button>
             </div>
         </dd>
+        }
+
         <dt class = "col-sm-2">
             Kategoria:
         </dt>

@@ -34,6 +34,8 @@
                     <div class="accordion-body roboto">
                         @Html.Raw(item.Content)
                         <br>
+                        @if(item.GraphicGallery.Count() > 0)
+                        {
                         <div id="@carouselId" class="carousel slide mx-auto">
                             <div class="carousel-inner col-md-5">
                                 @for (int i = 0; i < item.GraphicGallery.Count(); i++)
@@ -43,16 +45,16 @@
                                     </div>
                                 }
                             </div>
-                            <button class="carousel-control-prev custom-carousel-control" title="Poprzednie " type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <button class="carousel-control-prev custom-carousel-control" title="Poprzednie " type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
-                            <button class="carousel-control-next custom-carousel-control" title="Następne " type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <button class="carousel-control-next custom-carousel-control" title="Następne " type="button" data-bs-target="#@carouselId" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
-
+                        }
                     </div>
                 </div>
                 <br />

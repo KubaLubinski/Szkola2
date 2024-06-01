@@ -30,13 +30,13 @@
             </div>
             <hr />
             Galeria zdjęć:
-            <div class="form-group col-md-5 col-sm-8>
+            <div class="form-group col-md-5 col-sm-8">
                 @for (int i = 0; i < Model.GraphicGallery.Count(); i++)
                 {
-                    <div>
+                    <div class="mb-3">
                         <div class="card">
                             <a asp-action="Details" asp-route-Id="@Model.Id" class="card-img-top">
-                                <img class="card-img-top rounded" src="@Url.Content("~/miniGallery/"+Model.GraphicGallery[i].URL)" alt="@Model.GraphicGallery[i].Name" width="150" height="150">
+                                <img class="card-img-top rounded" src="@Url.Content("~/miniGallery/" + Model.GraphicGallery[i].URL)" alt="@Model.GraphicGallery[i].Name" width="150" height="150">
                             </a>
                             <div class="card-body">
                                 <a class="btn btn-danger card-title form-control" onclick="Delete('/PastSchoolEvents/DeleteOneImage/@Model.GraphicGallery[i].Id')">Usuń</a>
