@@ -195,11 +195,11 @@ body footer {
 }
 
 .clock {
-    width: 200px;  
+    width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 6px solid #4CAF50;
-    background-color: #f7f7f7;
+    border: 6px solid #BBD8F2;
+    background-color: #FFFFFF;
     background-image: url('../img/logo/clock.png');
     background-size: 140%;
     background-position: calc(50% - 5px) center;
@@ -253,7 +253,7 @@ body footer {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid;
-    border-color: #ff0000;
+    border-color: #BBD8F2;
 }
 
 .calendar_td {
@@ -273,7 +273,7 @@ body footer {
 }
 
 .thick-border {
-    border: 3px solid #ff0000;
+    border: 3px solid #F2D852;
     font-weight: bold;
 }
 .calendar {
