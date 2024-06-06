@@ -25,7 +25,7 @@ namespace Szkola2.Controllers
                                 .Include(t => t.Category)
                                 .Include(t => t.User)
                                 .OrderByDescending(t => t.DateAdded)
-                                .Take(5)
+                                .Take(6)
                                 .ToListAsync();
 
             var advertisingPhotos = await _context.AdvertisingPhotos.ToListAsync();
