@@ -15,105 +15,114 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <header>
+    <header class="sticky-top">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-color border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src ="~/img/logo/images.png" alt="logo szkoły" height="40"/></a>
+            <div class="container-fluid px-3">
+
+                <!-- LOGO -->
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo/images.png" alt="Logo Szkoły Podstawowej w Goleszynie" height="40" />
+                </a>
+
+                <!-- PRZYCISK MOBILNY -->
                 <button class="navbar-toggler height" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Przełącz nawigację">
                     <span class="bi bi-stack"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- ELEMENTY MENU -->
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
+
+                    <ul class="navbar-nav flex-grow-1 align-items-sm-center">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Index">Aktualności</a>
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Texts" asp-action="Index">Aktualności</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="History" asp-action="List">Historia</a>
-                        </li>   
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Documents" asp-action="Index">Dokumenty</a>
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="History" asp-action="List">Historia</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Documents" asp-action="Index">Dokumenty</a>
+                        </li>
+
+                        <!-- KALENDARIUM (POPRAWIONA PĘTLA) -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Kalendarium
                             </a>
-                            <ul class="dropdown-menu dropdown-color">
+                            <ul class="dropdown-menu dropdown-color shadow-sm border-0">
                                 @{
                                     int currentYear = DateTime.Now.Year;
-                                    for (int year = currentYear - 3; year <= currentYear - 2; year++)
+                                    // Poprawiono zmienne na działający zakres np. 3 lata wstecz do bieżącego roku
+                                    for (int year = currentYear - 3; year <= currentYear; year++)
                                     {
                                         int yearm = year + 1;
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="yearEvents" asp-route-year="@year">Rok szkolny @year/@yearm</a>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="yearEvents" asp-route-year="@year">Rok szkolny @year/@yearm</a>
                                         </li>
                                     }
                                 }
                             </ul>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">Kontakt</a>
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Contact">Kontakt</a>
                         </li>
-                        @{
-                            @if ((User.IsInRole("admin"))  || (User.IsInRole("dyrektor")) || (User.IsInRole("nauczyciel")) || (User.IsInRole("uczen")))
-                            {                     
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Administracja
-                            </a>
-                            <ul class="dropdown-menu dropdown-color">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="Create">Dodaj wpis o wydarzeniach</a>
-                            </li>                          
-                            @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")))
-                            {   
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Texts" asp-action="List">Lista tekstów</a>
-                                </li>               
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>     
-                                </li> 
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="AdvertisingPhotoes" asp-action="Index">Zdjęcia</a>    
-                                </li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Documents" asp-action="Index">Lista dokumentów</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="History" asp-action="Index">Historia szkoły</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="Index">Kalendarium wydarzeń</a>
-                                </li>
-                            }
-                            @if (User.IsInRole("admin"))
-                            {
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Zarządzaj użytkownikami</a>
-                                </li>
-                            }
-                            </ul>
-                           
-                        </li>
-                            }
+
+                        <!-- ADMINISTRACJA -->
+                        @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")) || (User.IsInRole("nauczyciel")) || (User.IsInRole("uczen")))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Administracja
+                                </a>
+                                <ul class="dropdown-menu dropdown-color shadow-sm border-0">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Texts" asp-action="Create">Dodaj wpis o wydarzeniach</a>
+                                    </li>
+                                    @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")))
+                                    {
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Texts" asp-action="List">Lista tekstów</a></li>
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a></li>
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="AdvertisingPhotoes" asp-action="Index">Zdjęcia</a></li>
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Documents" asp-action="Index">Lista dokumentów</a></li>
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="History" asp-action="Index">Historia szkoły</a></li>
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="PastSchoolEvents" asp-action="Index">Kalendarium wydarzeń</a></li>
+                                    }
+                                    @if (User.IsInRole("admin"))
+                                    {
+                                        <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Zarządzaj użytkownikami</a></li>
+                                    }
+                                </ul>
+                            </li>
                         }
                     </ul>
-                    <div>
-                        <button class="transparent-button" title="Powiększ rozmiar " onclick="increaseFontSize()">
-                            <span class = "bi bi-zoom-in"  />
+
+                    <!-- NARZĘDZIA DOSTĘPNOŚCI (Czcionka i Tryb nocny) -->
+                    <div class="d-flex align-items-center gap-2 my-2 my-sm-0 me-3">
+                        <button class="transparent-button" title="Powiększ rozmiar tekstu" onclick="increaseFontSize()">
+                            <span class="bi bi-zoom-in"></span>
+                            <span class="visually-hidden">Powiększ tekst</span>
                         </button>
-                        <button class="transparent-button" title="Zmniejsz rozmiar " onclick="decreaseFontSize()">
-                            <span class = "bi bi-zoom-out" />
+                        <button class="transparent-button" title="Zmniejsz rozmiar tekstu" onclick="decreaseFontSize()">
+                            <span class="bi bi-zoom-out"></span>
+                            <span class="visually-hidden">Zmniejsz tekst</span>
+                        </button>
+                        <button class="transparent-button border-0 bg-transparent" title="Przełącz tryb kolorów (jasny/ciemny)">
+                            <i class="bi bi-brightness-high" id="ldmode"></i>
+                            <span class="visually-hidden">Przełącz kontrast i kolory</span>
                         </button>
                     </div>
-                    <div>
-                        <i class="bi bi-brightness-high transparent-button" title="Przełącz kolory " id="ldmode"></i> 
+
+                    <!-- LOGOWANIE -->
+                    <div class="ms-sm-2">
+                        <partial name="_LoginPartial" />
                     </div>
-                    <partial name="_LoginPartial" />
+
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
@@ -121,15 +130,15 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-             
-            &copy; 2024 - Szkola2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
+    <footer class="border-top footer text-muted py-3 mt-auto">
+        <div class="container text-center text-sm-start">
+            &copy; 2026 - Szkoła Podstawowa w Goleszynie - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
         </div>
     </footer>
 
-    <script src="/js/Light-darkmode.js" ></script>
-    <script src="/js/Font-size.js" ></script>
+    <!-- SKRYPTY -->
+    <script src="/js/Light-darkmode.js"></script>
+    <script src="/js/Font-size.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

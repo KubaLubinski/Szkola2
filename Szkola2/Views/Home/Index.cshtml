@@ -1,5 +1,368 @@
 ﻿@* @model IEnumerable<Szkola2.Models.Text *@
 @model HomeViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    ViewData["Title"] = "Witamy";
+}
+
+<div class="school-home">
+
+    <!-- HERO / SLIDER -->
+    <section class="home-hero">
+        <div id="schoolHero" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
+                {
+                    <button type="button"
+                            data-bs-target="#schoolHero"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")"
+                            aria-label="Slajd @(i + 1)">
+                    </button>
+                }
+            </div>
+
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <img src="@Url.Content("~/img/mini/" + Model.AdvertisingPhotos[i].Photo)"
+                             class="hero-image"
+                             alt="Zdjęcie szkoły">
+
+                        <div class="hero-overlay"></div>
+
+                        @if (i == 0)
+                        {
+                            <div class="hero-content">
+                                <span class="hero-badge">
+                                    <span class="hero-badge-dot"></span>
+                                    Szkoła Podstawowa w Goleszynie
+                                </span>
+
+                                <h1>
+                                    Szkoła, która
+                                    <span>inspiruje</span>
+                                </h1>
+
+                                <p>
+                                    Szkoła Podstawowa im. Polskich Noblistów w Goleszynie
+                                </p>
+
+                                <a asp-controller="Texts"
+                                   asp-action="Index"
+                                   class="hero-button">
+                                    Poznaj aktualności
+                                    <span>→</span>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <button class="carousel-control-prev hero-control"
+                    type="button"
+                    data-bs-target="#schoolHero"
+                    data-bs-slide="prev">
+                <span class="hero-arrow">←</span>
+                <span class="visually-hidden">Poprzedni</span>
+            </button>
+
+            <button class="carousel-control-next hero-control"
+                    type="button"
+                    data-bs-target="#schoolHero"
+                    data-bs-slide="next">
+                <span class="hero-arrow">→</span>
+                <span class="visually-hidden">Następny</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- QUICK LINKS (3 Dopasowane Karty) -->
+    <section class="quick-links-3">
+        <a asp-controller="Texts" asp-action="Index" class="quick-card">
+            <div class="quick-icon news-icon">📰</div>
+            <div>
+                <span>Aktualności</span>
+                <small>Co nowego w szkole?</small>
+            </div>
+            <strong>→</strong>
+        </a>
+
+        <a href="#projects" class="quick-card">
+            <div class="quick-icon project-icon">🎓</div>
+            <div>
+                <span>Projekty</span>
+                <small>Nasze programy i inicjatywy</small>
+            </div>
+            <strong>→</strong>
+        </a>
+
+        <a href="#school-links" class="quick-card">
+            <div class="quick-icon info-icon">ℹ</div>
+            <div>
+                <span>Ważne informacje</span>
+                <small>Przydatne linki</small>
+            </div>
+            <strong>→</strong>
+        </a>
+    </section>
+
+    <!-- MAIN CONTENT (UKŁAD DWUKOLUMNOWY) -->
+    <section class="home-content">
+
+        <!-- LEWA KOLUMNA: AKTUALNOŚCI -->
+        <div class="news-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">CO SŁYCHAĆ?</span>
+                    <h2>Najnowsze <span>wydarzenia</span></h2>
+                </div>
+
+                <a asp-controller="Texts" asp-action="Index" class="all-news-link">
+                    Wszystkie aktualności <span>→</span>
+                </a>
+            </div>
+
+            <div class="news-grid">
+                @foreach (var item in Model.LatestTexts)
+                {
+                    <article class="news-card">
+                        <div class="news-image-wrapper">
+                            <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + item.MainGraphic)"
+                                 class="news-image"
+                                 alt="@item.TextName">
+
+                            <div class="news-category">
+                                @item.Category.CategoryName
+                            </div>
+                        </div>
+
+                        <div class="news-body">
+                            <div class="news-date">
+                                @item.DateAdded.ToString("dd.MM.yyyy")
+                            </div>
+
+                            <h3>@item.TextName</h3>
+
+                            <div class="news-author">
+                                <span class="author-avatar">
+                                    @item.User.FirstName.Substring(0, 1)
+                                </span>
+                                <span>@item.User.FirstName @item.User.LastName</span>
+                            </div>
+
+                            <div class="news-description">
+                                @if (item.Content.Length <= 140)
+                                {
+                                    @Html.Raw(item.Content)
+                                }
+                                else
+                                {
+                                    @Html.Raw(item.Content.Substring(0, 140) + "...")
+                                }
+                            </div>
+
+                            <a href="@Url.Action("Details", "Texts", new { id = item.TextId })" class="read-more">
+                                Czytaj więcej <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <div class="news-more">
+                <a asp-controller="Texts" asp-action="Index" class="primary-outline-button">
+                    Więcej wydarzeń z życia szkoły <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- PRAWA KOLUMNA: SIDEBAR (ZEGAR + BIP + FB + PROJEKTY OBOK AKTUALNOŚCI) -->
+        <aside class="home-sidebar">
+
+            <!-- ZEGAR I KALENDARZ -->
+            <div class="info-card clock-card" id="school-calendar">
+                <div class="info-card-header">
+                    <div>
+                        <span class="section-label">DZISIAJ</span>
+                        <h3>Aktualna data</h3>
+                    </div>
+                    <div class="live-dot"></div>
+                </div>
+
+                <div id="current-date-time" class="current-date">Ładowanie...</div>
+
+                <div class="clock-wrapper">
+                    <div class="clock" id="clock">
+                        <div class="clock-center"></div>
+                        <div class="hour-hand"></div>
+                        <div class="minute-hand"></div>
+                        <div class="second-hand"></div>
+                        <div class="clock-number number-12">12</div>
+                        <div class="clock-number number-3">3</div>
+                        <div class="clock-number number-6">6</div>
+                        <div class="clock-number number-9">9</div>
+                    </div>
+                </div>
+
+                <div class="calendar-wrapper">
+                    <table id="calendar" class="modern-calendar">
+                        <thead>
+                            <tr>
+                                <th>Pn</th>
+                                <th>Wt</th>
+                                <th>Śr</th>
+                                <th>Cz</th>
+                                <th>Pt</th>
+                                <th>Sb</th>
+                                <th>Nd</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BIP -->
+            <div class="info-card external-card">
+                <div class="external-icon bip-icon">BIP</div>
+                <div class="external-content">
+                    <span>Oficjalne informacje</span>
+                    <h3>Biuletyn Informacji Publicznej</h3>
+                    <a href="https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html" target="_blank" rel="noopener">Przejdź do BIP →</a>
+                </div>
+            </div>
+
+            <!-- FACEBOOK -->
+            <div class="info-card external-card">
+                <div class="external-icon facebook-icon">f</div>
+                <div class="external-content">
+                    <span>Obserwuj nas</span>
+                    <h3>Fanpage szkoły</h3>
+                    <a href="https://www.facebook.com/p/Szko%C5%82a-Podstawowa-im-Polskich-Noblist%C3%B3w-w-Goleszynie-100063569227821/?_rdr" target="_blank" rel="noopener">Odwiedź Facebook →</a>
+                </div>
+            </div>
+
+            <!-- KARTA Z PROJEKTAMI (OBOK AKTUALNOŚCI, POD BIP/FB) -->
+            <div class="info-card projects-sidebar-card" id="projects">
+                <div class="info-card-header">
+                    <div>
+                        <span class="section-label">NASZE INICJATYWY</span>
+                        <h3>Programy i projekty</h3>
+                    </div>
+                </div>
+
+                <div class="projects-sidebar-list" id="school-links">
+                    <a href="https://erasmusplus.org.pl/o-programie" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/erazmus.jpg" alt="Erasmus+">
+                        <div>
+                            <strong>Erasmus+</strong>
+                            <span>Program europejski</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+
+                    <a href="https://www.gov.pl/web/edukacja/aktywna-tablica" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/aktywna_tablica.jpg" alt="Aktywna Tablica">
+                        <div>
+                            <strong>Aktywna Tablica</strong>
+                            <span>Nowoczesna edukacja</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+
+                    <a href="https://etwinning.pl/o-programie/czym-jest-etwinning" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/eTwinning.png" alt="eTwinning">
+                        <div>
+                            <strong>eTwinning</strong>
+                            <span>Współpraca szkół</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+
+                    <a href="https://mazovia.pl/pl/bip/komunikaty/program-kulturalna-szkola-na-mazowszu-w-2024-r.html" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/kulturalna.png" alt="Kulturalna Szkoła">
+                        <div>
+                            <strong>Kulturalna Szkoła</strong>
+                            <span>Kultura i edukacja</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+
+                    <a href="https://ls.gwo.pl/landing" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/lepsza_szko%C5%82a.png" alt="Lepsza Szkoła">
+                        <div>
+                            <strong>Lepsza Szkoła</strong>
+                            <span>Wsparcie edukacji</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+
+                    <a href="https://www.gov.pl/web/laboratoria/o-programie2" target="_blank" rel="noopener" class="sidebar-project-item">
+                        <img src="/img/logo/labolatoria.jpg" alt="Laboratoria Przyszłości">
+                        <div>
+                            <strong>Laboratoria Przyszłości</strong>
+                            <span>Technologie i kreatywność</span>
+                        </div>
+                        <b>↗</b>
+                    </a>
+                </div>
+            </div>
+
+        </aside>
+
+    </section>
+
+</div>
+
+
+@section Scripts {
+    <script src="/js/Day.js"></script>
+    <script src="/js/Clock.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            /* Animacje pojawiania się elementów - DODANO .project-full-card */
+            const animatedElements = document.querySelectorAll(
+                ".quick-card, .news-card, .info-card, .project-card, .project-full-card, .section-heading"
+            );
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("animate-in");
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.12 }
+            );
+
+            animatedElements.forEach((element) => {
+                observer.observe(element);
+            });
+
+            /* Delikatny efekt parallax dla hero */
+            const hero = document.querySelector(".home-hero");
+            window.addEventListener("scroll", function() {
+                if (!hero) return;
+                const scroll = window.scrollY;
+                if (scroll < hero.offsetHeight) {
+                    hero.style.setProperty("--hero-scroll", `${scroll * 0.12}px`);
+                }
+            });
+
+        });
+    </script>
+}
+}
+
+@*@model HomeViewModel
 @{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Witamy";
@@ -129,5 +492,5 @@
 @section Scripts{
     <script src="/js/Day.js"></script>
     <script src="/js/Clock.js"> </script> 
-}
+}*@
 

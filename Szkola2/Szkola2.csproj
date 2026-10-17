@@ -1,12 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Szkola2-FC6C4DAA-53F8-4A75-BFC3-93DC34F464C9</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Views\Histories\**" />
     <Compile Remove="wwwroot\Relationship Diagram\**" />
@@ -17,46 +15,39 @@
     <None Remove="Views\Histories\**" />
     <None Remove="wwwroot\Relationship Diagram\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="Controllers\HistoriesController.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
     <Content Remove="wwwroot\js\ImageDelete.js" />
   </ItemGroup>
-
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\ImageDelete.js" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.11" />
     <PackageReference Include="LazZiya.ImageResize" Version="4.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.28" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.28">
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\miniGallery\gallery\" />
     <Folder Include="wwwroot\documents\" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="compilerconfig.json" />
     <None Include="wwwroot\js\ImageDelete.js" />
   </ItemGroup>
-
 </Project>

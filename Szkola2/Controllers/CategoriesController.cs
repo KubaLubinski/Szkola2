@@ -11,7 +11,6 @@ using Szkola2.Models;
 
 namespace Szkola2.Controllers
 {
-    
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

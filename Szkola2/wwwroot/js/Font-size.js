@@ -1,33 +1,40 @@
-﻿   
-    function saveFontSize(fontSize) {
-        localStorage.setItem('preferredFontSize', fontSize);
-    }
+﻿function saveFontSize(fontSize) {
+    localStorage.setItem('preferredFontSize', fontSize);
+}
 
-    
-    function loadFontSize() {
-        return localStorage.getItem('preferredFontSize') || '16'; 
-    }
+function loadFontSize() {
+    const saved = parseInt(
+        localStorage.getItem('preferredFontSize'),
+        10
+    );
 
-    function setFontSize(fontSize) {
-        document.body.style.fontSize = fontSize + 'px';
-    }
+    return Number.isFinite(saved)
+        ? Math.min(24, Math.max(12, saved))
+        : 16;
+}
 
-    function increaseFontSize() {
-        var currentFontSize = parseInt(loadFontSize());
-    var newFontSize = Math.min(currentFontSize + 2, 24);
-    saveFontSize(newFontSize);
-    setFontSize(newFontSize);
-    }
+function setFontSize(fontSize) {
+    fontSize = Math.min(24, Math.max(12, fontSize));
 
+    document.documentElement.style.fontSize = fontSize + 'px';
+    document.documentElement.style.setProperty(
+        '--base-font-size',
+        fontSize + 'px'
+    );
 
-    function decreaseFontSize() {
-        var currentFontSize = parseInt(loadFontSize());
-    var newFontSize = Math.max(currentFontSize - 2, 10); 
-    saveFontSize(newFontSize);
-    setFontSize(newFontSize);
-    }
+    saveFontSize(fontSize);
+}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var preferredFontSize = loadFontSize();
-    setFontSize(preferredFontSize);
-    });
+function increaseFontSize() {
+    const currentSize = loadFontSize();
+    setFontSize(currentSize + 2);
+}
+
+function decreaseFontSize() {
+    const currentSize = loadFontSize();
+    setFontSize(currentSize - 2);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    setFontSize(loadFontSize());
+});
