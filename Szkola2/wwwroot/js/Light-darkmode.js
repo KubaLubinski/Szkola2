@@ -1,43 +1,81 @@
 ﻿
-function applyDarkMode(isDarkMode) {   
-    if (isDarkMode) {        
-        document.body.classList.add("dark-theme");
-    } else {             
-        document.body.classList.remove("dark-theme");
-    }
-}
+(function () {
+    function updateDarkModeIcon(isDarkMode) {
+        const icon = document.getElementById("ldmode");
 
-    document.addEventListener("DOMContentLoaded", function () {   
-        var isDarkMode = localStorage.getItem("darkMode") === "true";    
+        if (!icon) return;
+
+        icon.className = isDarkMode
+            ? "bi bi-moon-fill icon-size"
+            : "bi bi-brightness-high icon-size";
+
+        const button = icon.closest("button");
+
+        if (button) {
+            button.setAttribute(
+                "aria-pressed",
+                String(isDarkMode)
+            );
+
+            button.setAttribute(
+                "aria-label",
+                isDarkMode
+                    ? "Włącz jasny motyw"
+                    : "Włącz ciemny motyw"
+            );
+
+            button.title = isDarkMode
+                ? "Włącz jasny motyw"
+                : "Włącz ciemny motyw";
+        }
+    }
+
+    function applyDarkMode(isDarkMode) {
+        document.body.classList.toggle(
+            "dark-theme",
+            isDarkMode
+        );
+
+        updateDarkModeIcon(isDarkMode);
+    }
+
+    function toggleDarkMode() {
+        const isDarkMode =
+            !document.body.classList.contains("dark-theme");
+
+        localStorage.setItem(
+            "darkMode",
+            String(isDarkMode)
+        );
+
         applyDarkMode(isDarkMode);
-    });
-
-
-// Funkcja do przełączania trybu ciemnego motywu
-function toggleDarkMode() {
-    
-    var isDarkMode = localStorage.getItem("darkMode") === "true";
-    isDarkMode = !isDarkMode;
-    localStorage.setItem("darkMode", isDarkMode);
-    updateDarkModeIcon(isDarkMode);
-    window.location.reload();
-}
-
-// Funkcja do zmiany ikony na podstawie trybu ciemnego
-function updateDarkModeIcon(isDarkMode) {
-    var ldmodeIcon = document.getElementById("ldmode");
-    if (isDarkMode) {       
-        ldmodeIcon.setAttribute
-            ("class", "bi bi-moon-fill icon-size transparent-button");
-    } else {  
-        ldmodeIcon.setAttribute
-            ("class", "bi bi-brightness-high  icon-size transparent-button");
     }
-}
 
-    var ldmode = document.getElementById("ldmode");
-    ldmode.addEventListener("click", toggleDarkMode);
-    updateDarkModeIcon(localStorage.getItem("darkMode") === "true");
+    function initializeDarkMode() {
+        const isDarkMode =
+            localStorage.getItem("darkMode") === "true";
+
+        applyDarkMode(isDarkMode);
+
+        const icon = document.getElementById("ldmode");
+        const button = icon?.closest("button");
+
+        if (button && !button.dataset.darkModeInitialized) {
+            button.addEventListener("click", toggleDarkMode);
+            button.dataset.darkModeInitialized = "true";
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeDarkMode
+        );
+    } else {
+        initializeDarkMode();
+    }
+})();
+
 
 
 

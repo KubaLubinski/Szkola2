@@ -4,39 +4,49 @@
     ViewData["Title"] = "Zdjęcia";
 }
 
-<h1>Zdjęcia </h1>
+<div class="school-home">
 
-<p>
-    <a asp-action="Create" class="btn btn-warning">Nowe zdjęcie</a>
-</p>
-<table class="table text-color">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-               <img src="@Url.Content(item.Photo = "~/img/mini/"+item.Photo)" width="250" height="200"/>@* dodana szerokość nwm ocen po swojemu czy moze byc czy skalowanie tu sie wstawi*@ 
-            </td>
-            <td>
-               @* <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Zmień')" onmouseout="hidetip()">
-                    <i  aria-label="Edycja"> </i></a> *@
-                <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Podglad" asp-action="Details" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Podgląd')" onmouseout="hidetip()">
-                    <i  aria-label="Podgląd"> </i></a>
-                <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.PhotoId" onmouseover="showtip(this, 'Usuń ')" onmouseout="hidetip()">
-                    <i  aria-label="Usuwanie"> </i></a>
-                <div class="tooltip" id="tooltip">Podpowiedź</div>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ZARZĄDZANIE</span>
+            <h1>Zdjęcia <span>na stronie głównej</span></h1>
+        </div>
+
+        <a asp-action="Create" class="btn btn-school">
+            Nowe zdjęcie <span aria-hidden="true">+</span>
+        </a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="photo-grid">
+            @foreach (var item in Model)
+            {
+                <div class="photo-card">
+                    <img src="@Url.Content("~/img/mini/" + item.Photo)" alt="Zdjęcie na stronie głównej" />
+
+                    <div class="photo-card-actions list-actions">
+                        <a class="btn btn-outline-success rounded-circle bi-eye"
+                           title="Podgląd" aria-label="Podgląd"
+                           asp-action="Details" asp-route-id="@item.PhotoId"></a>
+                        <a class="btn btn-outline-danger rounded-circle bi-trash-fill"
+                           title="Usuń" aria-label="Usuń"
+                           asp-action="Delete" asp-route-id="@item.PhotoId"></a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="panel-card texts-empty" role="alert">
+            <span class="texts-empty-icon" aria-hidden="true">ℹ</span>
+            <div>Brak zdjęć. Dodaj pierwsze zdjęcie przyciskiem „Nowe zdjęcie”.</div>
+        </div>
+    }
+
+</div>
+
 @section Scripts{ 
     <script src="/js/Mouseover-out.js" > </script>
 }

@@ -3,56 +3,53 @@
 @{
     ViewData["Title"] = "Logowanie";
 }
-<div class="row my-5">
-    <div class="rounded  shadow text-center p-3 col-10 offset-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
-        <img src="~/img/logo/logo-goleszyna.png" class="login-photo img-fluid mb-2" alt="logo szkoły" height="400" width="300"  ></img>
-        <hr />
-        <section>
-            <form id="account" method="post">
-                <h2 class="roboto">Witamy na stronie logowania</h2>           
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="input-group margin-login">
-                    <span class="input-group-text login-icon">
-                        <i class="bi bi-person-circle"></i>
-                    </span>
-                    <div class="form-floating login-width">
-                        <input asp-for="Input.Email" class="form-control" id="floatingInput" placeholder="name@example.com" autocomplete="username" aria-required="true"/>
-                        <label for="floatingInput" class="text-dark">E-mail</label>
-                    </div>
+
+<div class="school-home">
+
+    <div class="panel-card auth-card">
+
+        <img src="~/img/logo/logo_szkoly_duze.png" class="auth-logo" alt="Logo Szkoły Podstawowej w Goleszynie" />
+
+        <div class="auth-head">
+            <span class="section-label section-label-lg">LOGOWANIE</span>
+            <h1>Witamy na stronie <span>logowania</span></h1>
+        </div>
+
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-field">
+                <label asp-for="Input.Email" class="form-label fw-bold">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-text" aria-hidden="true"><i class="bi bi-person-circle"></i></span>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 </div>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Input.Haslo" class="form-label fw-bold">Hasło</label>
                 <div class="input-group">
-                    <span class="input-group-text login-icon">
-                        <i class="bi bi-key-fill"></i>
-                    </span>
-                    <div class="form-floating login-width">
-                        <input asp-for="Input.Haslo" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                        <label for="floatingPassword" class="text-dark">Hasło</label>
-                    </div>
+                    <span class="input-group-text" aria-hidden="true"><i class="bi bi-key-fill"></i></span>
+                    <input asp-for="Input.Haslo" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Hasło" />
                 </div>
                 <span asp-validation-for="Input.Haslo" class="text-danger"></span>
-                <div class="text-center mt-2">
-                    <div class="checkbox">
-                        <label asp-for="Input.RememberMe" class="form-label">
-                            <input class="form-check-input" asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary margin-login">Zaloguj się</button>
-                </div>   
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 d-none d-sm-block d-flex">
-        <section>
-            <div> 
-                
             </div>
-        </section>
+
+            <div class="form-check auth-remember">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label class="form-check-label" asp-for="Input.RememberMe"></label>
+            </div>
+
+            <button id="login-submit" type="submit" class="btn btn-school btn-school-lg">
+                Zaloguj się <span aria-hidden="true">→</span>
+            </button>
+        </form>
+
     </div>
+
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

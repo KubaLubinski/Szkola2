@@ -2,89 +2,86 @@
 @model IEnumerable<Szkola2.Models.Document>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista dokumentów";
+    bool canEdit = User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń");
 }
 
-<h1 class="roboto">Lista Dokumentów</h1>
-@{
-    if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
-    {
-        <p>
-    
-            <a asp-action="Create" class="btn btn-warning">Dodaj Nowy plik </a>
-        </p>
-    }
-}
-@foreach (var item in Model)
-{
-    <div class="card container left-document text-center  bg-color col-sm-4 shadow-document">
-        @{
-            string fileName = item.DocumentName;
-            int lastDotIndex = fileName.LastIndexOf('.');
-            string extension = lastDotIndex >= 0 ? fileName.Substring(lastDotIndex + 1).ToLower() : string.Empty;
+<div class="school-home">
 
-            string logoSrc = "";
-            switch (extension)
-                {
-                    case "txt":
-                        logoSrc = Url.Content("~/img/logo/txt-logo.png");
-                        break;
-                    case "docx":
-                        logoSrc = Url.Content("~/img/logo/docx-logo.png");
-                        break;
-                    case "pdf":
-                        logoSrc = Url.Content("~/img/logo/pdf-logo.png");
-                        break;   
-                }
-        }
-        <img id="logo-document" src="@logoSrc" class="card-img-top logo-document" alt="Logo dokumentu">
-        
-        <div class="card-body text-size-document">
-            <h3 class="card-title roboto"> @Html.DisplayFor(modelItem => item.DocumentDownload) </h3>
-            <p class="card-text"> @Html.Raw(item.Content) </p>
-            <a href="@Url.Content("~/documents/" + item.DocumentName)" download title="Pobierz " class="btn  btn-outline-logoyellow bi bi-file-earmark-arrow-down-fill width-btn-download position-absolute bottom-20-document end-0"> Pobierz >>> </a>
-            <p>
-                @{
-                    if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
-                    {
-                            <a asp-action="Edit" asp-route-id="@item.DocumentId" title="Edycja " class="btn btn-outline-primary rounded-circle bi-pencil-fill position-absolute bottom-0 end-10-document" > </a>
-                            <a asp-action="Delete" asp-route-id="@item.DocumentId" title="Usuwanie " class="btn btn-outline-danger rounded-circle bi-trash-fill position-absolute bottom-0" > </a><br>
-                    }
-                 }
-                 
-           </p>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">DO POBRANIA</span>
+            <h1>Lista <span>dokumentów</span></h1>
         </div>
-        
+
+        @if (canEdit)
+        {
+            <a asp-action="Create" class="btn btn-school">
+                Dodaj nowy plik <span aria-hidden="true">+</span>
+            </a>
+        }
     </div>
-}
 
+    @if (Model.Any())
+    {
+        <div class="doc-grid">
+            @foreach (var item in Model)
+            {
+                string fileName = item.DocumentName ?? "";
+                int lastDotIndex = fileName.LastIndexOf('.');
+                string extension = lastDotIndex >= 0 ? fileName.Substring(lastDotIndex + 1).ToLower() : string.Empty;
 
+                string logoSrc = extension switch
+                {
+                    "txt" => Url.Content("~/img/logo/txt-logo.png"),
+                    "docx" or "doc" => Url.Content("~/img/logo/docx-logo.png"),
+                    "pdf" => Url.Content("~/img/logo/pdf-logo.png"),
+                    _ => ""
+                };
 
+                <article class="doc-card">
+                    <div class="doc-card-icon">
+                        @if (!string.IsNullOrEmpty(logoSrc))
+                        {
+                            <img src="@logoSrc" alt="Ikona pliku @extension" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-file-earmark" aria-hidden="true"></i>
+                        }
+                    </div>
 
+                    <div class="doc-card-body">
+                        <h3>@Html.DisplayFor(modelItem => item.DocumentDownload)</h3>
+                        <div class="doc-card-text">@Html.Raw(item.Content)</div>
+                    </div>
 
-@section Scripts{ 
-    <script src="/js/Mouseover-out.js" > </script>
-    <script>
-    function showtips(element, text) {
-    var tooltips = document.getElementById('tooltips');
-    tooltips.innerText = text;
-    tooltips.classList.add('show');
+                    <div class="doc-card-footer">
+                        <a href="@Url.Content("~/documents/" + item.DocumentName)" download title="Pobierz"
+                           class="btn btn-school doc-download">
+                            <i class="bi bi-file-earmark-arrow-down-fill" aria-hidden="true"></i> Pobierz
+                        </a>
 
-    var rect = element.getBoundingClientRect();
-    var mouseX = rect.left + window.scrollX;
-    var mouseY = rect.top + window.scrollY;
+                        @if (canEdit)
+                        {
+                            <span class="list-actions">
+                                <a asp-action="Edit" asp-route-id="@item.DocumentId" title="Edycja" aria-label="Edycja"
+                                   class="btn btn-outline-primary rounded-circle bi-pencil-fill"></a>
+                                <a asp-action="Delete" asp-route-id="@item.DocumentId" title="Usuwanie" aria-label="Usuwanie"
+                                   class="btn btn-outline-danger rounded-circle bi-trash-fill"></a>
+                            </span>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="panel-card texts-empty" role="alert">
+            <span class="texts-empty-icon" aria-hidden="true">ℹ</span>
+            <div>Brak dokumentów do pobrania.</div>
+        </div>
+    }
 
-    var offsetX = 20;
-    var offsetY = 40; 
-
-    tooltips.style.left = (mouseX + offsetX) + 'px';
-    tooltips.style.top = (mouseY + offsetY) + 'px';
-}
-
-function hidetips() {
-    var tooltips = document.getElementById('tooltips');
-    tooltips.classList.remove('show');
-}
-    </script>
-}
-
+</div>

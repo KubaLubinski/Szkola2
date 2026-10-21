@@ -1,65 +1,81 @@
 ﻿@model Szkola2.Models.Document
 
 @{
-    ViewData["Title"] = "Edycja";
+    ViewData["Title"] = "Edycja dokumentu";
 }
 
-<h1 class="text-primary roboto">Edycja</h1>
+<div class="school-home">
 
-@{
-    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">EDYCJA</span>
+            <h1>Edycja <span>dokumentu</span></h1>
+        </div>
+    </div>
+
+    @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
     {
         <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage</div>
     }
-   
-}
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DocumentId" />
-            <div class="form-group">
-                <label asp-for="DocumentDownload" class="control-label"></label>
+
+    <form asp-action="Edit" enctype="multipart/form-data" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="DocumentId" />
+
+        <div class="form-section">
+            <h2 class="form-section-title">Opis</h2>
+
+            <div class="form-field">
+                <label asp-for="DocumentDownload" class="form-label fw-bold"></label>
                 <input asp-for="DocumentDownload" class="form-control" />
                 <span asp-validation-for="DocumentDownload" class="text-danger"></span>
             </div>
 
-            <div class="form-group editor-color">
-                <label asp-for="Content" class="control-label text-color"></label>
+            <div class="form-field">
+                <label asp-for="Content" class="form-label fw-bold"></label>
                 <textarea id="editor" asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="DocumentType" class="control-label"></label>
-                <select asp-for="DocumentType" class="form-control">             
+        <div class="form-section">
+            <h2 class="form-section-title">Plik</h2>
+
+            <div class="form-field">
+                <label asp-for="DocumentType" class="form-label fw-bold"></label>
+                <select asp-for="DocumentType" class="form-select">
                     <option value="Przeglądarka internetowa rozszerzenie .pdf">Przeglądarka internetowa rozszerzenie .pdf</option>
                     <option value="Microsoft Word rozszerzenie .docx">Microsoft Word rozszerzenie .docx .doc</option>
                     <option value="Dokument tekstowy rozszerzenie .txt">Dokument tekstowy rozszerzenie .txt</option>
                 </select>
                 <span asp-validation-for="DocumentType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DocumentName" class="control-label"></label>
-                <input type="file" name="newDocumentFile" id="newDocumentFile" class="form-control" accept=".pdf,.docx,.doc,.txt" onchange="checkFileExtension()" />
+
+            <div class="form-field">
+                <p class="muted-text mb-2">Aktualny plik: <strong>@Model.DocumentName</strong></p>
+                <label asp-for="DocumentName" class="form-label fw-bold">Zamień plik (opcjonalnie)</label>
+                <input type="file" name="newDocumentFile" id="newDocumentFile" class="form-control" accept=".pdf,.docx,.doc,.txt" />
                 <span asp-validation-for="DocumentName" class="text-danger"></span>
-            </div> 
-            <hr />
-            <div class="form-group">
-                <input type="submit" value="Zapisz zmiany" class="btn btn-primary" /> | 
-                <a asp-action="Index" class="btn btn-light">Powrót do Dokumentów</a>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Zapisz zmiany <span aria-hidden="true">→</span></button>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót do dokumentów</a>
+        </div>
+    </form>
+
 </div>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/ckeditor5/ckeditor.min.js"></script>
     <script src="~/lib/ckeditor5/translations/pl.min.js"></script>
     <script>
         ClassicEditor
-            .create(document.querySelector('#editor'),{
+            .create(document.querySelector('#editor'), {
                 language: 'pl'
             })
             .catch(error => {
@@ -67,17 +83,25 @@
             })
     </script>
     <script>
-        document.getElementById('documents').addEventListener('change', function () {
-        var selectedFileType = document.getElementById('DocumentType').value;
-        var fileInput = document.getElementById('documents');
-        var fileName = fileInput.value.split('\\').pop(); // Pobierz nazwę pliku z pełnej ścieżki
+        (function () {
+            var fileInput = document.getElementById('newDocumentFile');
+            var typeSelect = document.getElementById('DocumentType');
+            if (!fileInput || !typeSelect) return;
 
-        // Sprawdź, czy nazwa pliku zawiera wybrane rozszerzenie
-        if (!fileName.endsWith(selectedFileType.substring(selectedFileType.lastIndexOf('.') + 1))) {
-            alert('Wybrany plik ma niezgodne rozszerzenie z wybranym typem dokumentu.');
-            // Możesz dodać dalsze działania, np. zablokować wysyłkę formularza lub wyczyścić pole input pliku.
-            fileInput.value = '';
-        }
-    });
+            fileInput.addEventListener('change', function () {
+                if (!fileInput.value) return;
+
+                var fileName = fileInput.value.split('\\').pop().toLowerCase();
+                var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+
+                var typeExt = typeSelect.value.substring(typeSelect.value.lastIndexOf('.') + 1).toLowerCase();
+                var allowed = typeExt === 'docx' ? ['docx', 'doc'] : [typeExt];
+
+                if (allowed.indexOf(ext) === -1) {
+                    alert('Wybrany plik ma niezgodne rozszerzenie z wybranym typem dokumentu.');
+                    fileInput.value = '';
+                }
+            });
+        })();
     </script>
 }

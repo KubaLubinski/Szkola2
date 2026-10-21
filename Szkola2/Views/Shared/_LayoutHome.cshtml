@@ -1,6 +1,19 @@
 ﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
+    <script>
+            /* Zapobiega białemu błyskowi: ciemne tło ustawiane zanim strona się narysuje */
+            (function () {
+                try {
+                    var dark = false;
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var k = localStorage.key(i);
+                        if (/dark|theme|mode|tryb/i.test(k) && /^(dark|true|ciemny|1)$/i.test(localStorage.getItem(k))) { dark = true; break; }
+                    }
+                    if (dark) document.documentElement.classList.add('dark-pre');
+                } catch (e) { }
+            })();
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Szkola2</title>
@@ -14,30 +27,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <!-- PEŁNOEKRANOWA SEKCJA POWITALNA (HERO) -->
-    <header id="header" class="container-fluid back d-flex align-items-center justify-content-center" style="height: 100vh;">
-        <div class="row text-center col-10 offset-1 col-lg-8 offset-lg-2">
-            <div class="transparency p-4 rounded-4">
-                <h1 class="szkola-title roboto mt-3 text-light fw-bold">Szkoła Podstawowa imienia Polskich Noblistów w Goleszynie</h1>
-                <p class="lh-base text-light fs-5 my-3">
-                    Witamy na stronie udostępniającej Państwu informacje z życia szkoły. Zapraszamy do zapoznania się z aktualnościami.
-                </p>
-                <div>
-                    <a href="#navbar" class="btn btn-dark roboto mt-3 mb-4 px-4 py-2 fw-semibold shadow-sm" onclick="scrollToNavbar(event)">
-                        Przejdź do strony głównej ↓
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- PASEK NAWIGACJI (Stały kolor, bez przezroczystości, wyróżniony) -->
     <nav id="navbar" class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 sticky-top" style="background-color: #f1f3f5; z-index: 1030;">
         <div class="container-fluid px-3">
 
             <!-- LOGO -->
             <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/img/logo/images.png" alt="Logo Szkoły Podstawowej w Goleszynie" height="40" />
+                <img src="~/img/logo/logo_szkoly.png" alt="Logo Szkoły Podstawowej" height="40" />
             </a>
 
             <!-- PRZYCISK MOBILNY -->
@@ -113,23 +109,25 @@
                 </ul>
 
                 <!-- NARZĘDZIA DOSTĘPNOŚCI -->
-                <div class="d-flex align-items-center gap-2 my-2 my-sm-0 me-3">
-                    <button class="transparent-button" title="Powiększ rozmiar tekstu" onclick="increaseFontSize()">
+                <div class="nav-tools">
+                    <button type="button" class="transparent-button" title="Powiększ rozmiar tekstu" onclick="increaseFontSize()">
                         <span class="bi bi-zoom-in"></span>
                         <span class="visually-hidden">Powiększ tekst</span>
                     </button>
-                    <button class="transparent-button" title="Zmniejsz rozmiar tekstu" onclick="decreaseFontSize()">
+                    <button type="button" class="transparent-button" title="Zmniejsz rozmiar tekstu" onclick="decreaseFontSize()">
                         <span class="bi bi-zoom-out"></span>
                         <span class="visually-hidden">Zmniejsz tekst</span>
                     </button>
-                    <button class="transparent-button border-0 bg-transparent p-0" title="Przełącz tryb kolorów">
-                        <i class="bi bi-brightness-high" id="ldmode" style="font-size: 1.2rem; cursor: pointer;"></i>
-                        <span class="visually-hidden">Przełącz kontrast i kolory</span>
+                    <button type="button"
+                            class="transparent-button"
+                            title="Przełącz tryb kolorów">
+                        <i class="bi bi-brightness-high icon-size" id="ldmode"></i>
+                        <span class="visually-hidden">Przełącz tryb kolorów</span>
                     </button>
                 </div>
 
                 <!-- CZĘŚĆ LOGOWANIA -->
-                <div class="ms-sm-2">
+                <div class="ms-sm-2 nav-login">
                     <partial name="_LoginPartial" />
                 </div>
 
@@ -138,7 +136,26 @@
     </nav>
 
     <!-- TREŚĆ GŁÓWNA STRONY -->
-    <div class="container my-4">
+    <div class="container my-4 page-content">
+        <!-- POINFORMUJ O COOKIES -->
+        <div class="alert alert-dismissible fade show position-relative bg-light text-dark border-0 rounded-pill shadow-sm cookie-notice"
+             role="alert" style="z-index: 1030;">
+            <div class="container-fluid py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="cookie-message">
+                        <i class="bi bi-info-circle-fill pe-2"></i>
+                        Ta strona wykorzystuje pliki cookie do działania. Korzystając z niej, zgadzasz się na to.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij powiadomienie o cookies"></button>
+                </div>
+                <div class="mt-2">
+                    <a href="https://example.com/polityka-prywatnosci" class="btn btn-link text-dark p-0" target="_blank" rel="noopener noreferrer">
+                        Dowiedz się więcej
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
@@ -146,9 +163,19 @@
     </div>
 
     <!-- STOPKA -->
-    <footer class="border-top footer text-muted py-4 mt-auto bg-light">
-        <div class="container text-center text-sm-start">
-            &copy; 2026 - Szkoła Podstawowa im. Polskich Noblistów w Goleszynie - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
+    <footer class="footer site-footer border-top text-muted">
+        <div class="container site-footer-inner">
+            <div class="site-footer-copy">
+                &copy; 2026 - Szkoła Podstawowa im. Polskich Noblistów w Goleszynie
+            </div>
+            <nav class="site-footer-links" aria-label="Linki w stopce">
+                <a asp-area="" asp-controller="Home" asp-action="Contact"><i class="bi bi-envelope-fill" aria-hidden="true"></i> Kontakt</a>
+                <a href="https://www.facebook.com/TWOJA-STRONA" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
+            </nav>
+            <button type="button" class="back-to-top" id="backToTop" aria-label="Przewiń na górę strony" title="Na górę">
+                <i class="bi bi-arrow-up" aria-hidden="true"></i><span>Na górę</span>
+            </button>
         </div>
     </footer>
 
@@ -160,6 +187,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/site.js" asp-append-version="true"></script>
+    <script src="/js/navbar-fit.js" asp-append-version="true"></script>
+    <script src="/js/back-to-top.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -181,4 +210,3 @@
     </script>
 </body>
 </html>
-   

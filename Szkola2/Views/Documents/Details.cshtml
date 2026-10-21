@@ -1,41 +1,41 @@
 ﻿@model Szkola2.Models.Document
 
 @{
-    ViewData["Title"] = "Szczegóły";
+    ViewData["Title"] = "Szczegóły dokumentu";
 }
 
-<h1 class="text-success roboto">Szczegóły</h1>
+<div class="school-home">
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentDownload)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocumentDownload)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocumentName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">DOKUMENT</span>
+            <h1>@Html.DisplayFor(model => model.DocumentDownload)</h1>
+        </div>
+    </div>
+
+    <div class="panel-card panel-narrow">
+
+        <dl class="detail-list">
+            <dt>@Html.DisplayNameFor(model => model.DocumentDownload)</dt>
+            <dd>@Html.DisplayFor(model => model.DocumentDownload)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.DocumentName)</dt>
+            <dd>@Html.DisplayFor(model => model.DocumentName)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.DocumentType)</dt>
+            <dd>@Html.DisplayFor(model => model.DocumentType)</dd>
+        </dl>
+
+        <h2 class="form-section-title mt-4">@Html.DisplayNameFor(model => model.Content)</h2>
+        <div class="detail-content">
             @Html.Raw(Model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocumentType)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DocumentId" class="btn btn-warning">Edycja</a> 
-    <a asp-action="Index" class="btn btn-light">Powrót do Dokumentów</a>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.DocumentId" class="btn btn-school-warning">Edycja</a>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót do dokumentów</a>
+        </div>
+
+    </div>
+
 </div>

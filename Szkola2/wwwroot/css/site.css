@@ -1968,7 +1968,7 @@ body {
 }
 
 .news-description {
-    /* font-size: 0.95rem; */
+    font-size: 0.95rem;
     color: #495057;
     margin-bottom: 0.75rem;
     flex-grow: 1;
@@ -1978,7 +1978,7 @@ body {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
-    /*font-size: 0.9rem;*/
+    font-size: 0.9rem;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -2380,3 +2380,3005 @@ header.sticky-top {
     padding: 0.5rem 0.75rem;
     transition: background-color 0.2s ease;
 }
+
+
+/* ==========================================
+   JASNY TRYB CIEMNY — ODCIENIE SZAROŚCI
+   ========================================== */
+
+body.dark-theme {
+    --dm-bg: #404040;
+    --dm-surface: #505050;
+    --dm-surface-hover: #606060;
+    --dm-border: #858585;
+    --dm-text: #FFFFFF;
+    --dm-muted: #E0E0E0;
+    --dm-link: #C9E0FF;
+    background-color: var(--dm-bg) !important;
+    color: var(--dm-text) !important;
+}
+
+    /* Główna zawartość */
+    body.dark-theme main,
+    body.dark-theme main *,
+    body.dark-theme .container,
+    body.dark-theme .container-fluid {
+        border-color: var(--dm-border);
+    }
+
+    body.dark-theme main {
+        color: var(--dm-text);
+    }
+
+    /* Navbar — nadpisanie także koloru wpisanego w HTML */
+    body.dark-theme #navbar {
+        background-color: #505050 !important;
+        background-image: none !important;
+        border-color: var(--dm-border) !important;
+    }
+
+        body.dark-theme #navbar .navbar-brand,
+        body.dark-theme #navbar .nav-link,
+        body.dark-theme #navbar .nav-link.text-dark,
+        body.dark-theme #navbar .text-dark {
+            color: #FFFFFF !important;
+        }
+
+            body.dark-theme #navbar .nav-link:hover,
+            body.dark-theme #navbar .nav-link:focus {
+                background-color: var(--dm-surface-hover);
+                color: #FFFFFF !important;
+                border-radius: 5px;
+            }
+
+        /* Ikona przycisku mobilnego */
+        body.dark-theme #navbar .navbar-toggler {
+            color: #FFFFFF !important;
+            border-color: #BBBBBB !important;
+        }
+
+            body.dark-theme #navbar .navbar-toggler .bi {
+                color: #FFFFFF !important;
+            }
+
+        /* Menu rozwijane — usunięcie białego tła bg-white */
+        body.dark-theme #navbar .dropdown-menu,
+        body.dark-theme #navbar .dropdown-menu.bg-white {
+            background-color: var(--dm-surface) !important;
+            border: 1px solid var(--dm-border) !important;
+        }
+
+        body.dark-theme #navbar .dropdown-item,
+        body.dark-theme #navbar .dropdown-item.text-dark {
+            color: #FFFFFF !important;
+        }
+
+            body.dark-theme #navbar .dropdown-item:hover,
+            body.dark-theme #navbar .dropdown-item:focus {
+                background-color: var(--dm-surface-hover) !important;
+                color: #FFFFFF !important;
+            }
+
+        /* Przyciski dostępności: A+, A− i przełącznik motywu */
+        body.dark-theme #navbar .transparent-button {
+            color: #FFFFFF !important;
+            background-color: #606060 !important;
+            border: 1px solid #A0A0A0 !important;
+            border-radius: 6px;
+            min-width: 38px;
+            min-height: 36px;
+        }
+
+            body.dark-theme #navbar .transparent-button i,
+            body.dark-theme #navbar .transparent-button span.bi {
+                color: #FFFFFF !important;
+            }
+
+            body.dark-theme #navbar .transparent-button:hover,
+            body.dark-theme #navbar .transparent-button:focus-visible {
+                background-color: #707070 !important;
+                color: #FFFFFF !important;
+                outline: 2px solid #FFFFFF;
+                outline-offset: 2px;
+            }
+
+    /* Karty aktualności i pozostałe typowe powierzchnie */
+    body.dark-theme .card,
+    body.dark-theme .card-body,
+    body.dark-theme .card-header,
+    body.dark-theme .card-footer,
+    body.dark-theme .quick-card,
+    body.dark-theme .accordion-item,
+    body.dark-theme .list-group-item,
+    body.dark-theme .modal-content {
+        background-color: var(--dm-surface) !important;
+        color: var(--dm-text) !important;
+        border-color: var(--dm-border) !important;
+    }
+
+    /* Elementy Bootstrap wymuszające jasne tło */
+    body.dark-theme .bg-white,
+    body.dark-theme .bg-light {
+        background-color: var(--dm-surface) !important;
+        color: var(--dm-text) !important;
+    }
+
+    /* Nagłówki i teksty, również z klasami Bootstrapa */
+    body.dark-theme h1,
+    body.dark-theme h2,
+    body.dark-theme h3,
+    body.dark-theme h4,
+    body.dark-theme h5,
+    body.dark-theme h6,
+    body.dark-theme p,
+    body.dark-theme label,
+    body.dark-theme .text-dark,
+    body.dark-theme .text-body {
+        color: var(--dm-text) !important;
+    }
+
+    body.dark-theme .text-muted,
+    body.dark-theme small,
+    body.dark-theme .form-text {
+        color: var(--dm-muted) !important;
+    }
+
+    /* Linki w treści */
+    body.dark-theme main a:not(.btn):not(.dropdown-item),
+    body.dark-theme footer a {
+        color: var(--dm-link);
+    }
+
+        body.dark-theme main a:not(.btn):not(.dropdown-item):hover,
+        body.dark-theme footer a:hover {
+            color: #FFFFFF;
+        }
+
+    /* Przyciski Bootstrap */
+    body.dark-theme .btn-light,
+    body.dark-theme .btn-outline-secondary {
+        background-color: var(--dm-surface-hover);
+        color: #FFFFFF;
+        border-color: #B0B0B0;
+    }
+
+        body.dark-theme .btn-light:hover,
+        body.dark-theme .btn-outline-secondary:hover {
+            background-color: #707070;
+            color: #FFFFFF;
+        }
+
+    /* Formularze */
+    body.dark-theme .form-control,
+    body.dark-theme .form-select,
+    body.dark-theme textarea {
+        background-color: #414141 !important;
+        color: #FFFFFF !important;
+        border-color: #929292 !important;
+    }
+
+        body.dark-theme .form-control::placeholder,
+        body.dark-theme textarea::placeholder {
+            color: #D0D0D0 !important;
+        }
+
+    /* Stopka — nadpisanie bg-light */
+    body.dark-theme footer,
+    body.dark-theme footer.bg-light {
+        background-color: #484848 !important;
+        color: #E0E0E0 !important;
+        border-color: var(--dm-border) !important;
+    }
+
+    /* Widoczny fokus klawiatury */
+    body.dark-theme button:focus-visible,
+    body.dark-theme a:focus-visible,
+    body.dark-theme input:focus-visible,
+    body.dark-theme select:focus-visible,
+    body.dark-theme textarea:focus-visible {
+        outline: 2px solid #FFFFFF;
+        outline-offset: 3px;
+    }
+
+    /* Karty aktualności — Bootstrap i własne klasy */
+    body.dark-theme .card,
+    body.dark-theme .card-body,
+    body.dark-theme .card-header,
+    body.dark-theme .card-footer,
+    body.dark-theme .index8-home .card,
+    body.dark-theme .index8-home .card-body,
+    body.dark-theme .quick-card,
+    body.dark-theme .quick-card .card-body,
+    body.dark-theme article,
+    body.dark-theme .bg-white,
+    body.dark-theme .bg-light {
+        background-color: #505050 !important;
+        color: #FFFFFF !important;
+        border-color: #777777 !important;
+    }
+
+        /* Wewnętrzne elementy kart */
+        body.dark-theme .card *,
+        body.dark-theme .index8-home .card *,
+        body.dark-theme .quick-card * {
+            border-color: #777777;
+        }
+
+    /* Kalendarz — typowe klasy komponentów */
+    body.dark-theme .calendar,
+    body.dark-theme .calendar-container,
+    body.dark-theme .calendar-wrapper,
+    body.dark-theme .datepicker,
+    body.dark-theme .datepicker-days,
+    body.dark-theme .calendar table,
+    body.dark-theme .calendar thead,
+    body.dark-theme .calendar tbody,
+    body.dark-theme .calendar tr,
+    body.dark-theme .calendar th,
+    body.dark-theme .calendar td,
+    body.dark-theme .calendar .day,
+    body.dark-theme .calendar .date,
+    body.dark-theme .calendar .month,
+    body.dark-theme .calendar .year {
+        background-color: #505050 !important;
+        color: #FFFFFF !important;
+        border-color: #777777 !important;
+    }
+
+        /* Komórki kalendarza i dni tygodnia */
+        body.dark-theme .calendar td,
+        body.dark-theme .calendar th,
+        body.dark-theme .calendar button,
+        body.dark-theme .calendar a {
+            color: #FFFFFF !important;
+        }
+
+            /* Hover w kalendarzu */
+            body.dark-theme .calendar td:hover,
+            body.dark-theme .calendar .day:hover,
+            body.dark-theme .calendar button:hover,
+            body.dark-theme .calendar a:hover {
+                background-color: #686868 !important;
+                color: #FFFFFF !important;
+            }
+
+    /* Tekst w kartach */
+    body.dark-theme .card h1,
+    body.dark-theme .card h2,
+    body.dark-theme .card h3,
+    body.dark-theme .card h4,
+    body.dark-theme .card h5,
+    body.dark-theme .card p,
+    body.dark-theme .card small,
+    body.dark-theme .card .text-muted,
+    body.dark-theme .index8-home .card *,
+    body.dark-theme .quick-card * {
+        color: #FFFFFF !important;
+    }
+
+    /* Daty i tekst pomocniczy */
+    body.dark-theme .card .text-muted,
+    body.dark-theme .card small {
+        color: #E0E0E0 !important;
+    }
+
+/* ============================================
+   TRYB CIEMNY — KALENDARZ, ZEGAR I SZYBKIE LINKI
+   ============================================ */
+
+body.dark-theme {
+    --widget-bg: #46494E;
+    --widget-bg-light: #51545A;
+    --widget-hover: #62666D;
+    --widget-border: #70747B;
+    --widget-text: #F5F6F8;
+    --widget-muted: #D0D3D8;
+    --widget-link: #BBD7FF;
+}
+
+    /* --------------------------------------------
+   KALENDARZ I ZEGAR — KONTENER ZEWNĘTRZNY
+   -------------------------------------------- */
+
+    /* Typowe klasy kalendarza i zegara z projektu */
+    body.dark-theme .calendar,
+    body.dark-theme .calendar-container,
+    body.dark-theme .calendar-wrapper,
+    body.dark-theme .clock-container,
+    body.dark-theme .clock,
+    body.dark-theme .date-container,
+    body.dark-theme .date-widget,
+    body.dark-theme .calendar-widget,
+    body.dark-theme .clock-widget {
+        background-color: var(--widget-bg) !important;
+        color: var(--widget-text) !important;
+        border-color: var(--widget-border) !important;
+    }
+
+        /* Karta kalendarza, jeśli jest zbudowana z karty Bootstrap */
+        body.dark-theme .calendar .card,
+        body.dark-theme .clock-container .card,
+        body.dark-theme .calendar-widget .card,
+        body.dark-theme .clock-widget .card {
+            background-color: var(--widget-bg) !important;
+            color: var(--widget-text) !important;
+            border-color: var(--widget-border) !important;
+        }
+
+        /* --------------------------------------------
+   ZEGAR ANALOGOWY
+   -------------------------------------------- */
+
+        body.dark-theme .clock-container *,
+        body.dark-theme .clock-widget *,
+        body.dark-theme .clock * {
+            border-color: var(--widget-border);
+        }
+
+        /* Tarcza zegara — typowe elementy */
+        body.dark-theme .clock-face,
+        body.dark-theme .clock-dial,
+        body.dark-theme .clock-circle,
+        body.dark-theme .analog-clock,
+        body.dark-theme .clock-container .clock-face {
+            background-color: #3D4045 !important;
+            border-color: #B7BCC4 !important;
+            color: #FFFFFF !important;
+        }
+
+            /* Cyfry i oznaczenia zegara */
+            body.dark-theme .clock-number,
+            body.dark-theme .clock-face span,
+            body.dark-theme .clock-dial span,
+            body.dark-theme .clock-container .number {
+                color: #F5F6F8 !important;
+            }
+
+    /* Wskazówki zegara — dla elementów CSS */
+    body.dark-theme .hour-hand,
+    body.dark-theme .minute-hand,
+    body.dark-theme .clock-hour,
+    body.dark-theme .clock-minute {
+        background-color: #FFFFFF !important;
+    }
+
+    body.dark-theme .second-hand,
+    body.dark-theme .clock-second {
+        background-color: #FF7777 !important;
+    }
+
+
+    /* ==========================================
+   TRYB CIEMNY — KALENDARZ, ZEGAR, SZYBKIE LINKI
+   ========================================== */
+
+    /* Kontenery zegara i kalendarza */
+    body.dark-theme .calendar-container,
+    body.dark-theme .calendar-wrapper,
+    body.dark-theme .calendar-widget,
+    body.dark-theme .clock-container,
+    body.dark-theme .clock-widget,
+    body.dark-theme .date-widget,
+    body.dark-theme .date-container {
+        background: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #777777 !important;
+    }
+
+        /* Jeśli kalendarz i zegar są umieszczone w karcie */
+        body.dark-theme .calendar-container .card,
+        body.dark-theme .clock-container .card,
+        body.dark-theme .calendar-widget .card,
+        body.dark-theme .clock-widget .card {
+            background: #505050 !important;
+            color: #F5F5F5 !important;
+        }
+
+        /* Wewnętrzne elementy kalendarza */
+        body.dark-theme .calendar-container *,
+        body.dark-theme .calendar-widget *,
+        body.dark-theme .calendar-wrapper * {
+            border-color: #777777;
+        }
+
+        body.dark-theme .calendar-container table,
+        body.dark-theme .calendar-container th,
+        body.dark-theme .calendar-container td,
+        body.dark-theme .calendar-widget table,
+        body.dark-theme .calendar-widget th,
+        body.dark-theme .calendar-widget td {
+            background-color: #505050 !important;
+            color: #F5F5F5 !important;
+        }
+
+    /* Tarcza zegara */
+    body.dark-theme .clock-face,
+    body.dark-theme .clock-dial,
+    body.dark-theme .clock-circle,
+    body.dark-theme .analog-clock {
+        background-color: #424242 !important;
+        border-color: #D0D0D0 !important;
+        color: #FFFFFF !important;
+    }
+
+        /* Cyfry zegara */
+        body.dark-theme .clock-container .number,
+        body.dark-theme .clock-container .clock-number,
+        body.dark-theme .clock-face span {
+            color: #FFFFFF !important;
+        }
+
+    /* Karty szybkiego dostępu: biuletyn, Facebook, programy, projekty */
+    body.dark-theme .bulletin-card,
+    body.dark-theme .facebook-card,
+    body.dark-theme .program-card,
+    body.dark-theme .project-card,
+    body.dark-theme .quick-card,
+    body.dark-theme .quick-link {
+        background: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #777777 !important;
+    }
+
+        /* Wewnętrzne elementy kart */
+        body.dark-theme .bulletin-card *,
+        body.dark-theme .facebook-card *,
+        body.dark-theme .program-card *,
+        body.dark-theme .project-card *,
+        body.dark-theme .quick-card *,
+        body.dark-theme .quick-link * {
+            color: #F5F5F5;
+        }
+
+        /* Ikona „Ważne informacje”:
+   białe kółko, ciemny symbol */
+        body.dark-theme .quick-card .bi-info-circle,
+        body.dark-theme .quick-card .bi-info-circle-fill,
+        body.dark-theme .quick-links .bi-info-circle,
+        body.dark-theme .quick-links .bi-info-circle-fill,
+        body.dark-theme .quick-links-section .bi-info-circle,
+        body.dark-theme .quick-links-section .bi-info-circle-fill {
+            color: #333333 !important;
+            background-color: #FFFFFF !important;
+            border-radius: 50%;
+            padding: 3px;
+        }
+
+    /* Ikona, jeśli jest umieszczona w osobnym kółku */
+    body.dark-theme .info-icon {
+        background-color: #FFFFFF !important;
+        color: #333333 !important;
+        border-radius: 50%;
+    }
+
+    /* Ikony pozostałych kart */
+    body.dark-theme .bulletin-card .bi,
+    body.dark-theme .facebook-card .bi,
+    body.dark-theme .program-card .bi,
+    body.dark-theme .project-card .bi {
+        color: #FFFFFF !important;
+    }
+
+    /* Efekt po najechaniu na karty */
+    body.dark-theme .bulletin-card:hover,
+    body.dark-theme .facebook-card:hover,
+    body.dark-theme .program-card:hover,
+    body.dark-theme .project-card:hover,
+    body.dark-theme .quick-card:hover,
+    body.dark-theme .quick-link:hover {
+        background-color: #626262 !important;
+    }
+
+
+    /* ==========================================
+   TRYB CIEMNY — KALENDARZ, ZEGAR I KARTY
+   ========================================== */
+
+    /* Zewnętrzny panel zegara i kalendarza */
+    body.dark-theme .home-sidebar {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #777777 !important;
+    }
+
+    /* Wszystkie elementy wewnątrz kalendarza */
+    body.dark-theme #school-calendar,
+    body.dark-theme #school-calendar * {
+        background-color: #505050;
+        color: #F5F5F5;
+        border-color: #777777;
+    }
+
+        /* Wymuszenie ciemnego tła na elementach kalendarza */
+        body.dark-theme #school-calendar div,
+        body.dark-theme #school-calendar section,
+        body.dark-theme #school-calendar table,
+        body.dark-theme #school-calendar thead,
+        body.dark-theme #school-calendar tbody,
+        body.dark-theme #school-calendar tr,
+        body.dark-theme #school-calendar th,
+        body.dark-theme #school-calendar td {
+            background-color: #505050 !important;
+            color: #F5F5F5 !important;
+        }
+
+    /* Tarcza zegara — delikatnie ciemniejsza niż panel */
+    body.dark-theme .home-sidebar .clock-face,
+    body.dark-theme .home-sidebar .clock-dial,
+    body.dark-theme .home-sidebar .clock-circle,
+    body.dark-theme .home-sidebar .analog-clock {
+        background-color: #3D4045 !important;
+        color: #FFFFFF !important;
+        border-color: #BFC3C9 !important;
+    }
+
+    /* Zostaw niebieskie wyróżnienie aktualnego dnia */
+    body.dark-theme #school-calendar .today,
+    body.dark-theme #school-calendar .active,
+    body.dark-theme #school-calendar .selected {
+        background-color: #0D6EFD !important;
+        color: #FFFFFF !important;
+    }
+
+    /* ==========================================
+   KARTY BIP, FACEBOOK ORAZ IT PROJECTS
+   ========================================== */
+
+    /* Kontenery kart — selektory pomocnicze */
+    body.dark-theme .bip,
+    body.dark-theme .facebook,
+    body.dark-theme .it-projects,
+    body.dark-theme .it-project,
+    body.dark-theme #bip,
+    body.dark-theme #facebook,
+    body.dark-theme #it-projects,
+    body.dark-theme #itProjects {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #777777 !important;
+    }
+
+        /* Wewnętrzne elementy kart */
+        body.dark-theme .bip *,
+        body.dark-theme .facebook *,
+        body.dark-theme .it-projects *,
+        body.dark-theme .it-project *,
+        body.dark-theme #bip *,
+        body.dark-theme #facebook *,
+        body.dark-theme #it-projects *,
+        body.dark-theme #itProjects * {
+            color: #F5F5F5;
+        }
+
+        /* Hover */
+        body.dark-theme .bip:hover,
+        body.dark-theme .facebook:hover,
+        body.dark-theme .it-projects:hover,
+        body.dark-theme .it-project:hover,
+        body.dark-theme #bip:hover,
+        body.dark-theme #facebook:hover,
+        body.dark-theme #it-projects:hover,
+        body.dark-theme #itProjects:hover {
+            background-color: #626262 !important;
+        }
+
+    /* ==========================================
+   IKONA WAŻNE INFORMACJE
+   ========================================== */
+
+    /* Białe kółko, ciemny symbol informacji */
+    body.dark-theme .bi-info-circle,
+    body.dark-theme .bi-info-circle-fill {
+        color: #333333 !important;
+        background-color: #FFFFFF !important;
+        border-radius: 50%;
+        padding: 3px;
+    }
+
+/* Nie zmieniaj niebieskich ikon na innych elementach,
+   jeśli są częścią nawigacji lub przycisków. */
+
+    /* ==========================================
+   TRYB CIEMNY — KARTY W SIDEBARZE
+   ========================================== */
+
+    /* Karty BIP, Facebook, zegar oraz projekty */
+    body.dark-theme .home-sidebar .info-card {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border: 1px solid #707070 !important;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 15%);
+    }
+
+        /* Nagłówki i opisy */
+        body.dark-theme .home-sidebar .info-card h3,
+        body.dark-theme .home-sidebar .info-card span,
+        body.dark-theme .home-sidebar .info-card strong,
+        body.dark-theme .home-sidebar .info-card b,
+        body.dark-theme .home-sidebar .info-card .section-label {
+            color: #F5F5F5 !important;
+        }
+
+        /* Linki w kartach */
+        body.dark-theme .home-sidebar .info-card a {
+            color: #BBD7FF !important;
+        }
+
+    /* Wiersze poszczególnych projektów */
+    body.dark-theme .projects-sidebar-list,
+    body.dark-theme .sidebar-project-item,
+    body.dark-theme .projects-sidebar-list > a {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #707070 !important;
+    }
+
+        /* Nazwy i opisy projektów */
+        body.dark-theme .sidebar-project-item strong {
+            color: #FFFFFF !important;
+        }
+
+        body.dark-theme .sidebar-project-item span {
+            color: #D6D6D6 !important;
+        }
+
+        body.dark-theme .sidebar-project-item b {
+            color: #BBD7FF !important;
+        }
+
+        /* Najechanie na element projektu */
+        body.dark-theme .sidebar-project-item:hover {
+            background-color: #626262 !important;
+        }
+
+    /* Ikony BIP i Facebooka */
+    body.dark-theme .external-icon {
+        color: #FFFFFF !important;
+    }
+
+    /* Nagłówek i data w karcie zegara */
+    body.dark-theme #school-calendar .info-card-header,
+    body.dark-theme #school-calendar .current-date {
+        color: #F5F5F5 !important;
+    }
+
+    /* ==========================================
+   TRYB CIEMNY — WSKAZÓWKI ZEGARA
+   ========================================== */
+
+    body.dark-theme #clock .hour-hand {
+        background-color: #FFFFFF !important;
+        border-color: #FFFFFF !important;
+    }
+
+    body.dark-theme #clock .minute-hand {
+        background-color: #E0E0E0 !important;
+        border-color: #E0E0E0 !important;
+    }
+
+    body.dark-theme #clock .second-hand {
+        background-color: #FF7777 !important;
+        border-color: #FF7777 !important;
+    }
+
+    body.dark-theme #clock .clock-center {
+        background-color: #FFFFFF !important;
+        border-color: #FFFFFF !important;
+    }
+
+    body.dark-theme #clock .clock-number {
+        color: #FFFFFF !important;
+    }
+
+    /* ==========================================
+   TRYB CIEMNY — KALENDARZ
+   ========================================== */
+
+    body.dark-theme #calendar {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #707070 !important;
+    }
+
+        body.dark-theme #calendar th,
+        body.dark-theme #calendar td {
+            background-color: #505050 !important;
+            color: #F5F5F5 !important;
+            border-color: #707070 !important;
+        }
+
+            /* Dzień wskazany jako dzisiejszy */
+            body.dark-theme #calendar .today,
+            body.dark-theme #calendar .today td,
+            body.dark-theme #calendar td.today {
+                background-color: #0D6EFD !important;
+                color: #FFFFFF !important;
+                font-weight: 700;
+                border-radius: 4px;
+            }
+
+            /* Dzień wybrany przez użytkownika */
+            body.dark-theme #calendar .selected,
+            body.dark-theme #calendar .selected td,
+            body.dark-theme #calendar td.selected,
+            body.dark-theme #calendar .active,
+            body.dark-theme #calendar td.active {
+                background-color: #0D6EFD !important;
+                color: #FFFFFF !important;
+                font-weight: 700;
+            }
+
+            /* Jeśli dzień jest klikalnym elementem */
+            body.dark-theme #calendar td button,
+            body.dark-theme #calendar td a {
+                color: #F5F5F5 !important;
+            }
+
+            /* Wyróżnienie po najechaniu */
+            body.dark-theme #calendar td:hover {
+                background-color: #686868 !important;
+                color: #FFFFFF !important;
+            }
+            /* TRYB CIEMNY — WYRÓŻNIENIE DZISIEJSZEGO DNIA */
+            body.dark-theme #calendar td.thick-border {
+                background-color: #0D6EFD !important;
+                color: #FFFFFF !important;
+                font-weight: 700 !important;
+                border-radius: 50% !important;
+                border-color: #0D6EFD !important;
+                box-shadow: 0 2px 6px rgba(13, 110, 253, 0.5) !important;
+            }
+/* AUTOR AKTUALNOŚCI — MOTYW JASNY */
+.news-author {
+    color: #495057;
+    transition: color 0.2s ease;
+}
+
+    .news-author .author-avatar {
+        background-color: #E7F0FF;
+        color: #245CA6;
+        border: 1px solid #C8DAF5;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+/* AUTOR AKTUALNOŚCI — MOTYW CIEMNY */
+body.dark-theme .news-author {
+    color: #E0E0E0 !important;
+}
+
+    body.dark-theme .news-author .author-avatar {
+        background-color: #263B57 !important;
+        color: #BBD8F2 !important;
+        border: 1px solid #45658A !important;
+    }
+html,
+body {
+    min-height: 100%;
+    margin: 0;
+}
+
+.page-wrapper footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+/* Stopka jako zwykły element strony — bez przyklejania do ekranu */
+html body footer.footer {
+    position: static !important;
+    bottom: auto !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    margin-top: 0;
+    transform: none;
+}
+
+/* Kontener treści nie może wymuszać przyklejania stopki */
+.page-content {
+    flex: initial !important;
+    min-height: 0;
+}
+
+body.dark-theme .card,
+body.dark-theme .card-body,
+body.dark-theme .card-header,
+body.dark-theme .news-card {
+    background-color: var(--dm-surface) !important;
+    color: var(--dm-text) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* Wszelkie nagłówki, akapity, etykiety i teksty wewnątrz sekcji tekstów */
+body.dark-theme .card h3,
+body.dark-theme .card p,
+body.dark-theme .card label,
+body.dark-theme .card span,
+body.dark-theme .card small,
+body.dark-theme .news-body h3,
+body.dark-theme .news-body p,
+body.dark-theme .news-body span,
+body.dark-theme .news-description {
+    color: var(--dm-text) !important;
+}
+
+/* Pola formularzy (wyszukiwarka i selecty) */
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme input[type="text"] {
+    background-color: #414141 !important;
+    color: #FFFFFF !important;
+    border-color: var(--dm-border) !important;
+}
+
+    body.dark-theme .form-control::placeholder,
+    body.dark-theme input[type="text"]::placeholder {
+        color: #D0D0D0 !important;
+    }
+
+/* Paginacja (stronnicowanie) w trybie ciemnym */
+body.dark-theme .pagination .page-link {
+    background-color: var(--dm-surface) !important;
+    color: var(--dm-text) !important;
+    border-color: var(--dm-border) !important;
+}
+
+body.dark-theme .pagination .page-item.active .page-link {
+    background-color: var(--dm-surface-hover) !important;
+    border-color: var(--dm-border) !important;
+    color: #FFFFFF !important;
+    font-weight: bold;
+}
+
+body.dark-theme .pagination .page-link:hover {
+    background-color: var(--dm-surface-hover) !important;
+    color: #FFFFFF !important;
+}
+/* =================================================================
+   LISTA TEKSTÓW (Texts/Index) — styl spójny ze stroną główną
+   Wklej na KONIEC pliku site.css
+==================================================================== */
+
+.texts-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .texts-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Filtry --- */
+.texts-filter {
+    position: sticky;
+    top: 5rem;
+}
+
+@media (max-width: 992px) {
+    .texts-filter {
+        position: static;
+    }
+}
+
+.texts-filter .info-card-header {
+    margin-bottom: 1rem;
+}
+
+.texts-filter-field {
+    margin-bottom: 1rem;
+}
+
+.texts-filter-button {
+    width: 100%;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* --- Lista: 1 karta na wiersz, obraz po lewej --- */
+.texts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.news-card-row {
+    flex-direction: row;
+}
+
+    .news-card-row .news-image-wrapper {
+        flex: 0 0 280px;
+        height: auto;
+        min-height: 220px;
+    }
+
+    .news-card-row .news-body {
+        padding: 1.25rem 1.5rem;
+    }
+
+@media (max-width: 768px) {
+    .news-card-row {
+        flex-direction: column;
+    }
+
+        .news-card-row .news-image-wrapper {
+            flex: none;
+            height: 190px;
+            min-height: 0;
+        }
+}
+
+/* --- Brak wyników --- */
+.texts-empty {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.texts-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+/* --- Paginacja --- */
+.texts-pagination {
+    margin-top: 2.5rem;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+    .texts-pagination .page-link {
+        background-color: var(--card-bg);
+        color: var(--primary-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .texts-pagination .page-link:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+    .texts-pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: #ffffff;
+    }
+
+/* =================================================================
+   TRYB CIEMNY — lista tekstów
+==================================================================== */
+
+body.dark-theme .texts-filter,
+body.dark-theme .texts-empty,
+body.dark-theme .news-card-row {
+    background-color: #505050 !important;
+    border-color: #707070 !important;
+    color: #F5F5F5 !important;
+}
+
+    body.dark-theme .texts-filter label,
+    body.dark-theme .texts-filter h3,
+    body.dark-theme .news-card-row h3,
+    body.dark-theme .news-card-row .news-date,
+    body.dark-theme .news-card-row .news-description,
+    body.dark-theme .news-card-row .news-description *,
+    body.dark-theme .texts-empty div {
+        color: #F5F5F5 !important;
+    }
+
+    body.dark-theme .texts-filter .section-label,
+    body.dark-theme .news-card-row .read-more {
+        color: #BBD7FF !important;
+    }
+
+body.dark-theme .texts-empty-icon {
+    background-color: #FFFFFF !important;
+    color: #333333 !important;
+}
+
+body.dark-theme .texts-filter .form-control,
+body.dark-theme .texts-filter .form-select {
+    background-color: #414141 !important;
+    color: #FFFFFF !important;
+    border-color: #929292 !important;
+}
+
+body.dark-theme .texts-filter .primary-outline-button {
+    color: #BBD7FF;
+    border-color: #BBD7FF;
+}
+
+    body.dark-theme .texts-filter .primary-outline-button:hover {
+        background-color: #BBD7FF;
+        color: #202020;
+    }
+
+body.dark-theme .texts-pagination .page-link {
+    background-color: #505050 !important;
+    border-color: #707070 !important;
+    color: #F5F5F5 !important;
+}
+
+    body.dark-theme .texts-pagination .page-link:hover {
+        background-color: #626262 !important;
+        color: #FFFFFF !important;
+    }
+
+body.dark-theme .texts-pagination .page-item.active .page-link {
+    background-color: #0D6EFD !important;
+    border-color: #0D6EFD !important;
+    color: #FFFFFF !important;
+}
+
+/* --- Większy napis „CO SŁYCHAĆ?” (widoczny w obu trybach) --- */
+.section-label-lg {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 0.4rem;
+}
+
+body.dark-theme .section-label-lg {
+    color: #BBD7FF !important;
+}
+/* =================================================================
+   PANEL TEKSTÓW (Create / Edit / Details / Delete / List)
+   Wklej na KONIEC site.css, PO bloku z texts-list.css
+   (korzysta z klasy .section-label-lg zdefiniowanej tam)
+==================================================================== */
+
+/* --- Nagłówek strony (bez animacji wejścia) --- */
+.page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+    .page-heading h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+        .page-heading h1 span {
+            color: var(--primary-color);
+        }
+
+/* --- Karta-panel (formularze, szczegóły, tabela) --- */
+.panel-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.panel-narrow {
+    max-width: 900px;
+}
+
+@media (max-width: 576px) {
+    .panel-card {
+        padding: 1.1rem;
+    }
+}
+
+/* --- Sekcje formularza --- */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.muted-text {
+    color: #6c757d;
+}
+
+/* --- Przyciski --- */
+.btn-school,
+.btn-school-outline,
+.btn-school-danger,
+.btn-school-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.btn-school {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+}
+
+    .btn-school:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        color: #ffffff;
+    }
+
+.btn-school-outline {
+    background: transparent;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+    .btn-school-outline:hover {
+        background-color: var(--primary-color);
+        color: #ffffff;
+    }
+
+.btn-school-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
+
+    .btn-school-danger:hover {
+        background-color: #b02a37;
+        border-color: #b02a37;
+        color: #ffffff;
+    }
+
+.btn-school-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+    .btn-school-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+        color: #212529;
+    }
+
+/* --- Edit: zdjęcie główne i galeria --- */
+.edit-main-photo {
+    display: block;
+    width: 220px;
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.gallery-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-admin-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+}
+
+    .gallery-admin-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 0.4rem;
+    }
+
+/* --- Details / Delete --- */
+.detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--border-color);
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.detail-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.detail-badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 50rem;
+    background: rgba(13, 110, 253, 0.1);
+    color: var(--primary-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.detail-content {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+    .detail-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+.gallery-carousel {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+    .gallery-carousel .carousel-item img {
+        max-height: 520px;
+        object-fit: contain;
+    }
+
+    .gallery-carousel .carousel-control-prev-icon,
+    .gallery-carousel .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.55);
+        background-size: 50%;
+        border-radius: 50%;
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+.panel-danger {
+    border-left: 5px solid #dc3545;
+}
+
+.label-danger,
+.heading-danger {
+    color: #dc3545 !important;
+}
+
+.delete-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.delete-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.delete-photo {
+    width: 220px;
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.detail-list {
+    flex: 1;
+    min-width: 220px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1.25rem;
+}
+
+    .detail-list dt {
+        font-weight: 700;
+        color: #6c757d;
+    }
+
+    .detail-list dd {
+        margin: 0;
+    }
+
+.delete-content {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+}
+
+/* --- List: tabela --- */
+.texts-table {
+    margin-bottom: 0;
+    width: 100% !important;
+}
+
+    .texts-table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c757d;
+        white-space: nowrap;
+    }
+
+.table-thumb {
+    width: 72px;
+    height: 50px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 0.4rem;
+    border: 1px solid var(--border-color);
+}
+
+.title-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.title-cell-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+    .title-cell-text .detail-badge {
+        margin-top: 0.3rem;
+    }
+
+.table-excerpt {
+    width: 34%;
+    color: #495057;
+    overflow-wrap: anywhere;
+}
+
+.date-cell {
+    white-space: nowrap;
+}
+
+.date-cell-author {
+    color: #6c757d;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-on {
+    background: rgba(40, 167, 69, 0.15);
+    color: #1e7e34;
+}
+
+.status-off {
+    background: rgba(108, 117, 125, 0.18);
+    color: #495057;
+}
+
+.list-actions {
+    white-space: nowrap;
+    width: 1%;
+    text-align: right;
+}
+
+    .list-actions .btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        margin-left: 0.15rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+/* =================================================================
+   TRYB CIEMNY — panel tekstów
+==================================================================== */
+
+body.dark-theme .panel-card {
+    background-color: #505050 !important;
+    border-color: #707070 !important;
+    color: #F5F5F5 !important;
+}
+
+    body.dark-theme .panel-card h1,
+    body.dark-theme .panel-card h2,
+    body.dark-theme .panel-card dd,
+    body.dark-theme .panel-card label,
+    body.dark-theme .panel-card .table td,
+    body.dark-theme .panel-card .table-excerpt {
+        color: #F5F5F5 !important;
+    }
+
+body.dark-theme .page-heading h1 span {
+    color: #BBD7FF;
+}
+
+    body.dark-theme .page-heading h1 span.heading-danger,
+    body.dark-theme .label-danger {
+        color: #FF8A8A !important;
+    }
+
+body.dark-theme .panel-danger {
+    border-left-color: #FF6B6B;
+}
+
+body.dark-theme .form-section-title,
+body.dark-theme .detail-meta,
+body.dark-theme .form-actions {
+    border-color: #707070;
+    color: #F5F5F5;
+}
+
+body.dark-theme .detail-meta {
+    color: #E0E0E0;
+}
+
+body.dark-theme .detail-list dt,
+body.dark-theme .date-cell-author,
+body.dark-theme .muted-text,
+body.dark-theme .texts-table th {
+    color: #D6D6D6 !important;
+}
+
+body.dark-theme .detail-badge {
+    background: rgba(187, 215, 255, 0.18);
+    color: #BBD7FF;
+}
+
+body.dark-theme .gallery-admin-item,
+body.dark-theme .delete-content {
+    background: #444444;
+    border-color: #707070;
+}
+
+body.dark-theme .edit-main-photo,
+body.dark-theme .delete-photo,
+body.dark-theme .table-thumb {
+    border-color: #707070;
+}
+
+body.dark-theme .btn-school-outline {
+    color: #BBD7FF;
+    border-color: #BBD7FF;
+}
+
+    body.dark-theme .btn-school-outline:hover {
+        background-color: #BBD7FF;
+        color: #202020;
+    }
+
+body.dark-theme .btn-school-danger {
+    background-color: #E04B5A;
+    border-color: #E04B5A;
+}
+
+body.dark-theme .status-on {
+    background: rgba(90, 210, 120, 0.2);
+    color: #8FE3A5;
+}
+
+body.dark-theme .status-off {
+    background: rgba(255, 255, 255, 0.15);
+    color: #E0E0E0;
+}
+
+body.dark-theme .text-danger {
+    color: #FF8A8A !important;
+}
+
+/* Przyciski akcji w tabeli — jaśniejsze obramowania */
+body.dark-theme .list-actions .btn-outline-primary {
+    color: #9EC5FE;
+    border-color: #9EC5FE;
+}
+
+body.dark-theme .list-actions .btn-outline-success {
+    color: #8FE3A5;
+    border-color: #8FE3A5;
+}
+
+body.dark-theme .list-actions .btn-outline-danger {
+    color: #FF8A8A;
+    border-color: #FF8A8A;
+}
+
+
+/* Tabela i DataTables */
+body.dark-theme .texts-table,
+body.dark-theme .texts-table > :not(caption) > * > * {
+    background-color: transparent !important;
+    color: #F5F5F5 !important;
+    border-color: #707070 !important;
+    box-shadow: none !important;
+}
+
+    body.dark-theme .texts-table tbody tr:hover > * {
+        background-color: #5E5E5E !important;
+    }
+
+body.dark-theme .dataTables_wrapper,
+body.dark-theme .dataTables_wrapper label,
+body.dark-theme .dataTables_wrapper .dataTables_info,
+body.dark-theme .dt-container,
+body.dark-theme .dt-container label,
+body.dark-theme .dt-container .dt-info {
+    color: #F5F5F5 !important;
+}
+
+    body.dark-theme .dataTables_wrapper .form-control,
+    body.dark-theme .dataTables_wrapper .form-select,
+    body.dark-theme .dt-container .form-control,
+    body.dark-theme .dt-container .form-select,
+    body.dark-theme .dt-container input,
+    body.dark-theme .dt-container select {
+        background-color: #414141 !important;
+        color: #FFFFFF !important;
+        border-color: #929292 !important;
+    }
+
+    body.dark-theme .dataTables_wrapper .page-link,
+    body.dark-theme .dt-container .page-link {
+        background-color: #505050 !important;
+        border-color: #707070 !important;
+        color: #F5F5F5 !important;
+    }
+
+    body.dark-theme .dataTables_wrapper .page-item.active .page-link,
+    body.dark-theme .dt-container .page-item.active .page-link {
+        background-color: #0D6EFD !important;
+        border-color: #0D6EFD !important;
+        color: #FFFFFF !important;
+    }
+
+    body.dark-theme .dataTables_wrapper .page-item.disabled .page-link,
+    body.dark-theme .dt-container .page-item.disabled .page-link {
+        color: #A0A0A0 !important;
+    }
+
+
+/* =================================================================
+   CKEDITOR — pełny motyw ciemny (zgodny z resztą strony)
+   Tryb jasny zostaje domyślny (białe pole, ciemny tekst).
+==================================================================== */
+
+body.dark-theme {
+    --ck-color-base-foreground: #404040;
+    --ck-color-base-background: #505050;
+    --ck-color-base-border: #707070;
+    --ck-color-base-text: #F5F5F5;
+    --ck-color-text: #F5F5F5;
+    --ck-color-shadow-drop: rgba(0, 0, 0, 0.45);
+    --ck-color-shadow-inner: rgba(0, 0, 0, 0.2);
+    --ck-color-focus-border: #8AB4FF;
+    --ck-color-focus-outer-shadow: rgba(138, 180, 255, 0.3);
+    --ck-color-toolbar-background: #404040;
+    --ck-color-toolbar-border: #707070;
+    --ck-color-panel-background: #505050;
+    --ck-color-panel-border: #707070;
+    --ck-color-dropdown-panel-background: #505050;
+    --ck-color-dropdown-panel-border: #707070;
+    --ck-color-input-background: #414141;
+    --ck-color-input-border: #929292;
+    --ck-color-input-text: #FFFFFF;
+    --ck-color-input-disabled-background: #3A3A3A;
+    --ck-color-input-disabled-border: #606060;
+    --ck-color-input-disabled-text: #A0A0A0;
+    --ck-color-list-background: #505050;
+    --ck-color-list-button-hover-background: #626262;
+    --ck-color-list-button-on-background: #0D6EFD;
+    --ck-color-list-button-on-background-focus: #0B5ED7;
+    --ck-color-list-button-on-text: #FFFFFF;
+    --ck-color-button-default-hover-background: #626262;
+    --ck-color-button-default-active-background: #6C6C6C;
+    --ck-color-button-on-background: #3D4F6E;
+    --ck-color-button-on-hover-background: #475C80;
+    --ck-color-button-on-active-background: #4F6690;
+    --ck-color-button-on-color: #BBD7FF;
+    --ck-color-split-button-hover-background: #626262;
+    --ck-color-split-button-hover-border: #707070;
+    --ck-color-labeled-field-label-background: #505050;
+    --ck-color-widget-editable-focus-background: #505050;
+}
+
+    /* Pole edycji */
+    body.dark-theme .ck.ck-editor__editable,
+    body.dark-theme .ck.ck-editor__editable.ck-focused,
+    body.dark-theme .ck.ck-editor__main > .ck-editor__editable {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+        border-color: #707070 !important;
+    }
+
+    /* Tekst w polu — przebija globalne reguły body.dark-theme p / h1..h6 */
+    body.dark-theme .ck-content p,
+    body.dark-theme .ck-content h1,
+    body.dark-theme .ck-content h2,
+    body.dark-theme .ck-content h3,
+    body.dark-theme .ck-content h4,
+    body.dark-theme .ck-content h5,
+    body.dark-theme .ck-content h6,
+    body.dark-theme .ck-content li,
+    body.dark-theme .ck-content td,
+    body.dark-theme .ck-content th,
+    body.dark-theme .ck-content span,
+    body.dark-theme .ck-content strong,
+    body.dark-theme .ck-content em,
+    body.dark-theme .ck-content blockquote,
+    body.dark-theme .ck-content figcaption {
+        color: #F5F5F5 !important;
+    }
+
+    body.dark-theme .ck-content a {
+        color: #BBD7FF !important;
+    }
+
+    body.dark-theme .ck-content blockquote {
+        border-left-color: #8AB4FF;
+    }
+
+    body.dark-theme .ck-content table,
+    body.dark-theme .ck-content table td,
+    body.dark-theme .ck-content table th {
+        border-color: #707070;
+    }
+
+        body.dark-theme .ck-content table th {
+            background-color: #606060;
+        }
+
+    body.dark-theme .ck.ck-editor__editable > .ck-placeholder::before {
+        color: #C0C0C0;
+    }
+
+    /* Pasek narzędzi i przyciski */
+    body.dark-theme .ck.ck-toolbar {
+        background-color: #404040 !important;
+        border-color: #707070 !important;
+    }
+
+    body.dark-theme .ck.ck-toolbar__separator {
+        background-color: #707070;
+    }
+
+    body.dark-theme .ck.ck-button:not(.ck-on),
+    body.dark-theme .ck.ck-button:not(.ck-on) .ck-button__label {
+        color: #F5F5F5;
+    }
+
+    body.dark-theme .ck.ck-button.ck-on,
+    body.dark-theme .ck.ck-button.ck-on .ck-button__label {
+        color: #BBD7FF;
+    }
+
+/* =================================================================
+   LISTA — na wąskim ekranie tabela nie zmniejsza się,
+   cały panel (wyszukiwarka + tabela + stronicowanie) przewija się w bok
+==================================================================== */
+.list-panel {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.list-inner {
+    min-width: 880px;
+}
+
+body.dark-theme .list-panel {
+    scrollbar-color: #8A8A8A #404040;
+}
+
+/* =================================================================
+   LISTA — kolumny Tytuł i Treść nie mogą się zwężać do pionowych liter
+==================================================================== */
+.texts-table td:first-child,
+.texts-table th:first-child {
+    min-width: 280px;
+}
+
+.texts-table td.table-excerpt,
+.texts-table th:nth-child(2) {
+    min-width: 220px;
+}
+
+.title-cell-text {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.table-excerpt {
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.detail-badge,
+.status-pill {
+    white-space: nowrap;
+}
+
+.list-inner {
+    min-width: 1000px;
+}
+
+
+/* =================================================================
+   TRYB CIEMNY — przyciski akcji w tabelach (hover)
+   Wcześniej tło po najechaniu stawało się czarne (currentColor
+   w połączeniu z ciemnym kolorem tekstu). Teraz: jasne tło + ciemna ikona.
+==================================================================== */
+body.dark-theme .list-actions .btn-outline-primary:hover,
+body.dark-theme .list-actions .btn-outline-primary:focus-visible {
+    background-color: #9EC5FE;
+    border-color: #9EC5FE;
+    color: #202020;
+}
+
+body.dark-theme .list-actions .btn-outline-success:hover,
+body.dark-theme .list-actions .btn-outline-success:focus-visible {
+    background-color: #8FE3A5;
+    border-color: #8FE3A5;
+    color: #202020;
+}
+
+body.dark-theme .list-actions .btn-outline-danger:hover,
+body.dark-theme .list-actions .btn-outline-danger:focus-visible {
+    background-color: #FF8A8A;
+    border-color: #FF8A8A;
+    color: #202020;
+}
+
+/* =================================================================
+   STOPKA NA DOLE STRONY (nawet gdy treści jest mało)
+   Układ kolumnowy: treść rośnie, stopka zostaje na dole.
+   Działa zarówno gdy header/main/footer są bezpośrednio w <body>,
+   jak i gdy są w kontenerze .page-wrapper.
+==================================================================== */
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+    body > main,
+    .page-wrapper > main,
+    .page-content {
+        flex: 1 0 auto !important;
+    }
+
+html body footer.footer,
+html body footer {
+    flex-shrink: 0;
+    margin-top: auto !important;
+}
+
+/* Kontener treści rośnie, żeby stopka (footer.mt-auto) była zawsze na dole */
+body > .container {
+    flex: 1 0 auto;
+}
+
+/* =================================================================
+   ZDJĘCIA (AdvertisingPhoto) — siatka kart i podgląd
+==================================================================== */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.photo-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .photo-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    }
+
+    .photo-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+    }
+
+.photo-card-actions.list-actions {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.photo-preview {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.6rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Tryb ciemny */
+body.dark-theme .photo-card {
+    background-color: #505050;
+    border-color: #707070;
+}
+
+body.dark-theme .photo-card-actions.list-actions,
+body.dark-theme .photo-preview {
+    border-color: #707070;
+}
+
+/* =================================================================
+   DOKUMENTY — siatka kart z ikoną typu pliku
+==================================================================== */
+.doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.doc-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .doc-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    }
+
+.doc-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 130px;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .doc-card-icon img {
+        width: 84px;
+        height: 84px;
+        object-fit: contain;
+    }
+
+    .doc-card-icon .bi {
+        font-size: 3.5rem;
+        color: var(--primary-color);
+    }
+
+.doc-card-body {
+    flex: 1 1 auto;
+    padding: 1.1rem 1.25rem 0.5rem;
+}
+
+    .doc-card-body h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.35;
+        overflow-wrap: break-word;
+    }
+
+.doc-card-text {
+    font-size: 0.92rem;
+    color: #495057;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.doc-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.9rem 1.25rem 1.1rem;
+}
+
+.doc-download {
+    padding: 0.5rem 1rem;
+}
+
+.doc-card-footer .list-actions {
+    width: auto;
+    white-space: nowrap;
+}
+
+/* Tryb ciemny */
+body.dark-theme .doc-card {
+    background-color: #505050;
+    border-color: #707070;
+}
+
+body.dark-theme .doc-card-icon {
+    background-color: #444444;
+    border-bottom-color: #707070;
+}
+
+    body.dark-theme .doc-card-icon .bi {
+        color: #BBD7FF;
+    }
+
+body.dark-theme .doc-card-body h3,
+body.dark-theme .doc-card-text,
+body.dark-theme .doc-card-text * {
+    color: #F5F5F5 !important;
+}
+
+/* =================================================================
+   HISTORIA SZKOŁY — wpisy i galeria zdjęć
+==================================================================== */
+.history-entry {
+    margin-bottom: 1.5rem;
+}
+
+.history-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.history-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.history-gallery-item {
+    margin: 0;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+
+    .history-gallery-item img {
+        display: block;
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+
+/* Węższa tabela (Index historii) */
+.list-inner.list-inner-sm {
+    min-width: 640px;
+}
+
+.texts-table .title-col {
+    min-width: 180px;
+}
+
+body.dark-theme .history-title {
+    border-bottom-color: #707070;
+    color: #F5F5F5 !important;
+}
+
+body.dark-theme .history-gallery-item {
+    background-color: #444444;
+    border-color: #707070;
+}
+
+/* Historia (List) — wyższe zdjęcia, kadr od góry (twarze nie są ucinane) */
+.history-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.history-gallery-item img {
+    height: 380px;
+    object-position: center top;
+}
+
+@media (max-width: 576px) {
+    .history-gallery-item img {
+        height: 320px;
+    }
+}
+
+/* =================================================================
+   KONTAKT — godziny, adres, karty kontaktowe i mapa
+==================================================================== */
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--bg-color);
+    color: var(--primary-color);
+    font-size: 1.4rem;
+}
+
+.contact-info-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 0.15rem;
+}
+
+.contact-info strong {
+    font-size: 1.1rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+    .contact-list li {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        overflow-wrap: anywhere;
+    }
+
+    .contact-list .bi {
+        color: var(--primary-color);
+        flex-shrink: 0;
+    }
+
+    .contact-list a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+        .contact-list a:hover {
+            color: var(--primary-color);
+            border-bottom-color: currentColor;
+        }
+
+.map-frame {
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    line-height: 0;
+}
+
+    .map-frame iframe {
+        width: 100%;
+        height: 450px;
+        border: 0;
+    }
+
+/* Tryb ciemny */
+body.dark-theme .contact-info-icon {
+    background-color: #444444;
+    color: #BBD7FF;
+}
+
+body.dark-theme .contact-info-label {
+    color: #D6D6D6;
+}
+
+body.dark-theme .contact-info strong,
+body.dark-theme .contact-card-title,
+body.dark-theme .contact-list li,
+body.dark-theme .contact-list span {
+    color: #F5F5F5 !important;
+}
+
+body.dark-theme .contact-card-title {
+    border-bottom-color: #707070;
+}
+
+body.dark-theme .contact-list .bi {
+    color: #BBD7FF;
+}
+
+body.dark-theme .contact-list a {
+    color: #F5F5F5;
+}
+
+    body.dark-theme .contact-list a:hover {
+        color: #BBD7FF;
+    }
+
+body.dark-theme .map-frame {
+    border-color: #707070;
+}
+
+/* =================================================================
+   KALENDARIUM (YearEvents) — karty wydarzeń z rozwijaną treścią
+==================================================================== */
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.event-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.event-card-photo img {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.event-accordion .accordion-item {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.event-accordion .accordion-button {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .event-accordion .accordion-button:not(.collapsed) {
+        background: var(--bg-color);
+        color: var(--primary-dark);
+    }
+
+.event-title {
+    flex: 1 1 200px;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+.event-accordion .accordion-body {
+    padding: 1.25rem;
+}
+
+/* Tryb ciemny */
+body.dark-theme .event-card {
+    background-color: #505050;
+    border-color: #707070;
+}
+
+body.dark-theme .event-accordion .accordion-button {
+    background-color: #505050;
+    color: #F5F5F5;
+    border-bottom-color: #707070;
+}
+
+    body.dark-theme .event-accordion .accordion-button:not(.collapsed) {
+        background-color: #444444;
+        color: #BBD7FF;
+    }
+
+    body.dark-theme .event-accordion .accordion-button::after {
+        filter: invert(1) brightness(1.5);
+    }
+
+body.dark-theme .event-accordion .accordion-body {
+    background-color: #505050;
+    color: #F5F5F5;
+}
+
+    body.dark-theme .event-accordion .accordion-body p,
+    body.dark-theme .event-accordion .accordion-body span,
+    body.dark-theme .event-accordion .accordion-body li {
+        color: #F5F5F5 !important;
+    }
+
+/* =================================================================
+   YEAREVENTS — poprawki: ciemny pasek tytułu, mniejsze zdjęcia,
+   widoczne strzałki karuzeli, "Czytaj dalej" na wąskich ekranach
+==================================================================== */
+
+/* --- Mniejsze zdjęcie tytułowe --- */
+/* Zdjęcie tytułowe: cała fotografia widoczna (bez ucinania), mniejsze */
+.event-card-photo {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .event-card-photo img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 320px;
+        object-fit: contain;
+        border-radius: 0.5rem;
+    }
+
+@media (max-width: 991px) {
+    .event-card-photo img {
+        max-height: 270px;
+    }
+}
+
+/* --- Mniejsza galeria wewnątrz wydarzenia --- */
+.event-accordion .gallery-carousel {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .event-accordion .gallery-carousel .carousel-item img {
+        max-height: 480px;
+        width: auto;
+        max-width: 100%;
+    }
+
+@media (max-width: 991px) {
+    .event-accordion .gallery-carousel {
+        max-width: 620px;
+    }
+
+        .event-accordion .gallery-carousel .carousel-item img {
+            max-height: 360px;
+        }
+}
+
+@media (max-width: 576px) {
+    .event-card-photo {
+        padding: 0.75rem;
+    }
+
+        .event-card-photo img {
+            max-height: 220px;
+        }
+
+    .event-accordion .gallery-carousel .carousel-item img {
+        max-height: 240px;
+    }
+}
+
+/* --- Widoczne strzałki karuzeli (wszystkie galerie) --- */
+.gallery-carousel .carousel-control-prev,
+.gallery-carousel .carousel-control-next {
+    width: 4rem;
+    opacity: 1;
+}
+
+.gallery-carousel .carousel-control-prev-icon,
+.gallery-carousel .carousel-control-next-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    background-size: 45% 45%;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.gallery-carousel .carousel-control-prev:hover .carousel-control-prev-icon,
+.gallery-carousel .carousel-control-next:hover .carousel-control-next-icon,
+.gallery-carousel .carousel-control-prev:focus-visible .carousel-control-prev-icon,
+.gallery-carousel .carousel-control-next:focus-visible .carousel-control-next-icon {
+    background-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+@media (max-width: 576px) {
+    .gallery-carousel .carousel-control-prev,
+    .gallery-carousel .carousel-control-next {
+        width: 3.25rem;
+    }
+
+    .gallery-carousel .carousel-control-prev-icon,
+    .gallery-carousel .carousel-control-next-icon {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}
+
+/* --- Tryb ciemny: pasek tytułu akordeonu (zmienne Bootstrapa + !important) --- */
+body.dark-theme .event-accordion {
+    --bs-accordion-bg: #505050;
+    --bs-accordion-color: #F5F5F5;
+    --bs-accordion-border-color: #707070;
+    --bs-accordion-btn-color: #F5F5F5;
+    --bs-accordion-btn-bg: #505050;
+    --bs-accordion-active-color: #BBD7FF;
+    --bs-accordion-active-bg: #444444;
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(187, 215, 255, 0.35);
+}
+
+    body.dark-theme .event-accordion .accordion-button,
+    body.dark-theme .event-accordion .accordion-button.collapsed {
+        background-color: #505050 !important;
+        color: #F5F5F5 !important;
+    }
+
+        body.dark-theme .event-accordion .accordion-button:hover {
+            background-color: #5E5E5E !important;
+        }
+
+        body.dark-theme .event-accordion .accordion-button:not(.collapsed) {
+            background-color: #444444 !important;
+            color: #BBD7FF !important;
+        }
+
+        body.dark-theme .event-accordion .accordion-button .event-title {
+            color: inherit !important;
+        }
+
+/* --- "Czytaj dalej" (readmore.js) --- */
+body.dark-theme {
+    --readmore-bg: #505050;
+}
+
+.readmore-clamped {
+    position: relative;
+    overflow: hidden;
+}
+
+    .readmore-clamped::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3.5rem;
+        pointer-events: none;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--readmore-bg, var(--card-bg, #ffffff)));
+    }
+
+.readmore-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding: 0.45rem 1rem;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    border-radius: 0.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-speed, 0.3s);
+}
+
+    .readmore-btn:hover {
+        background-color: var(--primary-color);
+        color: #ffffff;
+    }
+
+body.dark-theme .readmore-btn {
+    color: #BBD7FF;
+    border-color: #BBD7FF;
+}
+
+    body.dark-theme .readmore-btn:hover {
+        background-color: #BBD7FF;
+        color: #202020;
+    }
+
+
+/* Tło karuzeli (pola obok obrazka, pod przyciskami) = kolor tła strony */
+body.dark-theme .gallery-carousel {
+    background-color: #404040 !important;
+}
+
+body.dark-theme .event-card-photo {
+    background-color: #404040;
+    border-bottom-color: #707070;
+}
+
+/* =================================================================
+   UŻYTKOWNICY — lista i edycja
+==================================================================== */
+.list-inner.list-inner-md {
+    min-width: 780px;
+}
+
+.texts-table td.email-col {
+    min-width: 230px;
+    overflow-wrap: break-word;
+}
+
+.texts-table td.name-col {
+    min-width: 110px;
+}
+
+.switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+}
+
+    .switch-row label {
+        flex: 1;
+        margin: 0;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .switch-row .form-check-input {
+        flex-shrink: 0;
+        width: 1.4rem;
+        height: 1.4rem;
+        margin: 0;
+        cursor: pointer;
+    }
+
+body.dark-theme .switch-row {
+    background-color: #444444;
+    border-color: #707070;
+}
+
+/* =================================================================
+   PASEK NAWIGACJI — zawijanie do trybu mobilnego, stałe przyciski
+   (klasę .navbar-force-collapse dodaje /js/navbar-fit.js, gdy menu
+   się nie mieści — np. po powiększeniu tekstu)
+==================================================================== */
+
+/* Pozycje menu nigdy nie łamią tekstu na kilka linii */
+#navbar .navbar-nav .nav-link,
+#navbar .dropdown-toggle {
+    white-space: nowrap;
+}
+
+/* Narzędzia dostępności: stały rozmiar niezależny od wielkości tekstu */
+.nav-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin: 0.5rem 0;
+}
+
+html body #navbar .nav-tools .transparent-button {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid #adb5bd;
+    border-radius: 6px;
+}
+
+    html body #navbar .nav-tools .transparent-button:hover {
+        background-color: #e9ecef;
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    html body #navbar .nav-tools .transparent-button .bi,
+    html body #navbar .nav-tools .transparent-button i {
+        font-size: 18px !important;
+        line-height: 1;
+        width: auto;
+        height: auto;
+    }
+
+/* Szeroki ekran: narzędzia przyklejone do prawej krawędzi paska,
+   dzięki czemu nie przesuwają się, gdy zmienia się szerokość menu */
+@media (min-width: 576px) {
+    #navbar .navbar-collapse > .navbar-nav {
+        order: 1;
+    }
+
+    #navbar .navbar-collapse > .nav-login {
+        order: 2;
+    }
+
+    #navbar .navbar-collapse > .nav-tools {
+        order: 3;
+        margin: 0 0 0 0.75rem;
+    }
+}
+
+/* Wymuszony tryb "zwinięty" (jak na wąskim ekranie) na szerokim viewportcie */
+@media (min-width: 576px) {
+    #navbar.navbar-force-collapse .navbar-toggler {
+        display: block;
+    }
+
+    #navbar.navbar-force-collapse .navbar-collapse {
+        display: none !important;
+        flex-basis: 100%;
+    }
+
+        #navbar.navbar-force-collapse .navbar-collapse.show,
+        #navbar.navbar-force-collapse .navbar-collapse.collapsing {
+            display: block !important;
+        }
+
+        #navbar.navbar-force-collapse .navbar-collapse > * {
+            order: 0 !important;
+        }
+
+    #navbar.navbar-force-collapse .navbar-nav {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+        #navbar.navbar-force-collapse .navbar-nav .dropdown-menu {
+            position: static;
+            float: none;
+        }
+
+    #navbar.navbar-force-collapse .nav-tools {
+        margin: 0.5rem 0;
+    }
+
+    #navbar.navbar-force-collapse .nav-login {
+        margin: 0 0 0.5rem 0 !important;
+    }
+}
+
+/* =================================================================
+   PASEK — wymuszony tryb zwinięty: logo + przycisk na górze,
+   rozwinięte menu pod nimi (Bootstrap ustawia tu flex-wrap: nowrap)
+==================================================================== */
+@media (min-width: 576px) {
+    #navbar.navbar-force-collapse > .container-fluid {
+        flex-wrap: wrap;
+    }
+
+    #navbar.navbar-force-collapse .navbar-collapse.show {
+        max-height: calc(100vh - 5rem);
+        overflow-y: auto;
+    }
+}
+
+/* =================================================================
+   STRONA GŁÓWNA — jednakowa szerokość slidera i pozostałych sekcji
+   (siatki z "1fr" potrafiły rozepchnąć się szerzej niż kontener)
+==================================================================== */
+.school-home {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+    .school-home > * {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+.home-hero {
+    width: 100%;
+}
+
+.quick-links-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.quick-card,
+.quick-card > div:nth-child(2) {
+    min-width: 0;
+}
+
+    .quick-card > div:nth-child(2) {
+        overflow-wrap: break-word;
+    }
+
+.home-content {
+    grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.news-section,
+.home-sidebar,
+.news-card,
+.info-card {
+    min-width: 0;
+}
+
+.news-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+}
+
+/* media queries muszą stać PO regułach bazowych powyżej */
+@media (max-width: 992px) {
+    .home-content {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 1100px) {
+    .quick-links-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* =================================================================
+   KONTO — logowanie, rejestracja, zmiana hasła
+==================================================================== */
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+    align-self: center;
+}
+
+.auth-logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 240px;
+    max-height: 300px;
+    margin: 0 auto 1rem;
+    object-fit: contain;
+}
+
+.auth-head {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+    .auth-head h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1.25;
+        margin: 0;
+    }
+
+        .auth-head h1 span {
+            color: var(--primary-color);
+        }
+
+.auth-card .input-group-text {
+    background: var(--bg-color);
+    color: var(--primary-color);
+    border-color: var(--border-color);
+    font-size: 1.1rem;
+}
+
+.btn-school-lg {
+    width: 100%;
+    padding: 0.8rem 1.4rem;
+    font-size: 1.05rem;
+}
+
+.auth-remember {
+    margin-bottom: 1.25rem;
+}
+
+/* Tryb ciemny */
+body.dark-theme .auth-head {
+    border-bottom-color: #707070;
+}
+
+    body.dark-theme .auth-head h1 span {
+        color: #BBD7FF;
+    }
+
+body.dark-theme .input-group-text {
+    background-color: #606060 !important;
+    color: #BBD7FF !important;
+    border-color: #929292 !important;
+}
+
+/* =================================================================
+   TRYB CIEMNY — panel boczny strony głównej bez jasnoszarego prostokąta
+   (reguła "body.dark-theme .home-sidebar" malowała całą kolumnę na #505050
+   oraz listę programów na tym samym kolorze, co karty w środku)
+==================================================================== */
+html body.dark-theme .home-sidebar,
+html body.dark-theme .home-sidebar .projects-sidebar-list {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* =================================================================
+   STOPKA — zawijanie tekstu, bez poziomego przewijania strony
+   (stary styl stopki wymuszał white-space: nowrap i line-height: 60px)
+==================================================================== */
+html body footer.footer {
+    height: auto !important;
+    line-height: 1.5 !important;
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+    html body footer.footer .container {
+        max-width: 100%;
+        white-space: normal !important;
+    }
+
+    html body footer.footer a {
+        overflow-wrap: anywhere;
+    }
+
+/* ===== Stopka: kontakt, Facebook, "na górę" ===== */
+html body footer.site-footer {
+    padding: 14px 0 !important;
+    background: #f1f3f5;
+}
+
+.site-footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 24px;
+}
+
+.site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+}
+
+    .site-footer-links a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .site-footer-links a:hover {
+            text-decoration: underline;
+            color: #0d6efd;
+        }
+
+    .site-footer-links .bi {
+        margin-right: 4px;
+    }
+
+.back-to-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid #adb5bd;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+    .back-to-top:hover {
+        background: rgba(13,110,253,.1);
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+
+@media (max-width: 575.98px) {
+    .site-footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+html body.dark-theme footer.site-footer {
+    background: #505050 !important;
+    border-color: #707070 !important;
+    color: #e6e6e6 !important;
+}
+
+html body.dark-theme .site-footer-links a {
+    color: #e6e6e6 !important;
+}
+
+    html body.dark-theme .site-footer-links a:hover {
+        color: #BBD7FF !important;
+    }
+
+html body.dark-theme .back-to-top {
+    border-color: #707070;
+    color: #e6e6e6;
+}
+
+    html body.dark-theme .back-to-top:hover {
+        background: rgba(187,215,255,.15);
+        border-color: #BBD7FF;
+        color: #BBD7FF;
+    }
+
+/* ===== Brak białego błysku przy przechodzeniu między stronami w trybie ciemnym ===== */
+html.dark-pre {
+    background: #404040;
+    color-scheme: dark;
+}
+
+    html.dark-pre body {
+        background: #404040;
+        color: #f1f1f1;
+    }
+
+    html.dark-pre #navbar {
+        background-color: #505050 !important;
+        border-color: #707070 !important;
+    }
+
+    html.dark-pre footer.site-footer {
+        background: #505050;
+        border-color: #707070;
+        color: #e6e6e6;
+    }
+/* ===== Karta zegara: wyraźny podział na etykietę i wartość ===== */
+html body #school-calendar .info-card-header .section-label {
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--primary-color, #0d6efd);
+}
+
+html body #school-calendar .current-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: .35rem 1.25rem 0;
+    padding: .7rem .9rem;
+    border-left: 4px solid var(--primary-color, #0d6efd);
+    border-radius: .5rem;
+    background: rgba(13, 110, 253, .07);
+    color: inherit;
+}
+
+#school-calendar .dt-date {
+    font-size: .95rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+#school-calendar .dt-time {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: .02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary-color, #0d6efd);
+}
+
+html body.dark-theme #school-calendar .info-card-header .section-label {
+    color: #BBD7FF !important;
+}
+
+html body.dark-theme #school-calendar .current-date {
+    background: rgba(187, 215, 255, .10);
+    border-left-color: #BBD7FF;
+    color: #F5F5F5 !important;
+}
+
+html body.dark-theme #school-calendar .dt-date {
+    color: #D5D5D5;
+}
+
+html body.dark-theme #school-calendar .dt-time {
+    color: #BBD7FF;
+}
+
+
+
+

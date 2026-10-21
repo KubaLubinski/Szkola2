@@ -1,45 +1,49 @@
 ﻿@model Szkola2.Models.PastSchoolEvent
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Usuwanie wydarzenia";
 }
 
-<h1 class="text-danger roboto">Usuwanie</h1>
+<div class="school-home">
 
-<h3 class="roboto">Czy na pewno chcesz usunąć ten wpis?</h3>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EventName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EventName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EventDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EventDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MainGraphic)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Url.Content(Model.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+Model.MainGraphic)" width="150" />
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg label-danger">UWAGA</span>
+            <h1>Usuwanie <span class="heading-danger">wydarzenia</span></h1>
+        </div>
+    </div>
+
+    <div class="panel-card panel-narrow panel-danger">
+
+        <p class="delete-question">Czy na pewno chcesz usunąć ten wpis? Tej operacji nie można cofnąć.</p>
+
+        <div class="delete-summary">
+            <img src="@Url.Content(Model.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + Model.MainGraphic)"
+                 class="delete-photo"
+                 alt="@Model.EventName" />
+
+            <dl class="detail-list">
+                <dt>@Html.DisplayNameFor(model => model.EventName)</dt>
+                <dd>@Html.DisplayFor(model => model.EventName)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.EventDate)</dt>
+                <dd>@string.Format("{0:dd.MM.yyyy}", Model.EventDate)</dd>
+            </dl>
+        </div>
+
+        <h2 class="form-section-title">@Html.DisplayNameFor(model => model.Content)</h2>
+        <div class="detail-content delete-content">
             @Html.Raw(Model.Content)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <hr />
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Usuń" class="btn btn-danger" /> | 
-        <a asp-action="Index" class="btn btn-light">Powrót do listy</a>
-    </form>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-actions">
+                <button type="submit" class="btn btn-school-danger">Usuń</button>
+                <a asp-action="Index" class="btn btn-school-outline">Powrót do listy</a>
+            </div>
+        </form>
+
+    </div>
+
 </div>

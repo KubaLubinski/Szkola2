@@ -1,41 +1,43 @@
 ﻿@model Szkola2.Models.History
 
 @{
-    ViewData["Title"] = "Usuwanie";
+    ViewData["Title"] = "Usuwanie wpisu o historii";
+    var plain = System.Net.WebUtility.HtmlDecode(
+        System.Text.RegularExpressions.Regex.Replace(Model.Content ?? "", "<.*?>", " ")).Trim();
 }
 
-<h1  class="text-danger roboto">Usuwanie</h1>
+<div class="school-home">
 
-<h3  class="roboto">Czy chcesz usunąć wpis o historii?</h3>
-<div>
-    
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TextName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TextName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @if (Model.Content.Length <= 200)
-            {
-                @Html.Raw(Model.Content)
-            }
-            else
-            {
-                @Html.Raw(Model.Content.Substring(0, 200) + " ...")
-            }
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <hr />
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Usuń" class="btn btn-danger" /> | 
-        <a asp-action="Index" class="btn btn-light">Powrót do histori</a>
-    </form>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg label-danger">UWAGA</span>
+            <h1>Usuwanie <span class="heading-danger">wpisu</span></h1>
+        </div>
+    </div>
+
+    <div class="panel-card panel-narrow panel-danger">
+
+        <p class="delete-question">Czy na pewno chcesz usunąć ten wpis o historii szkoły? Tej operacji nie można cofnąć.</p>
+
+        <dl class="detail-list">
+            <dt>@Html.DisplayNameFor(model => model.TextName)</dt>
+            <dd>@Html.DisplayFor(model => model.TextName)</dd>
+        </dl>
+
+        <h2 class="form-section-title mt-4">@Html.DisplayNameFor(model => model.Content)</h2>
+        <div class="detail-content delete-content">
+            @(plain.Length <= 300 ? plain : plain.Substring(0, 300) + " ...")
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-actions">
+                <button type="submit" class="btn btn-school-danger">Usuń</button>
+                <a asp-action="Index" class="btn btn-school-outline">Powrót do historii</a>
+            </div>
+        </form>
+
+    </div>
+
 </div>
+

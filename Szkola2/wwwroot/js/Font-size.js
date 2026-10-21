@@ -1,40 +1,20 @@
-﻿function saveFontSize(fontSize) {
-    localStorage.setItem('preferredFontSize', fontSize);
-}
+﻿(function () {
+    var KEY = 'siteFontScale', MIN = 80, MAX = 150, STEP = 10, DEF = 100;
 
-function loadFontSize() {
-    const saved = parseInt(
-        localStorage.getItem('preferredFontSize'),
-        10
-    );
+    function read() {
+        try {
+            var v = parseInt(localStorage.getItem(KEY), 10);
+            return isNaN(v) ? DEF : Math.min(MAX, Math.max(MIN, v));
+        } catch (e) { return DEF; }
+    }
+    function apply(v) {
+        document.documentElement.style.fontSize = v + '%';
+        try { localStorage.setItem(KEY, String(v)); } catch (e) { }
+        window.dispatchEvent(new Event('resize'));
+    }
+    window.increaseFontSize = function () { apply(Math.min(MAX, read() + STEP)); };
+    window.decreaseFontSize = function () { apply(Math.max(MIN, read() - STEP)); };
 
-    return Number.isFinite(saved)
-        ? Math.min(24, Math.max(12, saved))
-        : 16;
-}
-
-function setFontSize(fontSize) {
-    fontSize = Math.min(24, Math.max(12, fontSize));
-
-    document.documentElement.style.fontSize = fontSize + 'px';
-    document.documentElement.style.setProperty(
-        '--base-font-size',
-        fontSize + 'px'
-    );
-
-    saveFontSize(fontSize);
-}
-
-function increaseFontSize() {
-    const currentSize = loadFontSize();
-    setFontSize(currentSize + 2);
-}
-
-function decreaseFontSize() {
-    const currentSize = loadFontSize();
-    setFontSize(currentSize - 2);
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    setFontSize(loadFontSize());
-});
+    var saved = read();
+    if (saved !== DEF) document.documentElement.style.fontSize = saved + '%';
+})();

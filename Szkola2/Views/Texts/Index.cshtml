@@ -3,104 +3,149 @@
     ViewData["Title"] = "Lista tekstów";
 }
 
-<div class="container ">
-    <div class="row text-color">
-        <!-- wyszukiwarka-->
-        <div class=" col-md-12 col-xl-3">
-            <div class="card mt-2 shadow-sm ">
-                <div class="card-body bg-color">
-                    @using (Html.BeginForm("Index","Texts", new { PageNumber = "1" }, FormMethod.Get))
-                    {
-                    <div class="row gt-3">
-                        <div class="form-group col-auto ">
-                            <label for="Kategoria">Kategoria</label>
-                           @Html.DropDownList("Kategoria" , ViewBag.Category, "--- Wszystkie ---", htmlAttributes:new{ @class = "form-control bg-color text-color"})
-                        </div>   
-                        <div class="form-group col-auto">
-                            <label for="Fraza">Fragment tekstu</label>
-                           <input type="text" class="form-control bg-color text-color" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
-                        </div>
-                            <button type="submit" class="btn btn-outline-logoyellow mt-4 col-auto">Filtruj</button>
-                    </div>
-                    }
+<div class="school-home">
+
+    <!-- NAGŁÓWEK STRONY -->
+    <div class="section-heading">
+        <div>
+            <span class="section-label section-label-lg">CO SŁYCHAĆ?</span>
+            <h2>Wszystkie <span>aktualności</span></h2>
+        </div>
+    </div>
+
+    <div class="texts-layout">
+
+        <!-- WYSZUKIWARKA -->
+        <aside class="texts-filter info-card">
+            <div class="info-card-header">
+                <div>
+                    <span class="section-label">FILTRY</span>
+                    <h3>Szukaj tekstu</h3>
                 </div>
             </div>
-        </div>
-        <!-- L tekstow-->
-        
-        <div class="col-xl-9">
-        @if (Model.TextsView.TextCount > 0)
-        {
-            @foreach (var item in Model.Texts)
+
+            @using (Html.BeginForm("Index", "Texts", new { PageNumber = "1" }, FormMethod.Get))
             {
-                <div class="card mt-2 head-color shadow-sm ">
-                    <div class="card-header">
-                        <h3 class="text-primary roboto">@item.TextName</h3>
-                    </div>
-                    <div class="row bg-color">
-                        <div class="col-md-4">    
-                            <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" class="img-fluid" />
+                <div class="texts-filter-field">
+                    <label for="Kategoria" class="form-label fw-bold small">Kategoria</label>
+                    @Html.DropDownList("Kategoria", ViewBag.Category, "--- Wszystkie ---", htmlAttributes: new { @class = "form-select" })
+                </div>
+
+                <div class="texts-filter-field">
+                    <label for="Fraza" class="form-label fw-bold small">Fragment tekstu</label>
+                    <input type="text" class="form-control" id="Fraza" name="Fraza" placeholder="Szukany ciąg" value="@Model.TextsView?.Pharse">
+                </div>
+
+                <button type="submit" class="primary-outline-button texts-filter-button">
+                    Filtruj <span>→</span>
+                </button>
+            }
+        </aside>
+
+        <!-- LISTA TEKSTÓW (1 KARTA NA WIERSZ) -->
+        <div class="texts-list">
+            @if (Model.TextsView.TextCount > 0)
+            {
+                @foreach (var item in Model.Texts)
+                {
+                    <article class="news-card news-card-row">
+                        <div class="news-image-wrapper">
+                            <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + item.MainGraphic)"
+                                 class="news-image"
+                                 alt="@item.TextName">
+
+                            @if (item.Category != null)
+                            {
+                                <div class="news-category">@item.Category.CategoryName</div>
+                            }
                         </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <p class="card-title text-success roboto">@item.User.FullName</p>
-                                @if (item.Content.Length <= 100)
+
+                        <div class="news-body">
+                            <div class="news-date">@item.DateAdded.ToString("dd.MM.yyyy")</div>
+
+                            <h3>@item.TextName</h3>
+
+                            <div class="news-author">
+                                <span class="author-avatar">@item.User.FirstName.Substring(0, 1)</span>
+                                <span>@item.User.FullName</span>
+                            </div>
+
+                            <div class="news-description">
+                                @if (item.Content.Length <= 220)
                                 {
-                                    <p class="card-text roboto">@Html.Raw(item.Content)</p>
+                                    @Html.Raw(item.Content)
                                 }
                                 else
                                 {
-                                    <p class="card-text roboto">@Html.Raw(item.Content.Substring(0, 100) + "...")</p>
+                                    @Html.Raw(item.Content.Substring(0, 220) + "...")
                                 }
-                                <p class="card-text"><small class="text-muted"> @item.DateAdded </small></p>
-                                <div class="position-relative">
-                                        <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-logoyellow position-absolute bottom-0 end-0">Czytaj >>></a>
-                                </div>
-                            </div> <!-- card body-->
-                    </div>
-                        </div> <!-- row -->
-            </div> <!-- card-->
-                }
-                <!-- petla -->
+                            </div>
 
-            } else
+                            <a href="@Url.Action("Details", "Texts", new { id = item.TextId })" class="read-more">
+                                Czytaj więcej <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                }
+            }
+            else
             {
-                <div class="alert alert-info d-flex align-items-center mt2" role="alert">
-                    <i class="bi bi-info-circle-fill me-3" > Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania, lub szukanego ciągu.</i>
+                <div class="texts-empty info-card" role="alert">
+                    <span class="texts-empty-icon" aria-hidden="true">ℹ</span>
+                    <div>Brak tekstów do wyświetlenia. Proszę zmienić parametry filtrowania lub szukany ciąg.</div>
                 </div>
             }
-        </div> 
-        
-         
-    </div> <!-- obszar z danymi-->
-
-    <!-- stronnicowanie -->
-    <div class ="row mt-3">
-        <navi aria-label="Nawigacja między stronami">
-            <ul class="pagination">
-            @{
-                if (Model.TextsView.PageNumber > 1)
-                {
-
-                        <li class="page-item">
-                        <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber -1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Poprzednia </a>
-                        </li>
-                    }
-               for (var i=1; i<Model.TextsView.PageCount +1; i++)
-                {
-                <li class="@(i == @Model.TextsView.PageNumber ? "page-item active" : "pageactive")">
-                <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber = i, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse} )">@i </a>
-                </li>
-                }
-                if(Model.TextsView.PageNumber <Model.TextsView.PageCount)
-                {
-                <li class="page-item">
-                <a class="page-link bg-color text-color" href="@Url.Action("Index", "Texts", new{PageNumber =Model.TextsView.PageNumber +1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse})">Następna </a>
-                </li>
-                }
-            }
-            </ul>
-        </navi>
+        </div>
     </div>
 
+    <!-- STRONNICOWANIE -->
+    <nav aria-label="Nawigacja między stronami">
+        <ul class="pagination justify-content-center texts-pagination">
+            @if (Model.TextsView.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "Texts", new { PageNumber = Model.TextsView.PageNumber - 1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse })">Poprzednia</a>
+                </li>
+            }
+
+            @for (var i = 1; i < Model.TextsView.PageCount + 1; i++)
+            {
+                <li class="page-item @(i == Model.TextsView.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "Texts", new { PageNumber = i, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse })"
+                    @(i == Model.TextsView.PageNumber ? Html.Raw("aria-current=\"page\"") : null)>@i</a>
+                </li>
+            }
+
+            @if (Model.TextsView.PageNumber < Model.TextsView.PageCount)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "Texts", new { PageNumber = Model.TextsView.PageNumber + 1, Kategoria = Model.TextsView.Category, Fraza = Model.TextsView.Pharse })">Następna</a>
+                </li>
+            }
+        </ul>
+    </nav>
+
 </div>
+
+<!-- Animacja pojawiania się (karty mają w CSS opacity:0 do czasu dodania .animate-in) -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const elements = document.querySelectorAll(".news-card, .info-card, .section-heading");
+
+        if (!("IntersectionObserver" in window)) {
+            elements.forEach(el => el.classList.add("animate-in"));
+            return;
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("animate-in");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        elements.forEach(el => observer.observe(el));
+    });
+</script>

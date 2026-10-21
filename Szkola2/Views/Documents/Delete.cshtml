@@ -1,40 +1,43 @@
 ﻿@model Szkola2.Models.Document
 
 @{
-    ViewData["Title"] = "Usuwanie";
+    ViewData["Title"] = "Usuwanie dokumentu";
 }
 
-<h1 class="text-danger roboto">Usuwanie</h1>
+<div class="school-home">
 
-<h3 class="roboto">Czy napewno chcesz usunąć wybrany dokument</h3>
-<div>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg label-danger">UWAGA</span>
+            <h1>Usuwanie <span class="heading-danger">dokumentu</span></h1>
+        </div>
+    </div>
 
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentDownload)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocumentDownload)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
+    <div class="panel-card panel-narrow panel-danger">
+
+        <p class="delete-question">Czy na pewno chcesz usunąć wybrany dokument? Tej operacji nie można cofnąć.</p>
+
+        <dl class="detail-list">
+            <dt>@Html.DisplayNameFor(model => model.DocumentDownload)</dt>
+            <dd>@Html.DisplayFor(model => model.DocumentDownload)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.DocumentType)</dt>
+            <dd>@Html.DisplayFor(model => model.DocumentType)</dd>
+        </dl>
+
+        <h2 class="form-section-title mt-4">@Html.DisplayNameFor(model => model.Content)</h2>
+        <div class="detail-content delete-content">
             @Html.Raw(Model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocumentType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocumentType)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="DocumentId" />
-        <hr />
-        <input type="submit" value="Usuwanie" class="btn btn-danger" /> | 
-        <a asp-action="Index" class="btn btn-light">Powrót do dokumentów</a>
-    </form>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="DocumentId" />
+            <div class="form-actions">
+                <button type="submit" class="btn btn-school-danger">Usuń</button>
+                <a asp-action="Index" class="btn btn-school-outline">Powrót do dokumentów</a>
+            </div>
+        </form>
+
+    </div>
+
 </div>

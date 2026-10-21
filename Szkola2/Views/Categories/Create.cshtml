@@ -1,45 +1,53 @@
 ﻿@model Szkola2.Models.Category
 
 @{
-    ViewData["Title"] = "Utwórz";
+    ViewData["Title"] = "Utwórz kategorię";
 }
-@{
-    if  (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
-    {
-        <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage </div>
-    }
-}
-<h1 class="text-primary roboto">Dodaj Kategorie</h1>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CategoryName" class="control-label"></label>
-                <input asp-for="CategoryName" class="form-control" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"> </textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            <hr />
-            <div class="form-group">        
-                <input type="submit" value="Utwórz" class="btn btn-primary" />  | 
-                <a asp-action="Index" class="btn btn-light" >Powrót</a>
-            </div>
-        </form>
+
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">NOWA KATEGORIA</span>
+            <h1>Dodaj <span>kategorię</span></h1>
+        </div>
     </div>
+
+    @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage</div>
+    }
+
+    <form asp-action="Create" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-field">
+            <label asp-for="CategoryName" class="form-label fw-bold"></label>
+            <input asp-for="CategoryName" class="form-control" />
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="Description" class="form-label fw-bold"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" />
+            <label class="form-check-label" asp-for="IsActive"></label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Utwórz <span aria-hidden="true">→</span></button>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót</a>
+        </div>
+    </form>
+
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

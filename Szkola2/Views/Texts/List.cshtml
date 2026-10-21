@@ -4,112 +4,119 @@
     ViewData["Title"] = "Spis tekstów";
 }
 
-<h1 class="roboto">Teksty</h1>
+<div class="school-home">
 
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ZARZĄDZANIE</span>
+            <h1>Spis <span>tekstów</span></h1>
+        </div>
+    </div>
 
-<table class="table text-color" id="teksty">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TextName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateAdded)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MainGraphic)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                Kategoria:
-            </th>
-            <th>
-                Autor:
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TextName)
-            </td>
-            <td>
-                @if (item.Content.Length <= 75)
+    <div class="panel-card list-panel">
+        <div class="list-inner">
+            <table class="table texts-table align-middle" id="teksty">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.TextName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Content)</th>
+                        <th>Data i autor</th>
+                        <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+                        <th><span class="visually-hidden">Akcje</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        @Html.Raw(item.Content)
-                    }
-                    else
-                    {
-                      @(item.Content.Substring(0,75)+" ...")  
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateAdded)
-            </td>
-            <td >
-                 <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" width="150" alt="@item.Category.CategoryName" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
-                <br>
-                @Html.DisplayFor(modelItem => item.User.LastName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TextId" title="Edycja "class="btn btn-outline-primary rounded-circle bi-pencil-fill" > </a>&nbsp
-                <a asp-action="Details" asp-route-id="@item.TextId" title="Szczegóły " class="btn btn-outline-success rounded-circle bi-eye" > </a>&nbsp
-                <a asp-action="Delete" asp-route-id="@item.TextId"  title="Usuwanie "class="btn btn-outline-danger rounded-circle bi-trash-fill" > </a>
-                
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                        var plain = System.Net.WebUtility.HtmlDecode(
+                            System.Text.RegularExpressions.Regex.Replace(item.Content ?? "", "<.*?>", " ")).Trim();
 
-@section Scripts{
+                        <tr>
+                            <td>
+                                <div class="title-cell">
+                                    <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + item.MainGraphic)"
+                                         class="table-thumb"
+                                         alt="@item.TextName" />
+                                    <div class="title-cell-text">
+                                        <div class="fw-semibold">@item.TextName</div>
+                                        @if (item.Category != null)
+                                        {
+                                            <span class="detail-badge">@item.Category.CategoryName</span>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-excerpt">
+                                @(plain.Length <= 75 ? plain : plain.Substring(0, 75) + " ...")
+                            </td>
+                            <td class="date-cell" data-order="@(item.DateAdded.ToString("yyyyMMddHHmmss"))">
+                                <div>@item.DateAdded.ToString("dd.MM.yyyy")</div>
+                                <small class="date-cell-author">@item.User.FirstName @item.User.LastName</small>
+                            </td>
+                            <td>
+                                @if (item.IsActive == true)
+                                {
+                                    <span class="status-pill status-on">Aktywny</span>
+                                }
+                                else
+                                {
+                                    <span class="status-pill status-off">Ukryty</span>
+                                }
+                            </td>
+                            <td class="list-actions">
+                                <a asp-action="Edit" asp-route-id="@item.TextId" title="Edycja" aria-label="Edycja"
+                                   class="btn btn-outline-primary rounded-circle bi-pencil-fill"></a>
+                                <a asp-action="Details" asp-route-id="@item.TextId" title="Szczegóły" aria-label="Szczegóły"
+                                   class="btn btn-outline-success rounded-circle bi-eye"></a>
+                                <a asp-action="Delete" asp-route-id="@item.TextId" title="Usuwanie" aria-label="Usuwanie"
+                                   class="btn btn-outline-danger rounded-circle bi-trash-fill"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.10/datatables.min.js"></script>
 
-
-    <script> 
-        $(document).ready(function() {
-            $(`#teksty`).DataTable({
-              language: {
-                    "decimal":        "",
-                    "emptyTable":     "Brak danych do wyświetlenia",
-                    "info":           "Pozycje od _START_ do _END_ z _TOTAL_ rekordów",
-                    "infoEmpty":      "Pozycji 0 z 0 dostępnych",
-                    "infoFiltered":   "(Filtrowanie z _MAX_ dostępnych pozycji)",
-                    "infoPostFix":    "",
-                    "thousands":      ",",
-                    "lengthMenu":     "Pokaż _MENU_ pozycji",
+    <script>
+        $(document).ready(function () {
+            $('#teksty').DataTable({
+                autoWidth: false,
+                order: [[2, 'desc']],
+                columnDefs: [
+                    { orderable: false, searchable: false, targets: -1 }
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "Brak danych do wyświetlenia",
+                    "info": "Pozycje od _START_ do _END_ z _TOTAL_ rekordów",
+                    "infoEmpty": "Pozycji 0 z 0 dostępnych",
+                    "infoFiltered": "(Filtrowanie z _MAX_ dostępnych pozycji)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Pokaż _MENU_ pozycji",
                     "loadingRecords": "ładowanie...",
-                    "processing":     "Przetwarzanie...",
-                    "search":         "Wyszukaj:",
-                    "zeroRecords":    "Nie znaleziono danych",
+                    "processing": "Przetwarzanie...",
+                    "search": "Wyszukaj:",
+                    "zeroRecords": "Nie znaleziono danych",
                     "paginate": {
-                        "first":      "Pierwsza",
-                        "last":       "Ostatnia",
-                        "next":       "Następna",
-                        "previous":   "Poprzednia"
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
                     },
                     "aria": {
-                        "sortAscending":  ": Sortuje kolumnę rosnąco",
+                        "sortAscending": ": Sortuje kolumnę rosnąco",
                         "sortDescending": ": Sortuje kolumnę malejąco"
                     }
-}
-                });
+                }
+            });
         });
     </script>
 }
+

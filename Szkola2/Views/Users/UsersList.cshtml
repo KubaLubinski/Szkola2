@@ -1,59 +1,67 @@
 ﻿@model IEnumerable<Szkola2.Models.ViewModels.UserViewModel>
 
 @{
-    ViewData["Title"] = "UsersList";
+    ViewData["Title"] = "Lista użytkowników";
 }
 
-<h1 class="text-success roboto">Lista użytkowników</h1>
+<div class="school-home">
 
-<p>
-    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary roboto mt-3 mb-4">Dodaj użytkownika</a>
-</p>
-<table class="table text-color">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                Imię
-            </th>
-            <th>
-                Nazwisko
-            </th>
-            <th>
-                Czy konto jest aktywne?
-            </th>
-            <th>
-                Rola
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.IsActive)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role)
-                </td>
-                <td>
-                    <a asp-action="UserEdit" asp-route-id="@item.Id" class="btn btn-primary">Edytuj</a>
-@*                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Usuń</a> *@
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ADMINISTRACJA</span>
+            <h1>Lista <span>użytkowników</span></h1>
+        </div>
+
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-school">
+            Dodaj użytkownika <span aria-hidden="true">+</span>
+        </a>
+    </div>
+
+    <div class="panel-card list-panel">
+        <div class="list-inner list-inner-md">
+            <table class="table texts-table align-middle">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Konto</th>
+                        <th>Rola</th>
+                        <th><span class="visually-hidden">Akcje</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="email-col">@item.Email</td>
+                            <td class="name-col">@item.FirstName</td>
+                            <td class="name-col">@item.LastName</td>
+                            <td>
+                                @if (item.IsActive == true)
+                                {
+                                    <span class="status-pill status-on">Aktywne</span>
+                                }
+                                else
+                                {
+                                    <span class="status-pill status-off">Nieaktywne</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Role?.ToString()))
+                                {
+                                    <span class="detail-badge">@item.Role</span>
+                                }
+                            </td>
+                            <td class="list-actions">
+                                <a asp-action="UserEdit" asp-route-id="@item.Id" title="Edytuj" aria-label="Edytuj"
+                                   class="btn btn-outline-primary rounded-circle bi-pencil-fill"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

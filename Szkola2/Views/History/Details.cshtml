@@ -1,62 +1,60 @@
 ﻿@model Szkola2.Models.History
 
 @{
-    ViewData["Title"] = "Szczegóły";
+    ViewData["Title"] = "Szczegóły wpisu o historii";
+    bool canEdit = User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń");
 }
 
- <h1 class="text-success roboto">Szczegóły</h1>
-<div>
-   
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TextName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TextName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">HISTORIA SZKOŁY</span>
+            <h1>@Model.TextName</h1>
+        </div>
+    </div>
+
+    <article class="panel-card">
+
+        <div class="detail-content">
             @Html.Raw(Model.Content)
-        </dd>
+        </div>
+
         @if (Model.GraphicGallery.Count() > 0)
         {
-        <dt class="col-sm-2">
-            Galeria Zdjęć:
-        </dt>
-        <dd class="col-sm-10">
-            <div id="carouselExample" class="carousel slide">
+            <h2 class="form-section-title mt-4">Galeria zdjęć</h2>
+
+            <div id="carouselExample" class="carousel slide gallery-carousel">
                 <div class="carousel-inner">
                     @for (int i = 0; i < Model.GraphicGallery.Count(); i++)
                     {
-                        <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                            <img class="d-block img-fluid mx-auto" src="@Url.Content("~/miniGallery/"+Model.GraphicGallery[i].URL)" alt="@Model.GraphicGallery[i].Name">
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img class="d-block img-fluid mx-auto"
+                                 src="@Url.Content("~/miniGallery/" + Model.GraphicGallery[i].URL)"
+                                 alt="@Model.GraphicGallery[i].Name">
                         </div>
                     }
                 </div>
-                <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+
+                <button class="carousel-control-prev" title="Poprzednie" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">Poprzednie</span>
                 </button>
-                <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <button class="carousel-control-next" title="Następne" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">Następne</span>
                 </button>
             </div>
-        </dd>
         }
 
-    </dl>
-</div>
-<div>
-    <hr />
-    @{
-       if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel") || User.IsInRole("uczeń") )
-          {
-           <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edycja</a> 
-          }
-     }
-    <a asp-action="Index" class="btn btn-outline-logoyellow">Powrót do histori</a>
+        <div class="form-actions">
+            @if (canEdit)
+            {
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-school-warning">Edycja</a>
+            }
+            <a asp-action="Index" class="btn btn-school-outline">Powrót do historii</a>
+        </div>
+
+    </article>
+
 </div>

@@ -1,19 +1,20 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.querySelector('[name="CategoryId"]');
-    const eventDateInput = document.querySelector('[name="EventDate"]').closest('.form-group');
+    const eventDateInput = document.querySelector('[name="EventDate"]');
 
-    if (!['1', '2'].includes(categorySelect.value)) {
-        eventDateInput.style.display = 'none';
-    }
+    // Skrypt jest współdzielony - na stronach bez tych pól po prostu nic nie robi
+    if (!categorySelect || !eventDateInput) return;
+
+    // Obsługuje zarówno nowy układ (.form-field), jak i stary (.form-group)
+    const wrapper = eventDateInput.closest('.form-field, .form-group');
+    if (!wrapper) return;
+
+    const categoriesWithDate = ['1', '2'];
 
     function toggleEventDateVisibility() {
-        if (['1', '2'].includes(categorySelect.value)) {
-            eventDateInput.style.display = 'block'; 
-        } else {
-            eventDateInput.style.display = 'none'; 
-            eventDateInput.value = '01.01.0001 00:00:00';
-        }
+        wrapper.style.display = categoriesWithDate.includes(categorySelect.value) ? '' : 'none';
     }
 
+    toggleEventDateVisibility();
     categorySelect.addEventListener('change', toggleEventDateVisibility);
 });

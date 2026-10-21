@@ -4,18 +4,29 @@
     ViewData["Title"] = "Usuwanie";
 }
 
-<h1 class="text-danger roboto">Czy na pewno chcesz usunąć to zdjęcie?</h1>
-<div>
-    <hr />
-    <dl class="row">
-        <dd class = "col-sm-10">
-            <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)" />
-        </dd>
-    </dl>
-    <hr />
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="PhotoId" />
-        <input type="submit" value="Usuń" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-light">Powrót do zdjęć</a>
-    </form>
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg label-danger">UWAGA</span>
+            <h1>Usuwanie <span class="heading-danger">zdjęcia</span></h1>
+        </div>
+    </div>
+
+    <div class="panel-card panel-narrow panel-danger">
+
+        <p class="delete-question">Czy na pewno chcesz usunąć to zdjęcie? Tej operacji nie można cofnąć.</p>
+
+        <img class="photo-preview" src="@Url.Content("~/img/mini/" + Model.Photo)" alt="Zdjęcie do usunięcia" />
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="PhotoId" />
+            <div class="form-actions">
+                <button type="submit" class="btn btn-school-danger">Usuń</button>
+                <a asp-action="Index" class="btn btn-school-outline">Powrót do zdjęć</a>
+            </div>
+        </form>
+
+    </div>
+
 </div>

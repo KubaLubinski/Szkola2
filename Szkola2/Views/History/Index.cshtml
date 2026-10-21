@@ -1,68 +1,75 @@
 ﻿@model IEnumerable<Szkola2.Models.History>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Historia szkoły";
+    bool canCreate = User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel");
+    bool isManager = User.IsInRole("admin") || User.IsInRole("dyrektor");
 }
 
-<h1 class="roboto">Historia szkoły</h1>
-@{
-    if(User.IsInRole("admin") || User.IsInRole("dyrektor") || User.IsInRole("nauczyciel"))
-    {
-        <p>
-            <a asp-action="Create" class="btn btn-warning" title="Stwórz nowy wpis ">Stwórz nowy wpis</a>
-        </p>
-    }
-}
+<div class="school-home">
 
-<table class="table text-color">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TextName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.TextName)
-            </td>
-            <td>
-                @if (item.Content.Length <= 80)
-                    {
-                        @Html.Raw(item.Content)
-                    }
-                    else
-                    {
-                      @Html.Raw(item.Content.Substring(0,80)+" ...")  
-                    }
-            </td>
-            <td>
-                
-                
-                @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
-                {
-                    <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id" ><i aria-label="Szczegóły"> </i></a> 
-                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id" ><i  aria-label="Edycja tekstu"> </i></a>
-                        <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id"><i  aria-label="Usuwanie"> </i></a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-outline-logoyellow" title="Czytaj" asp-action="Details" asp-route-id="@item.Id"><i aria-label="Szczegóły"> </i> Czytaj >>></a>
-                    }
-                
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ZARZĄDZANIE</span>
+            <h1>Historia <span>szkoły</span></h1>
+        </div>
 
-@section Scripts{
+        @if (canCreate)
+        {
+            <a asp-action="Create" class="btn btn-school" title="Stwórz nowy wpis">
+                Stwórz nowy wpis <span aria-hidden="true">+</span>
+            </a>
+        }
+    </div>
+
+    <div class="panel-card list-panel">
+        <div class="list-inner list-inner-sm">
+            <table class="table texts-table align-middle">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.TextName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Content)</th>
+                        <th><span class="visually-hidden">Akcje</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var plain = System.Net.WebUtility.HtmlDecode(
+                            System.Text.RegularExpressions.Regex.Replace(item.Content ?? "", "<.*?>", " ")).Trim();
+
+                        <tr>
+                            <td class="fw-semibold title-col">@item.TextName</td>
+                            <td class="table-excerpt">
+                                @(plain.Length <= 120 ? plain : plain.Substring(0, 120) + " ...")
+                            </td>
+                            <td class="list-actions">
+                                @if (isManager)
+                                {
+                                    <a class="btn btn-outline-success rounded-circle bi-eye" title="Szczegóły" aria-label="Szczegóły"
+                                       asp-action="Details" asp-route-id="@item.Id"></a>
+                                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill" title="Edycja" aria-label="Edycja"
+                                       asp-action="Edit" asp-route-id="@item.Id"></a>
+                                    <a class="btn btn-outline-danger rounded-circle bi-trash-fill" title="Usuwanie" aria-label="Usuwanie"
+                                       asp-action="Delete" asp-route-id="@item.Id"></a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-school-outline" title="Czytaj" asp-action="Details" asp-route-id="@item.Id">
+                                        Czytaj <span aria-hidden="true">→</span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
     <script src="~/js/History.js"></script>
-    
 }
+

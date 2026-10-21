@@ -1,58 +1,106 @@
 ﻿@model IEnumerable<Szkola2.Models.PastSchoolEvent>
 
 @{
-    ViewData["Title"] = "Spis Wydarzeń";
+    ViewData["Title"] = "Spis wydarzeń";
+    bool isManager = User.IsInRole("admin") || User.IsInRole("dyrektor");
 }
 
-<h1>Kalendarium wydarzeń z życia szkoły</h1>
+<div class="school-home">
 
-<p>
-    <a asp-action="Create" class="btn btn-warning">Dodaj nowy wpis</a>
-</p>
-<table class="table text-color">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.EventName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EventDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventDate)
-            </td>
-            <td>
-                @if (item.Content.Length <= 80)
-                {
-                    @Html.Raw(item.Content)
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ZARZĄDZANIE</span>
+            <h1>Kalendarium <span>wydarzeń</span></h1>
+        </div>
+
+        <a asp-action="Create" class="btn btn-school">
+            Dodaj nowy wpis <span aria-hidden="true">+</span>
+        </a>
+    </div>
+
+    <div class="panel-card list-panel">
+        <div class="list-inner list-inner-sm">
+            <table class="table texts-table align-middle" id="wydarzenia">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.EventName)</th>
+                        <th>@Html.DisplayNameFor(model => model.EventDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Content)</th>
+                        <th><span class="visually-hidden">Akcje</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var plain = System.Net.WebUtility.HtmlDecode(
+                            System.Text.RegularExpressions.Regex.Replace(item.Content ?? "", "<.*?>", " ")).Trim();
+                        var dateKey = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:yyyyMMddHHmmss}", item.EventDate);
+                        var dateText = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:dd.MM.yyyy}", item.EventDate);
+
+                        <tr>
+                            <td class="fw-semibold title-col">@Html.DisplayFor(modelItem => item.EventName)</td>
+                            <td class="text-nowrap" data-order="@dateKey" data-sort="@dateKey">@dateText</td>
+                            <td class="table-excerpt">
+                                @(plain.Length <= 120 ? plain : plain.Substring(0, 120) + " ...")
+                            </td>
+                            <td class="list-actions">
+                                <a class="btn btn-outline-success rounded-circle bi-eye" title="Szczegóły" aria-label="Szczegóły"
+                                   asp-action="Details" asp-route-id="@item.Id"></a>
+                                @if (isManager)
+                                {
+                                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill" title="Edycja" aria-label="Edycja"
+                                       asp-action="Edit" asp-route-id="@item.Id"></a>
+                                    <a class="btn btn-outline-danger rounded-circle bi-trash-fill" title="Usuwanie" aria-label="Usuwanie"
+                                       asp-action="Delete" asp-route-id="@item.Id"></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.10/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#wydarzenia').DataTable({
+                autoWidth: false,
+                order: [[1, 'desc']],
+                columnDefs: [
+                    { type: 'num', targets: 1 },
+                    { orderable: false, targets: [2, 3] },
+                    { searchable: false, targets: 3 }
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "Brak danych do wyświetlenia",
+                    "info": "Pozycje od _START_ do _END_ z _TOTAL_ rekordów",
+                    "infoEmpty": "Pozycji 0 z 0 dostępnych",
+                    "infoFiltered": "(Filtrowanie z _MAX_ dostępnych pozycji)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Pokaż _MENU_ pozycji",
+                    "loadingRecords": "ładowanie...",
+                    "processing": "Przetwarzanie...",
+                    "search": "Wyszukaj:",
+                    "zeroRecords": "Nie znaleziono danych",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    },
+                    "aria": {
+                        "sortAscending": ": Sortuje kolumnę rosnąco",
+                        "sortDescending": ": Sortuje kolumnę malejąco"
+                    }
                 }
-                else
-                {
-                    @Html.Raw(item.Content.Substring(0,80)+" ...")
-                }
-            </td>
-            <td>
-                <a class="btn btn-outline-success rounded-circle bi-eye my-1" title="Szczegóły" asp-action="Details" asp-route-id="@item.Id" ><i aria-label="Szczegóły"> </i></a>
-                @if (User.IsInRole("admin") || User.IsInRole("dyrektor"))
-                {
-                    <a class="btn btn-outline-primary rounded-circle bi-pencil-fill my-1" title="Edycja" asp-action="Edit" asp-route-id="@item.Id" ><i aria-label="Edycja tekstu" > </i></a>
-                    <a class="btn btn-outline-danger rounded-circle bi-trash-fill my-1" title="Usuwanie" asp-action="Delete" asp-route-id="@item.Id" ><i aria-label="Usuwanie"> </i></a>
-                }
-                
-            </td>
-        </tr>
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

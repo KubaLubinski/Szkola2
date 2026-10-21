@@ -1,47 +1,76 @@
 ﻿@{
     ViewData["Title"] = "Zapraszamy do kontaktu";
 }
-<h1 class="text-center roboto">@ViewData["Title"]</h1>
-<div>
-    <div >
-        <h3 class="text-center">
-        <p><i class="bi bi-clock-fill"></i>  Godziny pracy w roku szkolnym 7.00 - 15.00  </p>
-        <p><i class="bi-geo-fill"></i> Goleszyn ul. Niepodległości 2, 09-200 Sierpc </p>
-        </h3>
-    </div>
-</div>
-<div class="col-md-12">
-    <div class="card-group">
-        <div class="card text-center">
-            <div class="card-body editor-color">
-                <h5 class="card-title">Dyrektor</h5>
-                <p class="card-text"><i class="bi bi-person-circle"></i> Mgr. Magdalena Pesta</p>
-                <p class="card-text"><i class="bi-telephone-fill"></i> tel. (24)275-84-81</p>
-                <p class="card-text"><i class="bi-envelope-fill"></i> magdaolszewska@onet.eu</p>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-body editor-color">
-                <h5 class="card-title">Sekretariat</h5>
-                <p class="card-text"><i class="bi bi-person-circle"></i> Bożena Ikier</p>
-                <p class="card-text"><i class="bi-telephone-fill"></i> tel. (24) 275-84-80/82</p>
-                <p class="card-text"><i class="bi-envelope-fill"></i> bozena.ikier@spgoleszyn.pl</p>
-                <p class="card-text"><i class="bi bi-printer-fill"></i> Fax  (24) 275-84-84</p>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-body editor-color">
-                <h5 class="card-title">Pokój nauczycielski</h5>
-                <p class="card-text"><i class="bi bi-person-circle"></i> Kadra nauczycielska</p>
-                <p class="card-text"><i class="bi-telephone-fill"></i> tel. (24) 275-84-85</p>
-                <p class="card-text"><i class="bi-envelope-fill"></i> sp.goleszyn@wp.pl</p>
-                <p class="card-text"><i class="bi bi-printer-fill"></i> Fax  (24) 275-84-84</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1436.1632999320536!2d19.728721359714736!3d52.78213368449174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471c5e01623e0dfd%3A0x9413b52a1d39efc7!2sSzko%C5%82a%20Podstawowa%20im.%20Polskich%20Noblist%C3%B3w%20w%20Goleszynie!5e0!3m2!1spl!2spl!4v1714920143900!5m2!1spl!2spl" style="width: 100%; height: 450px; border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 
-    <scripts>
-    <script src="/js/Font-size.js"></script>
-    </scripts>
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">KONTAKT</span>
+            <h1>Zapraszamy <span>do kontaktu</span></h1>
+        </div>
+    </div>
+
+    <!-- GODZINY I ADRES -->
+    <div class="contact-info-grid">
+        <div class="panel-card contact-info">
+            <span class="contact-info-icon" aria-hidden="true"><i class="bi bi-clock-fill"></i></span>
+            <div>
+                <span class="contact-info-label">Godziny pracy w roku szkolnym</span>
+                <strong>7.00 – 15.00</strong>
+            </div>
+        </div>
+
+        <div class="panel-card contact-info">
+            <span class="contact-info-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></span>
+            <div>
+                <span class="contact-info-label">Adres</span>
+                <strong>Goleszyn, ul. Niepodległości 2, 09-200 Sierpc</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- KARTY KONTAKTOWE -->
+    <div class="contact-grid">
+
+        <article class="panel-card contact-card">
+            <h2 class="contact-card-title">Dyrektor</h2>
+            <ul class="contact-list">
+                <li><i class="bi bi-person-circle" aria-hidden="true"></i> <span>Mgr. Magdalena Pesta</span></li>
+                <li><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+48242758481">tel. (24) 275-84-81</a></li>
+                <li><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:magdaolszewska@onet.eu">magdaolszewska@onet.eu</a></li>
+            </ul>
+        </article>
+
+        <article class="panel-card contact-card">
+            <h2 class="contact-card-title">Sekretariat</h2>
+            <ul class="contact-list">
+                <li><i class="bi bi-person-circle" aria-hidden="true"></i> <span>Bożena Ikier</span></li>
+                <li><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+48242758480">tel. (24) 275-84-80/82</a></li>
+                <li><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:bozena.ikier@spgoleszyn.pl">bozena.ikier@spgoleszyn.pl</a></li>
+                <li><i class="bi bi-printer-fill" aria-hidden="true"></i> <span>Fax (24) 275-84-84</span></li>
+            </ul>
+        </article>
+
+        <article class="panel-card contact-card">
+            <h2 class="contact-card-title">Pokój nauczycielski</h2>
+            <ul class="contact-list">
+                <li><i class="bi bi-person-circle" aria-hidden="true"></i> <span>Kadra nauczycielska</span></li>
+                <li><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+48242758485">tel. (24) 275-84-85</a></li>
+                <li><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:sp.goleszyn@wp.pl">sp.goleszyn@wp.pl</a></li>
+                <li><i class="bi bi-printer-fill" aria-hidden="true"></i> <span>Fax (24) 275-84-84</span></li>
+            </ul>
+        </article>
+
+    </div>
+
+    <!-- MAPA -->
+    <div class="map-frame">
+        <iframe title="Mapa dojazdu do Szkoły Podstawowej w Goleszynie"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1436.1632999320536!2d19.728721359714736!3d52.78213368449174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471c5e01623e0dfd%3A0x9413b52a1d39efc7!2sSzko%C5%82a%20Podstawowa%20im.%20Polskich%20Noblist%C3%B3w%20w%20Goleszynie!5e0!3m2!1spl!2spl!4v1714920143900!5m2!1spl!2spl"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+</div>

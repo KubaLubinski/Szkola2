@@ -1,44 +1,49 @@
 ﻿@model Szkola2.Models.Category
 
 @{
-    ViewData["Title"] = "Edycja";
+    ViewData["Title"] = "Edycja kategorii";
 }
 
-<h1 class="text-primary roboto">Edycja</h1>
+<div class="school-home">
 
-<h4 class="roboto">Kategorie</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CategoryId" />
-            <div class="form-group">
-                <label asp-for="CategoryName" class="control-label"></label>
-                <input asp-for="CategoryName" class="form-control" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"> </textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            
-            <div class="form-group">
-                <hr />
-                <input type="submit" value="Zapisz" class="btn btn-primary" /> | 
-                <a asp-action="Index" class="btn btn-light">Powrót</a>
-            </div>
-        </form>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">EDYCJA</span>
+            <h1>Edycja <span>kategorii</span></h1>
+        </div>
     </div>
+
+    <form asp-action="Edit" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="CategoryId" />
+
+        <div class="form-field">
+            <label asp-for="CategoryName" class="form-label fw-bold"></label>
+            <input asp-for="CategoryName" class="form-control" />
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="Description" class="form-label fw-bold"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" />
+            <label class="form-check-label" asp-for="IsActive"></label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Zapisz <span aria-hidden="true">→</span></button>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót</a>
+        </div>
+    </form>
+
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

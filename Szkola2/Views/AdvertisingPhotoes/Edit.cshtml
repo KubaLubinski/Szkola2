@@ -1,33 +1,42 @@
 ﻿@model Szkola2.Models.AdvertisingPhoto
 
 @{
-    ViewData["Title"] = "Zamiana";
+    ViewData["Title"] = "Zamiana zdjęcia";
 }
 
-<h1 class="text-primary roboto">Zamień zdjęcie</h1>
+<div class="school-home">
 
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PhotoId" />
-            <div>
-                <img src="@Url.Content(Model.Photo = "~/img/mini/"+Model.Photo)"/>
-                <br /><br />@* 2 razy br bo nie ma odstępu miedzy guzikiem a obrazkiem*@
-                <input type="file" name="photo" id="photo" class="from-control" accept=".jpg,.gif,.png"/>
-            </div>
-            <div class="form-group">
-                <hr />
-                <input type="submit" value="Zapisz" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-light">Powrót do zdjęć</a>
-            </div>
-        </form>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">EDYCJA</span>
+            <h1>Zamień <span>zdjęcie</span></h1>
+        </div>
     </div>
+
+    <form asp-action="Edit" enctype="multipart/form-data" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="PhotoId" />
+
+        <div class="form-field">
+            <img class="photo-preview" src="@Url.Content("~/img/mini/" + Model.Photo)" alt="Aktualne zdjęcie" />
+        </div>
+
+        <div class="form-field">
+            <label for="photo" class="form-label fw-bold">Nowe zdjęcie</label>
+            <input type="file" name="photo" id="photo" class="form-control" accept=".jpg,.gif,.png" />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Zapisz <span aria-hidden="true">→</span></button>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót do zdjęć</a>
+        </div>
+    </form>
+
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+

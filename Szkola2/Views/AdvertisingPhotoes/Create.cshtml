@@ -1,35 +1,42 @@
 ﻿@model Szkola2.Models.AdvertisingPhoto
 
 @{
-    ViewData["Title"] = "Zdjęcia";
+    ViewData["Title"] = "Nowe zdjęcie";
 }
 
-<h1 class="text-primary roboto">Nowe zdjęcie</h1>
-@{
-    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
-    {
-        <div class="alert alert-danger" role="alert"> @ViewBag.ErrorMessage</div>
-    }
-}
+<div class="school-home">
 
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create" enctype="multipart/form-data" >
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-             <div class="form-group" >
-                <label asp-for="Photo" class="control-label"></label>
-                <input type="file" name="photo" id="photo" class="form-control" accept=".jpg,.gif,.png" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
-            </div>   
-                <hr />
-                <input type="submit" value="Wstaw zdjęcie" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-light">Powrót do zdjęć</a>
-        </form>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">NOWE ZDJĘCIE</span>
+            <h1>Dodaj <span>zdjęcie</span></h1>
+        </div>
     </div>
+
+    @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage</div>
+    }
+
+    <form asp-action="Create" enctype="multipart/form-data" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-field">
+            <label asp-for="Photo" class="form-label fw-bold"></label>
+            <input type="file" name="photo" id="photo" class="form-control" accept=".jpg,.gif,.png" />
+            <span asp-validation-for="Photo" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Wstaw zdjęcie <span aria-hidden="true">→</span></button>
+            <a asp-action="Index" class="btn btn-school-outline">Powrót do zdjęć</a>
+        </div>
+    </form>
+
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

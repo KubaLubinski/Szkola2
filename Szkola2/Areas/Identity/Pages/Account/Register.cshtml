@@ -3,66 +3,97 @@
 @{
     ViewData["Title"] = "Dodawanie nowego użytkownika";
 }
-<h1 class="text-success roboto">Dodawanie nowego użytkownika</h1>
-<div class="row">
-    <div class="col-lg-5 col-md-8 text-dark">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
+
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ADMINISTRACJA</span>
+            <h1>Dodawanie nowego <span>użytkownika</span></h1>
+        </div>
+    </div>
+
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-section">
+            <h2 class="form-section-title">Dane</h2>
+
+            <div class="form-field">
+                <label asp-for="Input.Email" class="form-label fw-bold"></label>
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.FirstName" class="form-control" />
-                <label asp-for="Input.FirstName"></label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+
+            <div class="row g-3">
+                <div class="col-md-6 form-field mb-0">
+                    <label asp-for="Input.FirstName" class="form-label fw-bold"></label>
+                    <input asp-for="Input.FirstName" class="form-control" />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 form-field mb-0">
+                    <label asp-for="Input.LastName" class="form-label fw-bold"></label>
+                    <input asp-for="Input.LastName" class="form-control" />
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.LastName" class="form-control" />
-                <label asp-for="Input.LastName"></label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.Information" class="form-control" />
-                <label asp-for="Input.Information"></label>
+
+            <div class="form-field mt-3">
+                <label asp-for="Input.Information" class="form-label fw-bold"></label>
+                <textarea asp-for="Input.Information" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Input.Information" class="text-danger"></span>
             </div>
-            <hr />
-            <div class="form-floating text-color">
+        </div>
+
+        <div class="form-section">
+            <h2 class="form-section-title">Uprawnienia</h2>
+
+            <div class="switch-row">
                 <label asp-for="Input.IsActive" class="form-check-label"></label>
                 <input asp-for="Input.IsActive" class="form-check-input" />
-                <span asp-validation-for="Input.IsActive" class="text-danger"></span>
             </div>
-            <hr />
-            <div class="form-floating text-color">
+            <span asp-validation-for="Input.IsActive" class="text-danger"></span>
+
+            <div class="switch-row">
                 <label asp-for="Input.CanAddTexts" class="form-check-label"></label>
                 <input asp-for="Input.CanAddTexts" class="form-check-input" />
-                <span asp-validation-for="Input.CanAddTexts" class="text-danger"></span>
             </div>
-            <hr />
-            <div class="form-group">
-                <label asp-for="Input.UserRole" class="text-color"></label>
-                <select asp-for="Input.UserRole" class="form-control text-center" asp-items="Model.RoleItems">
-                    <option value="">-- Wybierz role --</option>
+            <span asp-validation-for="Input.CanAddTexts" class="text-danger"></span>
+
+            <div class="form-field mt-3">
+                <label asp-for="Input.UserRole" class="form-label fw-bold"></label>
+                <select asp-for="Input.UserRole" class="form-select" asp-items="Model.RoleItems">
+                    <option value="">-- Wybierz rolę --</option>
                 </select>
                 <span asp-validation-for="Input.UserRole" class="text-danger"></span>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.Password">Hasło</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-section">
+            <h2 class="form-section-title">Hasło</h2>
+
+            <div class="row g-3">
+                <div class="col-md-6 form-field mb-0">
+                    <label asp-for="Input.Password" class="form-label fw-bold">Hasło</label>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 form-field mb-0">
+                    <label asp-for="Input.ConfirmPassword" class="form-label fw-bold">Potwierdź hasło</label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.ConfirmPassword">Potwierdź hasło</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <hr/>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Zatwierdź</button>
-        </form>
-    </div>
+        </div>
+
+        <div class="form-actions">
+            <button id="registerSubmit" type="submit" class="btn btn-school">Zatwierdź <span aria-hidden="true">→</span></button>
+            <a asp-area="" asp-controller="Users" asp-action="UsersList" class="btn btn-school-outline">Powrót do listy</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {

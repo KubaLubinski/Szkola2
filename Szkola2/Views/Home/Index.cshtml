@@ -27,7 +27,7 @@
                 @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
                 {
                     <div class="carousel-item @(i == 0 ? "active" : "")">
-                        <img src="@Url.Content("~/img/mini/" + Model.AdvertisingPhotos[i].Photo)"
+                        <img src="@Url.Content("~/img/" + Model.AdvertisingPhotos[i].Photo)"
                              class="hero-image"
                              alt="Zdjęcie szkoły">
 
@@ -53,7 +53,18 @@
                                 <a asp-controller="Texts"
                                    asp-action="Index"
                                    class="hero-button">
-                                    Poznaj aktualności
+                                    Przejdź do aktualności
+                                    <span>→</span>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="hero-content">
+                                <a asp-controller="Texts"
+                                   asp-action="Index"
+                                   class="hero-button">
+                                    Przejdź do aktualności
                                     <span>→</span>
                                 </a>
                             </div>
@@ -187,13 +198,12 @@
             <div class="info-card clock-card" id="school-calendar">
                 <div class="info-card-header">
                     <div>
-                        <span class="section-label">DZISIAJ</span>
-                        <h3>Aktualna data</h3>
+                        <span class="section-label">Aktualna data i godzina</span>
                     </div>
                     <div class="live-dot"></div>
                 </div>
 
-                <div id="current-date-time" class="current-date">Ładowanie...</div>
+                <div id="current-date-time" class="current-date" aria-live="off">Ładowanie...</div>
 
                 <div class="clock-wrapper">
                     <div class="clock" id="clock">
@@ -324,7 +334,38 @@
     <script src="/js/Clock.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        /* Rozdziela tekst z Day.js na datę i godzinę (godzina większa), bez zmian w Day.js */
+        (function () {
+            var el = document.getElementById("current-date-time");
+            if (!el) return;
+            var busy = false;
+            function format() {
+                if (busy) return;
+                var raw = (el.textContent || "").trim();
+                if (!raw || /^ładowanie/i.test(raw) || el.querySelector(".dt-time")) return;
+                var text = raw.replace(/^aktualna data( i godzina)?\s*[:\-–]?\s*/i, "");
+                var m = text.match(/(\d{1,2}:\d{2}(?::\d{2})?)/);
+                if (!m) return;
+                var date = (text.slice(0, m.index) + text.slice(m.index + m[0].length)).replace(/[,\-–]\s*$/, "").replace(/^\s*[,\-–]\s*/, "").replace(/\s+/g, " ").trim();
+                busy = true;
+                el.innerHTML = "";
+                var d = document.createElement("span"); d.className = "dt-date"; d.textContent = date;
+                var t = document.createElement("span"); t.className = "dt-time"; t.textContent = m[1];
+                el.appendChild(d); el.appendChild(t);
+                busy = false;
+            }
+            new MutationObserver(function () {
+                var t = el.querySelector(".dt-time");
+                if (t && el.textContent === (el.querySelector(".dt-date").textContent + t.textContent)) return;
+                /* Day.js nadpisał tekst — formatujemy jeszcze raz */
+                format();
+            }).observe(el, { childList: true, characterData: true, subtree: true });
+            format();
+        })();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
             /* Animacje pojawiania się elementów - DODANO .project-full-card */
             const animatedElements = document.querySelectorAll(
@@ -349,7 +390,7 @@
 
             /* Delikatny efekt parallax dla hero */
             const hero = document.querySelector(".home-hero");
-            window.addEventListener("scroll", function() {
+            window.addEventListener("scroll", function () {
                 if (!hero) return;
                 const scroll = window.scrollY;
                 if (scroll < hero.offsetHeight) {
@@ -359,7 +400,6 @@
 
         });
     </script>
-}
 }
 
 @*@model HomeViewModel
@@ -493,4 +533,3 @@
     <script src="/js/Day.js"></script>
     <script src="/js/Clock.js"> </script> 
 }*@
-

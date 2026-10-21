@@ -1,76 +1,100 @@
-﻿@using Humanizer
-@using System.Globalization
-@model IEnumerable<Szkola2.Models.PastSchoolEvent>
+﻿@model IEnumerable<Szkola2.Models.PastSchoolEvent>
 
 @{
-    ViewData["Title"] = "YearEvents";
+    ViewData["Title"] = "Wydarzenia z roku szkolnego";
 }
 
-<h1 class="text-center text-decoration-underline roboto">Wydarzenia z roku szkolengo @ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</h1>
+<div class="school-home">
 
-@{
-    var culture = new CultureInfo("en-US");
-    int collapseNumber = 0;
-    List<string> numberWords = new List<string>();
-    for (int i = 2; i <= 100; i++)
-    {
-        string word = i.ToWords(culture).Transform(To.TitleCase).Replace(" ", "");
-        numberWords.Add(word);
-    }
-
-    foreach (var item in Model)
-    {
-        string collapse = numberWords[collapseNumber];
-        string collapseId = $"panelsStayOpen-collapse{collapse}";
-        string carouselId = $"carousel{collapse}";
-        <div class="accordion" id="accordionPanelsStayOpenExample">
-            <div class="accordion-item bg-color">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" title="Rozwiń " type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
-                        <h3 class="fs-3 fw-bold text-decoration-none">@Html.DisplayFor(modelItem => item.EventDate) - @Html.Raw(item.EventName)</h3>
-                    </button>
-                </h2>
-                <div id="@collapseId" class="accordion-collapse collapse">
-                    <div class="accordion-body roboto">
-                        @Html.Raw(item.Content)
-                        <br>
-                        @if(item.GraphicGallery.Count() > 0)
-                        {
-                        <div id="@carouselId" class="carousel slide mx-auto">
-                            <div class="carousel-inner col-md-5">
-                                @for (int i = 0; i < item.GraphicGallery.Count(); i++)
-                                {
-                                    <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                                        <img class="d-block rounded img-fluid mx-auto" src="@Url.Content("~/miniGallery/"+item.GraphicGallery[i].URL)" alt="@item.GraphicGallery[i].Name">
-                                    </div>
-                                }
-                            </div>
-                            <button class="carousel-control-prev custom-carousel-control" title="Poprzednie " type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next custom-carousel-control" title="Następne " type="button" data-bs-target="#@carouselId" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        }
-                    </div>
-                </div>
-                <br />
-                <div>
-                    <img class="d-block rounded img-fluid mx-auto" src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" />
-                </div>
-                <hr />
-            </div>
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">KALENDARIUM</span>
+            <h1>Rok szkolny <span>@ViewBag.SelectedYear/@ViewBag.AfterSelectedYear</span></h1>
         </div>
-        collapseNumber++;
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="event-list">
+            @foreach (var item in Model)
+            {
+                <article class="event-card">
+
+                    <div class="accordion event-accordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" title="Rozwiń" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#event-collapse-@item.Id"
+                                        aria-expanded="false" aria-controls="event-collapse-@item.Id">
+                                    <span class="detail-badge">@string.Format("{0:dd.MM.yyyy}", item.EventDate)</span>
+                                    <span class="event-title">@Html.Raw(item.EventName)</span>
+                                </button>
+                            </h2>
+
+                            <div class="event-card-photo">
+                                <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + item.MainGraphic)"
+                                     alt="@item.EventName" />
+                            </div>
+
+                            <div id="event-collapse-@item.Id" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+
+                                    <div class="detail-content" data-readmore="150">
+                                        @Html.Raw(item.Content)
+                                    </div>
+
+                                    @if (item.GraphicGallery.Count() > 0)
+                                    {
+                                        <div id="event-carousel-@item.Id" class="carousel slide gallery-carousel mt-4">
+                                            <div class="carousel-inner">
+                                                @for (int i = 0; i < item.GraphicGallery.Count(); i++)
+                                                {
+                                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                        <img class="d-block img-fluid mx-auto"
+                                                             src="@Url.Content("~/miniGallery/" + item.GraphicGallery[i].URL)"
+                                                             alt="@item.GraphicGallery[i].Name">
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <button class="carousel-control-prev" title="Poprzednie" type="button"
+                                                    data-bs-target="#event-carousel-@item.Id" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Poprzednie</span>
+                                            </button>
+                                            <button class="carousel-control-next" title="Następne" type="button"
+                                                    data-bs-target="#event-carousel-@item.Id" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Następne</span>
+                                            </button>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </article>
+            }
+        </div>
     }
+    else
+    {
+        <div class="panel-card texts-empty" role="alert">
+            <span class="texts-empty-icon" aria-hidden="true">ℹ</span>
+            <div>Brak wydarzeń w tym roku szkolnym.</div>
+        </div>
+    }
+
+    <div class="form-actions border-0 pt-0 mt-0">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-school-outline">← Wróć do strony głównej</a>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/readmore.js"></script>
 }
 
-
-
-<div>
-    <a asp-action="Index" asp-controller="Home" class="btn btn-warning">Wróć do strony głównej</a>
-</div>
 

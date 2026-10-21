@@ -1,54 +1,87 @@
 ﻿@model UserViewModel
 
-<h1 class="text-success roboto">Edytuj użytkownika</h1>
+@{
+    ViewData["Title"] = "Edycja użytkownika";
+}
 
-<form asp-action="UserEdit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="FirstName">Imię</label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName">Nazwisko</label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Information"></label>
-        <textarea asp-for="Information" class="form-control"></textarea>
-        <span asp-validation-for="Information" class="text-danger"></span>
-    </div>
-    <hr />
-    <div class="form-group">
-        <label asp-for="IsActive" class="form-check-label">Czy konto jest aktywne?</label>
-        <input asp-for="IsActive" class="form-check-input" />
-        <span asp-validation-for="IsActive" class="text-danger"></span>
-    </div>
-    <hr />
-    <div class="form-group">
-        <label asp-for="CanAddTexts" class="form-check-label"></label>
-        <input asp-for="CanAddTexts" class="form-check-input" />
-        <span asp-validation-for="CanAddTexts" class="text-danger"></span>
-    </div>
-    <hr />
-    @if (!(ViewBag.UserRole == "admin" || ViewBag.UserRole == null))
-    {
-        <div class="form-group">
-            <label asp-for="Role">Rola</label>
-            <select asp-for="Role" class="form-control" asp-items="ViewBag.RoleId">
-                <option value="">-- Wybierz role --</option>
-            </select>
-            <span asp-validation-for="Role" class="text-danger"></span>
+<div class="school-home">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">ADMINISTRACJA</span>
+            <h1>Edytuj <span>użytkownika</span></h1>
         </div>
+    </div>
+
+    <form asp-action="UserEdit" class="panel-card panel-narrow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-section">
+            <h2 class="form-section-title">Dane</h2>
+
+            <div class="form-field">
+                <label asp-for="Email" class="form-label fw-bold"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="FirstName" class="form-label fw-bold">Imię</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="LastName" class="form-label fw-bold">Nazwisko</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Information" class="form-label fw-bold"></label>
+                <textarea asp-for="Information" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Information" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2 class="form-section-title">Uprawnienia</h2>
+
+            <div class="switch-row">
+                <label asp-for="IsActive" class="form-check-label">Czy konto jest aktywne?</label>
+                <input asp-for="IsActive" class="form-check-input" />
+            </div>
+            <span asp-validation-for="IsActive" class="text-danger"></span>
+
+            <div class="switch-row">
+                <label asp-for="CanAddTexts" class="form-check-label"></label>
+                <input asp-for="CanAddTexts" class="form-check-input" />
+            </div>
+            <span asp-validation-for="CanAddTexts" class="text-danger"></span>
+
+            @if (!(ViewBag.UserRole == "admin" || ViewBag.UserRole == null))
+            {
+                <div class="form-field mt-3">
+                    <label asp-for="Role" class="form-label fw-bold">Rola</label>
+                    <select asp-for="Role" class="form-select" asp-items="ViewBag.RoleId">
+                        <option value="">-- Wybierz rolę --</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            }
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-school">Zapisz zmiany <span aria-hidden="true">→</span></button>
+            <a asp-action="UsersList" class="btn btn-school-outline">Powrót do listy</a>
+        </div>
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-        <div class="form-group">
-            <button type="submit" class="btn btn-success">Zapisz zmiany</button>
-        </div>
-
-</form>
+}
