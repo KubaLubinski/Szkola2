@@ -5,9 +5,10 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    var currentUser = await UserManager.GetUserAsync(User);
      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toogle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="mx-3">@UserManager.GetUserAsync(User).Result.FullName</span>
+            <span class="mx-3">@(currentUser?.FullName ?? User.Identity?.Name)</span>
         </a>
         <ul class="dropdown-menu dropdown-color" aria-labelledby="NavbarDropdownMenuLink>">
             <li class="nav-item"><a class="dropdown-item dropdown-color" asp-area="Identity"

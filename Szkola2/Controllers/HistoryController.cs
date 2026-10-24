@@ -1,12 +1,10 @@
 ﻿using Humanizer;
-using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Szkola2.Data;
 using Szkola2.Infrastructure;
 using Szkola2.Models;
-using Image = System.Drawing.Image;
 
 namespace Szkola2.Controllers
 {
@@ -14,11 +12,16 @@ namespace Szkola2.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IWebHostEnvironment _hostEnvironment;
+        private readonly IDemoContext _demo;
+        private readonly FileCleaner _files;
 
-        public HistoryController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public HistoryController(ApplicationDbContext context, IWebHostEnvironment environment,
+            IDemoContext demo, FileCleaner files)
         {
             _context = context;
             _hostEnvironment = environment;
+            _demo = demo;
+            _files = files;
         }
 
         // GET: History
@@ -63,39 +66,30 @@ namespace Szkola2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TextName,Content")] History history, IFormFileCollection GraphicGalleryFiles)
         {
+            history.Content = HtmlCleaner.Clean(history.Content);
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ModelState.IsValid)
             {
                 if (GraphicGalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
                     history.GraphicGallery = new List<Graphic>();
 
                     foreach (var file in GraphicGalleryFiles)
                     {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
+                        if (imageFileUpload.TryUploadGalleryImage(file, out var galleryUrl, out _))
                         {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-                            history.GraphicGallery.Add(gallery);
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            };
+                            history.GraphicGallery.Add(new Graphic() { Name = Path.GetFileName(file.FileName), URL = galleryUrl });
                         }
                         else
                         {
+                            // usuwamy zdjęcia zapisane wcześniej w tej samej partii
+                            foreach (var uploaded in history.GraphicGallery) _files.DeleteGalleryImage(uploaded.URL);
                             ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
                             return View(history);
                         }
@@ -142,6 +136,13 @@ namespace Szkola2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TextName,Content")] History history, IFormFileCollection GraphicGalleryFiles)
         {
+            history.Content = HtmlCleaner.Clean(history.Content);
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Edit), new { id });
+            }
+
             if (id != history.Id)
             {
                 return NotFound();
@@ -158,38 +159,19 @@ namespace Szkola2.Controllers
                 if (GraphicGalleryFiles != null)
                 {
                     ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
 
                     history.GraphicGallery = new List<Graphic>();
 
                     foreach (var file in GraphicGalleryFiles)
                     {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
+                        if (imageFileUpload.TryUploadGalleryImage(file, out var galleryUrl, out _))
                         {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-
-                            history.GraphicGallery.Add(gallery);
-
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            }
+                            history.GraphicGallery.Add(new Graphic() { Name = Path.GetFileName(file.FileName), URL = galleryUrl });
                         }
                         else
                         {
+                            // usuwamy zdjęcia zapisane wcześniej w tej samej partii
+                            foreach (var uploaded in history.GraphicGallery) _files.DeleteGalleryImage(uploaded.URL);
                             ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
                             history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
                             return View(history);
@@ -240,7 +222,6 @@ namespace Szkola2.Controllers
         // POST: History/Delete/5
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost, ActionName("Delete")]
-        [HttpDelete]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
@@ -248,25 +229,30 @@ namespace Szkola2.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.History'  is null.");
             }
-            var history = await _context.History.FindAsync(id);
-            if (history != null)
+
+            // konto testowe nie może niczego usuwać (wcześniej pliki były kasowane z dysku, zanim zapis do bazy został odrzucony)
+            if (_demo.IsDemo)
             {
-                var ImagesToDelete = _context.GraphicGallery.Where(u => u.Id == id).ToList();
-                foreach (var image in ImagesToDelete)
-                {
-                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
-                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
-                    DeleteImage(DeleteImagePath);
-                    DeleteImage(DeleteMiniImagePath);
-                }
-                var HistoryGalleriesItemToDelete = _context.GraphicGallery.Where(i => i.HistoryId == id).ToList();
-                foreach (var item in HistoryGalleriesItemToDelete)
-                {
-                    _context.GraphicGallery.Remove(item);
-                }
-                _context.History.Remove(history);
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
             }
+
+            var history = await _context.History.FirstOrDefaultAsync(h => h.Id == id);
+            if (history == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // wcześniej: Where(u => u.Id == id) - kasowało pliki cudzych zdjęć o tym samym numerze
+            var images = await _context.GraphicGallery!.Where(g => g.HistoryId == id).ToListAsync();
+            var urls = images.Select(g => g.URL).ToList();
+
+            _context.GraphicGallery.RemoveRange(images);
+            _context.History.Remove(history);
             await _context.SaveChangesAsync();
+
+            // pliki dopiero po udanym zapisie
+            foreach (var url in urls) _files.DeleteGalleryImage(url);
             return RedirectToAction(nameof(Index));
         }
 
@@ -277,18 +263,31 @@ namespace Szkola2.Controllers
 
         }
 
-        public IActionResult DeleteOneImage(int Id)
+        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
+        // Wcześniej: brak autoryzacji, dowolna metoda HTTP (także GET) i wyjątek, gdy grafika nie istnieje.
+        [HttpDelete]
+        [Authorize(Roles = "admin,dyrektor")]
+        public async Task<IActionResult> DeleteOneImage(int Id)
         {
-            var ImageToDelete = _context.GraphicGallery.FirstOrDefault(u => u.Id == Id);
-            var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
-            var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
-            DeleteImage(DeleteImagePath);
-            DeleteImage(DeleteMiniImagePath);
+            if (_demo.IsDemo)
+            {
+                return Json(new { success = false, message = DemoMessages.ReadOnly });
+            }
 
-            _context.GraphicGallery.Remove(ImageToDelete);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Edit));
+            var image = await _context.GraphicGallery!.FirstOrDefaultAsync(g => g.Id == Id && g.HistoryId != null);
+            if (image == null)
+            {
+                return Json(new { success = false, message = "Nie znaleziono grafiki." });
+            }
+
+            var url = image.URL;
+            _context.GraphicGallery.Remove(image);
+            await _context.SaveChangesAsync();
+            _files.DeleteGalleryImage(url);
+
+            return Json(new { success = true, message = "Grafika została usunięta." });
         }
+
         private void DeleteImage(string deleteImagePath)
         {
             if (System.IO.File.Exists(deleteImagePath))

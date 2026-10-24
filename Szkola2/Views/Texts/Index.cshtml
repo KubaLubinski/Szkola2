@@ -1,4 +1,5 @@
-﻿@model TextsViewModel
+﻿@using Szkola2.Infrastructure
+@model TextsViewModel
 @{
     ViewData["Title"] = "Lista tekstów";
 }
@@ -66,19 +67,12 @@
                             <h3>@item.TextName</h3>
 
                             <div class="news-author">
-                                <span class="author-avatar">@item.User.FirstName.Substring(0, 1)</span>
-                                <span>@item.User.FullName</span>
+                                <span class="author-avatar">@(string.IsNullOrEmpty(item.User?.FirstName) ? "?" : item.User.FirstName[..1])</span>
+                                <span>@item.User?.FullName</span>
                             </div>
 
                             <div class="news-description">
-                                @if (item.Content.Length <= 220)
-                                {
-                                    @Html.Raw(item.Content)
-                                }
-                                else
-                                {
-                                    @Html.Raw(item.Content.Substring(0, 220) + "...")
-                                }
+                                @TextPreview.FromHtml(item.Content, 220)
                             </div>
 
                             <a href="@Url.Action("Details", "Texts", new { id = item.TextId })" class="read-more">

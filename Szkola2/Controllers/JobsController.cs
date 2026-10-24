@@ -13,14 +13,17 @@ namespace Szkola2.Controllers
         public class DataTransferJob
         {
             private readonly ApplicationDbContext _dbContext;
+            private readonly ILogger<DataTransferJob> _logger;
 
-            public DataTransferJob(ApplicationDbContext dbContext)
+            public DataTransferJob(ApplicationDbContext dbContext, ILogger<DataTransferJob> logger)
             {
                 _dbContext = dbContext;
+                _logger = logger;
             }
 
             public async Task CopyAndArchiveTextsAsync()
             {
+                _logger.LogInformation("Start archiwizacji tekstów");
                 var endDate = new DateTime(DateTime.Now.Year, 8, 31);
                 var startDate = new DateTime(DateTime.Now.Year - 1, 8, 31);
 
@@ -53,6 +56,8 @@ namespace Szkola2.Controllers
                 }
 
                 await _dbContext.SaveChangesAsync();
+                _logger.LogInformation("Archiwizacja zakończona: przeniesiono {Copied} tekstów, aktywnych zostaje {Active}",
+                    textsFromLastYear.Count, recentTexts.Count);
             }
         }
     }

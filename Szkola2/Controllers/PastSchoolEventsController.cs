@@ -1,42 +1,39 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Humanizer;
-using LazZiya.ImageResize;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Szkola2.Data;
 using Szkola2.Infrastructure;
 using Szkola2.Models;
-using static System.Net.Mime.MediaTypeNames;
-using Image = System.Drawing.Image;
 
 namespace Szkola2.Controllers
 {
     public class PastSchoolEventsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IWebHostEnvironment _hostEnvironment;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IDemoContext _demo;
+        private readonly FileCleaner _files;
+        private readonly GalleryService _gallery;
+        private readonly ILogger<PastSchoolEventsController> _logger;
 
-        public PastSchoolEventsController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public PastSchoolEventsController(ApplicationDbContext context, IWebHostEnvironment environment,
+            IDemoContext demo, FileCleaner files, GalleryService gallery, ILogger<PastSchoolEventsController> logger)
         {
             _context = context;
             _hostEnvironment = environment;
+            _demo = demo;
+            _files = files;
+            _gallery = gallery;
+            _logger = logger;
         }
 
         // GET: PastSchoolEvents
         public async Task<IActionResult> Index()
         {
-              return _context.PastSchoolEvents != null ? 
-                          View(await _context.PastSchoolEvents.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.PastSchoolEvents'  is null.");
+            return _context.PastSchoolEvents != null ?
+                        View(await _context.PastSchoolEvents.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.PastSchoolEvents'  is null.");
         }
 
         // GET: PastSchoolEvents/Details/5
@@ -66,83 +63,68 @@ namespace Szkola2.Controllers
         }
 
         // POST: PastSchoolEvents/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EventName,EventDate,Content")] PastSchoolEvent pastSchoolEvent, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
-
+        public async Task<IActionResult> Create([Bind("EventName,EventDate,Content")] PastSchoolEvent pastSchoolEvent, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
-            if (ModelState.IsValid)
+            pastSchoolEvent.Content = HtmlCleaner.Clean(pastSchoolEvent.Content);
+            if (!ModelState.IsValid)
+            {
+                return View(pastSchoolEvent);
+            }
+
+            if (_demo.IsDemo)
+            {
+                if (await _context.PastSchoolEvents.CountAsync(e => e.DemoOwnerId == _demo.UserId) >= DemoLimits.MaxEvents)
+                    return CreateFail(pastSchoolEvent, $"Konto testowe może mieć maksymalnie {DemoLimits.MaxEvents} własnych wpisów kalendarium. Usuń któryś, aby dodać nowy.");
+
+                var limitError = DemoLimits.CheckFiles(picture, GraphicGalleryFiles);
+                if (limitError != null) return CreateFail(pastSchoolEvent, limitError);
+            }
+
+            if (EventNameExist(pastSchoolEvent.EventName))
+            {
+                return CreateFail(pastSchoolEvent, "Wpis o takiej nazwie już istnieje!");
+            }
+
+            string? mainName = null;
+            GalleryUploadResult? gallery = null;
+            try
             {
                 if (picture != null && picture.Length > 0)
                 {
-                    ImageFileUpload imageFileResult = new(_hostEnvironment);
-                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
-
-                    if (fileSendResult.Success)
+                    var sent = new ImageFileUpload(_hostEnvironment).SendFile(picture, "img", 600);
+                    if (!sent.Success)
                     {
-                        pastSchoolEvent.MainGraphic = fileSendResult.Name;
+                        return CreateFail(pastSchoolEvent, "Wybrany plik nie jest obrazkiem!");
                     }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
-                        return View(pastSchoolEvent);
-                    }
+                    mainName = sent.Name;
+                    pastSchoolEvent.MainGraphic = mainName;
                 }
 
-                if (GraphicGalleryFiles != null)
+                gallery = _gallery.Save(GraphicGalleryFiles);
+                if (!gallery.Success)
                 {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-                    pastSchoolEvent.GraphicGallery = new List<Graphic>();
+                    _files.DeleteMainGraphic(mainName);
+                    return CreateFail(pastSchoolEvent, gallery.Error!);
+                }
+                pastSchoolEvent.GraphicGallery = gallery.Items;
 
-                    foreach (var file in GraphicGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-                            pastSchoolEvent.GraphicGallery.Add(gallery);
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            };
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            return View(pastSchoolEvent);
-                        }
-                    }
-                }
-                if (!EventNameExist(pastSchoolEvent.EventName))
-                {
-                    _context.Add(pastSchoolEvent);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
-                    return View(pastSchoolEvent);
-                }
+                _context.Add(pastSchoolEvent);
+                await _context.SaveChangesAsync();
             }
-            return View(pastSchoolEvent);
+            catch
+            {
+                _files.DeleteMainGraphic(mainName);
+                if (gallery != null) _gallery.Discard(gallery);
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: PastSchoolEvents/Edit/5
+        // GET: PastSchoolEvents/Edit/5  (podgląd dozwolony także dla cudzych wpisów)
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -151,114 +133,106 @@ namespace Szkola2.Controllers
                 return NotFound();
             }
 
-            var pastSchoolEvent = await _context.PastSchoolEvents.FindAsync(id);
+            var pastSchoolEvent = await _context.PastSchoolEvents
+                .Include(e => e.GraphicGallery)
+                .FirstOrDefaultAsync(e => e.Id == id);
             if (pastSchoolEvent == null)
             {
                 return NotFound();
             }
-            pastSchoolEvent.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
+
+            if (_demo.IsDemo && !_demo.CanModify(pastSchoolEvent))
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ViewOnly;
+            }
+            pastSchoolEvent.GraphicGallery ??= new List<Graphic>();
             return View(pastSchoolEvent);
         }
 
         // POST: PastSchoolEvents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EventName,MainGraphic,EventDate,Content")] PastSchoolEvent pastSchoolEvent, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EventName,EventDate,Content")] PastSchoolEvent pastSchoolEvent, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
+            pastSchoolEvent.Content = HtmlCleaner.Clean(pastSchoolEvent.Content);
             if (id != pastSchoolEvent.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var entity = await _context.PastSchoolEvents
+                .Include(e => e.GraphicGallery)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            if (entity == null)
             {
-                if (EventNameExist(pastSchoolEvent.EventName, pastSchoolEvent.Id))
-                {
-                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
-                    pastSchoolEvent.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();;
-                    return View(pastSchoolEvent);
-                }
+                return NotFound();
+            }
+
+            if (!_demo.CanModify(entity))
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Edit), new { id });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return EditFail(entity, pastSchoolEvent, null);
+            }
+
+            if (_demo.IsDemo)
+            {
+                var limitError = DemoLimits.CheckFiles(picture, GraphicGalleryFiles);
+                if (limitError != null) return EditFail(entity, pastSchoolEvent, limitError);
+            }
+
+            if (EventNameExist(pastSchoolEvent.EventName, pastSchoolEvent.Id))
+            {
+                return EditFail(entity, pastSchoolEvent, "Wpis o takiej nazwie już istnieje!");
+            }
+
+            string? newMain = null;
+            var oldMain = entity.MainGraphic;
+            GalleryUploadResult? gallery = null;
+            try
+            {
                 if (picture != null && picture.Length > 0)
                 {
-                    ImageFileUpload imageFileResult = new(_hostEnvironment);
-                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
-
-                    if (fileSendResult.Success)
+                    var sent = new ImageFileUpload(_hostEnvironment).SendFile(picture, "img", 600);
+                    if (!sent.Success)
                     {
-                        pastSchoolEvent.MainGraphic = fileSendResult.Name;
+                        return EditFail(entity, pastSchoolEvent, "Wybrany plik nie jest obrazkiem!");
                     }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
-                        pastSchoolEvent.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
-                        return View(pastSchoolEvent);
-                    }
+                    newMain = sent.Name;
                 }
-                //test graphic
-                if (GraphicGalleryFiles != null)
+
+                gallery = _gallery.Save(GraphicGalleryFiles);
+                if (!gallery.Success)
                 {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-
-                    pastSchoolEvent.GraphicGallery = new List<Graphic>();
-
-                    foreach (var file in GraphicGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-
-                            pastSchoolEvent.GraphicGallery.Add(gallery);
-
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            pastSchoolEvent.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
-                            return View(pastSchoolEvent);
-                        }
-                    }
+                    _files.DeleteMainGraphic(newMain);
+                    return EditFail(entity, pastSchoolEvent, gallery.Error);
                 }
-                try
-                {
-                    _context.Update(pastSchoolEvent);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PastSchoolEventExists(pastSchoolEvent.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                entity.EventName = pastSchoolEvent.EventName;
+                entity.EventDate = pastSchoolEvent.EventDate;
+                entity.Content = pastSchoolEvent.Content;
+                if (newMain != null) entity.MainGraphic = newMain;
+
+                entity.GraphicGallery ??= new List<Graphic>();
+                foreach (var g in gallery.Items) entity.GraphicGallery.Add(g);
+
+                await _context.SaveChangesAsync();
             }
-            pastSchoolEvent.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
-            return View(pastSchoolEvent);
+            catch
+            {
+                _files.DeleteMainGraphic(newMain);
+                if (gallery != null) _gallery.Discard(gallery);
+                throw;
+            }
+
+            if (newMain != null) _files.DeleteMainGraphic(oldMain);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PastSchoolEvents/Delete/5
@@ -290,37 +264,35 @@ namespace Szkola2.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.PastSchoolEvents'  is null.");
             }
-            var pastSchoolEvent = await _context.PastSchoolEvents.FindAsync(id);
-            if (pastSchoolEvent != null)
-            {
-                var MainGraphicDelete = Path.Combine(_hostEnvironment.WebRootPath + pastSchoolEvent.MainGraphic);
-                DeleteImage(MainGraphicDelete);
 
-                var ImagesToDelete = _context.GraphicGallery.Where(u => u.Id == id).ToList();
-                foreach (var image in ImagesToDelete)
-                {
-                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
-                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
-                    DeleteImage(DeleteImagePath);
-                    DeleteImage(DeleteMiniImagePath);
-                }
-                var HistoryGalleriesItemToDelete = _context.GraphicGallery.Where(i => i.EventId == id).ToList();
-                foreach (var item in HistoryGalleriesItemToDelete)
-                {
-                    _context.GraphicGallery.Remove(item);
-                }
-                _context.PastSchoolEvents.Remove(pastSchoolEvent);
+            var pastSchoolEvent = await _context.PastSchoolEvents
+                .Include(e => e.GraphicGallery)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            if (pastSchoolEvent == null)
+            {
+                return RedirectToAction(nameof(Index));
             }
-            
+
+            if (!_demo.CanModify(pastSchoolEvent))
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
+            }
+
+            var mainGraphic = pastSchoolEvent.MainGraphic;
+            var galleryUrls = (pastSchoolEvent.GraphicGallery ?? new List<Graphic>()).Select(g => g.URL).ToList();
+
+            if (pastSchoolEvent.GraphicGallery != null) _context.GraphicGallery.RemoveRange(pastSchoolEvent.GraphicGallery);
+            _context.PastSchoolEvents.Remove(pastSchoolEvent);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Usunięto wydarzenie {EventId} (użytkownik {UserId}, zdjęć w galerii: {GalleryCount})",
+                id, User.FindFirstValue(ClaimTypes.NameIdentifier), galleryUrls.Count);
+
+            _files.DeleteMainGraphic(mainGraphic);
+            foreach (var url in galleryUrls) _files.DeleteGalleryImage(url);
+
             return RedirectToAction(nameof(Index));
         }
-
-        //public async Task<IActionResult> YearEvents(int? year)
-        //{
-        //    var applicationDbContext = _context.PastSchoolEvents.Where(e => e.EventDate.Year == year.Value);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}
 
         public IActionResult YearEvents(int? year)
         {
@@ -329,18 +301,8 @@ namespace Szkola2.Controllers
                 return View("Error");
             }
 
-            if (year.HasValue)
-            {
-                ViewBag.SelectedYear = year;
-                ViewBag.AfterSelectedYear = year + 1;
-            }
-
-            List<string> numberWords = new List<string>();
-            for (int i = 2; i <= 100; i++)
-            {
-                string word = i.ToWords().Transform(To.TitleCase);
-                numberWords.Add(word);
-            }
+            ViewBag.SelectedYear = year;
+            ViewBag.AfterSelectedYear = year + 1;
 
             var events = _context.PastSchoolEvents
                 .Where(e => e.EventDate >= new DateTime(year.Value, 9, 1) && e.EventDate < new DateTime(year.Value + 1, 9, 1))
@@ -349,10 +311,42 @@ namespace Szkola2.Controllers
 
             return View(events);
         }
-        private bool PastSchoolEventExists(int id)
+
+        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
+        [HttpDelete]
+        [Authorize(Roles = "admin,dyrektor")]
+        public async Task<IActionResult> DeleteOneImage(int Id)
         {
-          return (_context.PastSchoolEvents?.Any(e => e.Id == id)).GetValueOrDefault();
+            var result = await _gallery.DeleteOneAsync(Id, User);
+            if (!result.Found)
+            {
+                return Json(new { success = false, message = "Nie znaleziono grafiki." });
+            }
+            if (result.Forbidden)
+            {
+                return Json(new { success = false, message = "Brak uprawnień do tego zdjęcia." });
+            }
+            if (!result.Allowed)
+            {
+                return Json(new { success = false, message = DemoMessages.ReadOnly });
+            }
+            return Json(new { success = true, message = "Grafika została usunięta." });
         }
+
+        private IActionResult CreateFail(PastSchoolEvent model, string message)
+        {
+            ViewBag.ErrorMessage = message;
+            return View("Create", model);
+        }
+
+        private IActionResult EditFail(PastSchoolEvent entity, PastSchoolEvent posted, string? message)
+        {
+            if (message != null) ViewBag.ErrorMessage = message;
+            posted.MainGraphic = entity.MainGraphic;
+            posted.GraphicGallery = entity.GraphicGallery ?? new List<Graphic>();
+            return View("Edit", posted);
+        }
+
         private bool EventNameExist(string? eventName)
         {
             return (_context.PastSchoolEvents?.Any(e => e.EventName == eventName)).GetValueOrDefault();
@@ -360,25 +354,6 @@ namespace Szkola2.Controllers
         private bool EventNameExist(string? eventName, int? id)
         {
             return (_context.PastSchoolEvents?.Any(e => e.EventName == eventName & e.Id != id)).GetValueOrDefault();
-        }
-        public IActionResult DeleteOneImage(int Id)
-        {
-            var ImageToDelete = _context.GraphicGallery.FirstOrDefault(u => u.Id == Id);
-            var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
-            var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
-            DeleteImage(DeleteImagePath);
-            DeleteImage(DeleteMiniImagePath);
-
-            _context.GraphicGallery.Remove(ImageToDelete);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Edit));
-        }
-        private void DeleteImage(string deleteImagePath)
-        {
-            if (System.IO.File.Exists(deleteImagePath))
-            {
-                System.IO.File.Delete(deleteImagePath);
-            }
         }
     }
 }

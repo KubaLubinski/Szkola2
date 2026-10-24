@@ -31,7 +31,7 @@
                         {
                             <figure class="history-gallery-item">
                                 <img src="@Url.Content("~/miniGallery/" + item.GraphicGallery[i].URL)"
-                                     alt="@item.GraphicGallery[i].Name" />
+                                     alt="@($"{item.TextName} – zdjęcie {i + 1} z {item.GraphicGallery.Count()}")" />
                             </figure>
                         }
                     </div>
@@ -48,3 +48,4 @@
     }
 
 </div>
+

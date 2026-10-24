@@ -1,0 +1,28 @@
+@using Szkola2.Infrastructure
+@inject IDemoContext Demo
+@{
+    var demoNotice = TempData[DemoMessages.Key] as string;
+}
+
+@if (demoNotice != null)
+{
+    <div class="site-notice site-notice--warn" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+        <div class="site-notice__text">@demoNotice</div>
+    </div>
+}
+
+@if (Demo.IsDemo)
+{
+    <div class="site-notice" role="status">
+        <i class="bi bi-person-badge-fill" aria-hidden="true"></i>
+        <div class="site-notice__text">
+            <strong>Konto testowe.</strong>
+            Przeglądasz całą stronę, a własne teksty, dokumenty i wpisy kalendarium możesz dodawać, edytować i usuwać. Widoczne są tylko dla Ciebie.
+            @if (Demo.ExpiresUtc is DateTime expires)
+            {
+                <span>Sesja wygasa o <strong>@expires.ToLocalTime().ToString("HH:mm")</strong>, po czym konto i wpisy zostaną usunięte.</span>
+            }
+        </div>
+    </div>
+}

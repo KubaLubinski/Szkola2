@@ -1,0 +1,184 @@
+@{
+    ViewData["Title"] = "Deklaracja dostępności";
+    const string bipUrl = "https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html";
+    const string facebookUrl = "https://www.facebook.com/p/Szko%C5%82a-Podstawowa-im-Polskich-Noblist%C3%B3w-w-Goleszynie-100063569227821/?_rdr";
+}
+
+<div class="school-home legal-page a11y-page">
+
+    <div class="page-heading">
+        <div>
+            <span class="section-label section-label-lg">DOKUMENTY</span>
+            <h1>Deklaracja <span>dostępności</span></h1>
+        </div>
+        <span class="a11y-badge a11y-badge--partial">
+            <i class="bi bi-universal-access" aria-hidden="true"></i> WCAG 2.1 AA – zgodność częściowa
+        </span>
+    </div>
+
+    <div class="site-notice" role="note">
+        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+        <div class="site-notice__text">
+            <strong>Projekt portfolio.</strong> Dane kontaktowe, adresowe i daty w tym dokumencie są fikcyjne
+            i służą wyłącznie do pokazania, jak taka deklaracja powinna wyglądać.
+        </div>
+    </div>
+
+    <!-- najważniejsze informacje w skrócie -->
+    <ul class="a11y-facts" aria-label="Podsumowanie deklaracji">
+        <li class="a11y-fact">
+            <i class="bi bi-universal-access" aria-hidden="true"></i>
+            <span class="a11y-fact-label">Standard</span>
+            <strong>WCAG 2.1, poziom AA</strong>
+        </li>
+        <li class="a11y-fact">
+            <i class="bi bi-clipboard2-check" aria-hidden="true"></i>
+            <span class="a11y-fact-label">Status</span>
+            <strong>Częściowo zgodna</strong>
+        </li>
+        <li class="a11y-fact">
+            <i class="bi bi-calendar-event" aria-hidden="true"></i>
+            <span class="a11y-fact-label">Data publikacji strony</span>
+            <strong>1 września 2026</strong>
+        </li>
+        <li class="a11y-fact">
+            <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+            <span class="a11y-fact-label">Ostatnia aktualizacja</span>
+            <strong>24 października 2026</strong>
+        </li>
+    </ul>
+
+    <div class="a11y-layout">
+
+        <nav class="a11y-toc" aria-label="Spis treści deklaracji">
+            <span class="a11y-toc-title">Na tej stronie</span>
+            <ol>
+                <li><a href="#status">Status zgodności</a></li>
+                <li><a href="#niedostepne">Treści niedostępne</a></li>
+                <li><a href="#udogodnienia">Udogodnienia</a></li>
+                <li><a href="#kontakt">Kontakt i wnioski</a></li>
+                <li><a href="#skargi">Skargi i odwołania</a></li>
+                <li><a href="#architektura">Dostępność budynku</a></li>
+                <li><a href="#serwisy">Serwisy powiązane</a></li>
+                <li><a href="#przygotowanie">Przygotowanie deklaracji</a></li>
+            </ol>
+        </nav>
+
+        <div class="a11y-content">
+
+            <section id="status" class="panel-card a11y-section" aria-labelledby="h-status">
+                <h2 id="h-status"><i class="bi bi-clipboard2-check" aria-hidden="true"></i> Status zgodności</h2>
+                <p>
+                    Strona internetowa jest <strong>częściowo zgodna</strong> z wymaganiami WCAG 2.1 (poziom AA)
+                    z powodu niezgodności lub wyłączeń wymienionych w następnej sekcji.
+                </p>
+            </section>
+
+            <section id="niedostepne" class="panel-card a11y-section" aria-labelledby="h-niedostepne">
+                <h2 id="h-niedostepne"><i class="bi bi-slash-circle" aria-hidden="true"></i> Treści niedostępne</h2>
+                <ul class="a11y-list">
+                    <li>Dokumenty PDF, DOC i DOCX w zakładce „Dokumenty" mogą nie spełniać wymagań dostępności (np. skany bez warstwy tekstowej, brak struktury nagłówków).</li>
+                    <li>Część zdjęć w starszych wpisach ma opis alternatywny ograniczony do tytułu wpisu i numeru zdjęcia.</li>
+                    <li>Treści i osadzone elementy serwisów zewnętrznych (Facebook, BIP, strony programów) nie podlegają kontroli szkoły.</li>
+                    <li>Teksty wprowadzane przez redaktorów mogą zawierać elementy (tabele, formatowanie) niezgodne z wymaganiami. Redaktorzy są szkoleni w ich poprawnym przygotowaniu.</li>
+                </ul>
+            </section>
+
+            <section id="udogodnienia" class="panel-card a11y-section" aria-labelledby="h-udogodnienia">
+                <h2 id="h-udogodnienia"><i class="bi bi-hand-thumbs-up" aria-hidden="true"></i> Udogodnienia na stronie</h2>
+                <ul class="a11y-features">
+                    <li><i class="bi bi-skip-forward-fill" aria-hidden="true"></i>
+                        <span><strong>Przejdź do treści</strong> – link pojawia się po pierwszym naciśnięciu klawisza <kbd>Tab</kbd>.</span></li>
+                    <li><i class="bi bi-keyboard" aria-hidden="true"></i>
+                        <span><strong>Obsługa klawiaturą</strong> – <kbd>Tab</kbd>, <kbd>Shift</kbd> + <kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Spacja</kbd>; aktywny element jest wyraźnie zaznaczony.</span></li>
+                    <li><i class="bi bi-zoom-in" aria-hidden="true"></i>
+                        <span><strong>Rozmiar tekstu</strong> – przyciski powiększania i zmniejszania w pasku nawigacji; wybór jest zapamiętywany.</span></li>
+                    <li><i class="bi bi-moon-stars" aria-hidden="true"></i>
+                        <span><strong>Motyw jasny i ciemny</strong> – przełącznik w pasku nawigacji; wybór jest zapamiętywany.</span></li>
+                    <li><i class="bi bi-pause-circle" aria-hidden="true"></i>
+                        <span><strong>Pauza karuzeli</strong> – automatyczne przewijanie zdjęć można zatrzymać; przy włączonej w systemie opcji ograniczenia ruchu animacje są wyłączone.</span></li>
+                </ul>
+            </section>
+
+            <section id="kontakt" class="panel-card a11y-section" aria-labelledby="h-kontakt">
+                <h2 id="h-kontakt"><i class="bi bi-chat-dots" aria-hidden="true"></i> Informacje zwrotne i dane kontaktowe</h2>
+                <p>
+                    Osobą do kontaktu w sprawach dostępności jest <strong>Jan Przykładowy</strong>.
+                    Tą drogą można zgłaszać problemy z dostępnością strony oraz składać wnioski o udostępnienie informacji w formie dostępnej.
+                </p>
+                <ul class="a11y-contact">
+                    <li><i class="bi bi-envelope-fill" aria-hidden="true"></i>
+                        <a href="mailto:dostepnosc&#64;szkola-demo.example">dostepnosc&#64;szkola-demo.example</a></li>
+                    <li><i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                        <a href="tel:+48000000000">+48&nbsp;000&nbsp;000&nbsp;000</a></li>
+                    <li><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                        <span>Sekretariat szkoły, ul. Przykładowa 1, 00-000 Goleszyn</span></li>
+                </ul>
+                <h3>Co zawrzeć we wniosku</h3>
+                <p>Imię i nazwisko, sposób kontaktu, adres strony, której dotyczy problem, opis trudności oraz preferowaną formę odpowiedzi.</p>
+                <div class="a11y-callout">
+                    <i class="bi bi-clock-history" aria-hidden="true"></i>
+                    <p>
+                        Dostępność zapewnimy <strong>w ciągu 7 dni</strong>. Jeśli nie będzie to możliwe, niezwłocznie podamy termin,
+                        nie dłuższy niż <strong>2 miesiące</strong>, i zaproponujemy alternatywny sposób dostępu do informacji.
+                    </p>
+                </div>
+            </section>
+
+            <section id="skargi" class="panel-card a11y-section" aria-labelledby="h-skargi">
+                <h2 id="h-skargi"><i class="bi bi-megaphone" aria-hidden="true"></i> Skargi i odwołania</h2>
+                <p>
+                    Jeśli odpowiedź szkoły nie będzie satysfakcjonująca, można złożyć skargę do Rzecznika Praw Obywatelskich:
+                    <a href="https://www.rpo.gov.pl" target="_blank" rel="noopener noreferrer">rpo.gov.pl</a>.
+                </p>
+            </section>
+
+            <section id="architektura" class="panel-card a11y-section" aria-labelledby="h-architektura">
+                <h2 id="h-architektura"><i class="bi bi-building" aria-hidden="true"></i> Dostępność architektoniczna</h2>
+                <p>Szkoła mieści się przy ul. Przykładowej 1 w Goleszynie (adres fikcyjny).</p>
+                <ul class="a11y-checklist">
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Wejście główne na poziomie terenu, bez stopni; drzwi umożliwiają przejazd wózka.</span></li>
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Miejsce parkingowe dla osób z niepełnosprawnościami przed budynkiem.</span></li>
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Winda na pierwsze piętro i toaleta przystosowana dla osób z niepełnosprawnościami.</span></li>
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Sekretariat na parterze, przy wejściu głównym.</span></li>
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Możliwość wejścia z psem asystującym.</span></li>
+                    <li class="is-no"><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Brak: </span>Pętla indukcyjna w budynku.</span></li>
+                    <li class="is-yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><span class="visually-hidden">Jest: </span>Tłumacz polskiego języka migowego na wniosek, zgłoszony z wyprzedzeniem co najmniej 3 dni roboczych.</span></li>
+                </ul>
+            </section>
+
+            <section id="serwisy" class="panel-card a11y-section" aria-labelledby="h-serwisy">
+                <h2 id="h-serwisy"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Serwisy powiązane</h2>
+                <p>Poniższe serwisy są prowadzone poza tą stroną i mają własne zasady dostępności oraz prywatności.</p>
+                <ul class="a11y-links">
+                    <li>
+                        <span class="external-icon bip-icon" aria-hidden="true">BIP</span>
+                        <div>
+                            <strong>Biuletyn Informacji Publicznej</strong>
+                            <span>Oficjalne informacje szkoły. Własna deklaracja dostępności znajduje się w serwisie BIP.</span>
+                            <a href="@bipUrl" target="_blank" rel="noopener noreferrer">Przejdź do BIP<span class="visually-hidden"> (otwiera się w nowej karcie)</span> →</a>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="external-icon facebook-icon" aria-hidden="true">f</span>
+                        <div>
+                            <strong>Fanpage szkoły na Facebooku</strong>
+                            <span>Aktualności publikowane także w mediach społecznościowych; dostępność zależy od serwisu Facebook.</span>
+                            <a href="@facebookUrl" target="_blank" rel="noopener noreferrer">Odwiedź Facebook<span class="visually-hidden"> (otwiera się w nowej karcie)</span> →</a>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="przygotowanie" class="panel-card a11y-section" aria-labelledby="h-przygotowanie">
+                <h2 id="h-przygotowanie"><i class="bi bi-journal-text" aria-hidden="true"></i> Przygotowanie deklaracji</h2>
+                <p>
+                    Deklarację sporządzono 1 września 2026 r., ostatnia aktualizacja: 24 października 2026 r.
+                    Powstała na podstawie samooceny z użyciem automatycznych narzędzi (Lighthouse, WAVE) oraz ręcznych testów
+                    nawigacji klawiaturą.
+                </p>
+            </section>
+
+        </div>
+    </div>
+</div>

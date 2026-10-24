@@ -24,6 +24,7 @@ namespace Szkola2.Controllers
             var latestTexts = await _context.Texts
                                 .Include(t => t.Category)
                                 .Include(t => t.User)
+                                .Where(t => t.IsActive)   // ukryte teksty nie mogą trafiać na stronę główną
                                 .OrderByDescending(t => t.DateAdded)
                                 .Take(6)
                                 .ToListAsync();
@@ -41,6 +42,10 @@ namespace Szkola2.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+        public IActionResult Accessibility()
         {
             return View();
         }

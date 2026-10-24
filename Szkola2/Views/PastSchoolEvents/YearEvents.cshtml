@@ -27,7 +27,7 @@
                                         data-bs-toggle="collapse" data-bs-target="#event-collapse-@item.Id"
                                         aria-expanded="false" aria-controls="event-collapse-@item.Id">
                                     <span class="detail-badge">@string.Format("{0:dd.MM.yyyy}", item.EventDate)</span>
-                                    <span class="event-title">@Html.Raw(item.EventName)</span>
+                                    <span class="event-title">@item.EventName</span>
                                 </button>
                             </h2>
 
@@ -52,7 +52,7 @@
                                                     <div class="carousel-item @(i == 0 ? "active" : "")">
                                                         <img class="d-block img-fluid mx-auto"
                                                              src="@Url.Content("~/miniGallery/" + item.GraphicGallery[i].URL)"
-                                                             alt="@item.GraphicGallery[i].Name">
+                                                             alt="@($"{item.EventName} – zdjęcie {i + 1} z {item.GraphicGallery.Count()}")">
                                                     </div>
                                                 }
                                             </div>
@@ -96,5 +96,9 @@
 @section Scripts {
     <script src="~/js/readmore.js"></script>
 }
+
+
+
+
 
 

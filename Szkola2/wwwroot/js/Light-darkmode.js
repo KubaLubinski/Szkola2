@@ -1,4 +1,4 @@
-﻿
+
 (function () {
     function updateDarkModeIcon(isDarkMode) {
         const icon = document.getElementById("ldmode");
@@ -33,6 +33,13 @@
     function applyDarkMode(isDarkMode) {
         document.body.classList.toggle(
             "dark-theme",
+            isDarkMode
+        );
+
+        // klasa ustawiana wcześnie w <head> (bez białego błysku) - musi znikać razem z trybem ciemnym,
+        // inaczej tło strony zostaje ciemne po przełączeniu na jasny motyw
+        document.documentElement.classList.toggle(
+            "dark-pre",
             isDarkMode
         );
 

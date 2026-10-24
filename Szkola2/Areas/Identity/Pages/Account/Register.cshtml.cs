@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -20,10 +20,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Szkola2.Controllers;
+using Szkola2.Infrastructure;
 using Szkola2.Models;
 
 namespace Szkola2.Areas.Identity.Pages.Account
 {
+    // Wcześniej strona była dostępna dla każdego (także niezalogowanego) i pozwalała założyć konto z dowolną rolą.
+    [Authorize(Roles = "admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
@@ -33,6 +36,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IDemoContext _demo;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
@@ -40,7 +44,8 @@ namespace Szkola2.Areas.Identity.Pages.Account
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IDemoContext demo)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +54,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _demo = demo;
         }
 
         /// <summary>
@@ -143,8 +149,22 @@ namespace Szkola2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            // konto testowe może obejrzeć formularz, ale nie założy użytkownika
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction("UsersList", "Users");
+            }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            // rola musi istnieć i nie może być ani "admin", ani "demo" (lista w formularzu to tylko podpowiedź - serwer sprawdza sam)
+            var allowedRoles = _roleManager.Roles.Where(r => r.Name != "admin" && r.Name != "demo").Select(r => r.Name).ToList();
+            if (!allowedRoles.Contains(Input.UserRole))
+            {
+                ModelState.AddModelError("Input.UserRole", "Wybrana rola jest niedozwolona.");
+            }
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -155,7 +175,7 @@ namespace Szkola2.Areas.Identity.Pages.Account
                 user.IsActive = Input.IsActive;
                 user.CanAddTexts = Input.CanAddTexts;
                 user.EmailConfirmed = true;
-                user.LockoutEnabled = false;
+                user.LockoutEnabled = true;
 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

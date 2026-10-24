@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace Szkola2.Models
 {
-    public class PastSchoolEvent
+    public class PastSchoolEvent : IDemoOwned
     {
         [Key]
         [Display(Name = "Identyfikator:")]
@@ -29,6 +29,10 @@ namespace Szkola2.Models
         [MaxLength(128)]
         [FileExtensions(Extensions = ".jpg,.png,.gif", ErrorMessage = "Niepoprawne rozszerzenie pliku.")]
         public string? MainGraphic { get; set; }
+
+        /// <summary>null = wpis szkoły; inaczej Id konta demo-właściciela. Nigdy nie bindować z formularza.</summary>
+        [MaxLength(450)]
+        public string? DemoOwnerId { get; set; }
 
         [NotMapped]
         public virtual IFormFileCollection? GraphicGalleryFiles { get; set; }

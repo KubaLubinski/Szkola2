@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,12 +17,19 @@ namespace Szkola2.Controllers
     public class AdvertisingPhotoesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IWebHostEnvironment _hostEnvironment;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IDemoContext _demo;
+        private readonly FileCleaner _files;
+        private readonly ILogger<AdvertisingPhotoesController> _logger;
 
-        public AdvertisingPhotoesController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public AdvertisingPhotoesController(ApplicationDbContext context, IWebHostEnvironment environment,
+            IDemoContext demo, FileCleaner files, ILogger<AdvertisingPhotoesController> logger)
         {
             _context = context;
             _hostEnvironment = environment;
+            _demo = demo;
+            _files = files;
+            _logger = logger;
         }
 
         // GET: AdvertisingPhotoes
@@ -68,6 +76,14 @@ namespace Szkola2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto, IFormFile photo)
         {
+            // konto testowe nie może zmieniać slidera; blokada musi być PRZED zapisem pliku,
+            // bo inaczej wgrywane zdjęcia zostawałyby na dysku mimo odrzuconego zapisu w bazie
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ModelState.IsValid)
             {
                 if(photo != null && photo.Length >0)
@@ -85,7 +101,15 @@ namespace Szkola2.Controllers
                     }
                 }
                 _context.Add(advertisingPhoto);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    _files.DeleteMainGraphic(advertisingPhoto.Photo);
+                    throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(advertisingPhoto);
@@ -121,6 +145,21 @@ namespace Szkola2.Controllers
             if (id != advertisingPhoto.PhotoId)
             {
                 return NotFound();
+            }
+
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
+            }
+
+            // nazwa pliku musi wskazywać istniejący plik w wwwroot/img (bez ścieżek typu ../)
+            var photoName = advertisingPhoto.Photo;
+            if (string.IsNullOrWhiteSpace(photoName)
+                || photoName != Path.GetFileName(photoName)
+                || !System.IO.File.Exists(Path.Combine(_hostEnvironment.WebRootPath, "img", photoName)))
+            {
+                ModelState.AddModelError(nameof(AdvertisingPhoto.Photo), "Wskazany plik zdjęcia nie istnieje.");
             }
 
             if (ModelState.IsValid)
@@ -175,13 +214,23 @@ namespace Szkola2.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.AdvertisingPhotos'  is null.");
             }
+            if (_demo.IsDemo)
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Index));
+            }
+
             var advertisingPhoto = await _context.AdvertisingPhotos.FindAsync(id);
             if (advertisingPhoto != null)
             {
+                var fileName = advertisingPhoto.Photo;
                 _context.AdvertisingPhotos.Remove(advertisingPhoto);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Usunięto zdjęcie slidera {PhotoId} (użytkownik {UserId})", id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                // plik kasujemy dopiero po udanym zapisie w bazie (wcześniej zostawał na dysku)
+                _files.DeleteMainGraphic(fileName);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

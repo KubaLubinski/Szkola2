@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using LazZiya.ImageResize;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
 using Szkola2.Data;
 using Szkola2.Infrastructure;
 using Szkola2.Models;
@@ -22,17 +13,29 @@ namespace Szkola2.Controllers
     public class TextsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IWebHostEnvironment _hostEnvironment;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IDemoContext _demo;
+        private readonly FileCleaner _files;
+        private readonly GalleryService _gallery;
+        private readonly ILogger<TextsController> _logger;
 
-        public TextsController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public TextsController(ApplicationDbContext context, IWebHostEnvironment environment,
+            IDemoContext demo, FileCleaner files, GalleryService gallery, ILogger<TextsController> logger)
         {
             _context = context;
             _hostEnvironment = environment;
+            _demo = demo;
+            _files = files;
+            _gallery = gallery;
+            _logger = logger;
         }
 
         // GET: Texts
         public async Task<IActionResult> Index(string Fraza, string Autor, int? Kategoria, int PageNumber = 1)
         {
+            // numer strony z adresu URL: wartość <= 0 dawała ujemny Skip i błąd 500
+            if (PageNumber < 1) PageNumber = 1;
+
             var SelectedTexts = _context.Texts?
                 .Include(t => t.Category)
                 .Include(t => t.User)
@@ -60,7 +63,7 @@ namespace Szkola2.Controllers
             textsViewModel.TextsView.Pharse = Fraza;
             textsViewModel.TextsView.Category = Kategoria;
 
-            textsViewModel.Texts = (IEnumerable<Text>?) await SelectedTexts
+            textsViewModel.Texts = (IEnumerable<Text>?)await SelectedTexts
                 .Skip((PageNumber - 1) * textsViewModel.TextsView.PageSize)
                 .Take(textsViewModel.TextsView.PageSize)
                 .ToListAsync();
@@ -72,17 +75,19 @@ namespace Szkola2.Controllers
                 .Include(u => u.User)
                 .Select(u => u.User)
                 .Distinct(),
-                "Id","LastName", Autor);
+                "Id", "LastName", Autor);
 
             return View(textsViewModel);
         }
-        // GET: Texts
-        [Authorize(Roles ="admin,dyrektor")]
+
+        // GET: Texts/List
+        [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> List()
         {
             var applicationDbContext = _context.Texts.Include(t => t.Category).Include(t => t.User);
             return View(await applicationDbContext.ToListAsync());
         }
+
         // GET: Texts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -96,7 +101,7 @@ namespace Szkola2.Controllers
                 .Include(t => t.User)
                 .Include(g => g.GraphicGallery)
                 .FirstOrDefaultAsync(m => m.TextId == id);
-            if (text == null)
+            if (text == null || !CanSeeText(text))
             {
                 return NotFound();
             }
@@ -108,102 +113,84 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
-            ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id");
+            FillCategories();
             return View();
         }
 
         // POST: Texts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // DemoOwnerId, Id (autor) i DateAdded ustawiamy po stronie serwera - nie są bindowane z formularza.
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextId,TextName,Content,DateAdded,CategoryId,EventDate,IsActive,Id")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Create([Bind("TextName,Content,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
+            text.Content = HtmlCleaner.Clean(text.Content);
             if (!(text.CategoryId == 1 || text.CategoryId == 2))
             {
                 ModelState.Remove("EventDate");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                text.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                text.DateAdded = DateTime.Now;
+                FillCategories(text.CategoryId);
+                return View(text);
+            }
 
+            if (_demo.IsDemo)
+            {
+                if (await _context.Texts.CountAsync(t => t.DemoOwnerId == _demo.UserId) >= DemoLimits.MaxTexts)
+                    return CreateFail(text, $"Konto testowe może mieć maksymalnie {DemoLimits.MaxTexts} własnych tekstów. Usuń któryś, aby dodać nowy.");
+
+                var limitError = DemoLimits.CheckFiles(picture, GraphicGalleryFiles);
+                if (limitError != null) return CreateFail(text, limitError);
+            }
+
+            if (TextNameExist(text.TextName))
+            {
+                return CreateFail(text, "Wpis o takiej nazwie już istnieje!");
+            }
+
+            text.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            text.DateAdded = DateTime.Now;
+
+            string? mainName = null;
+            GalleryUploadResult? gallery = null;
+            try
+            {
                 if (picture != null && picture.Length > 0)
                 {
-                    ImageFileUpload imageFileResult = new(_hostEnvironment);
-                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
-
-                    if (fileSendResult.Success)
+                    var sent = new ImageFileUpload(_hostEnvironment).SendFile(picture, "img", 600);
+                    if (!sent.Success)
                     {
-                        text.MainGraphic = fileSendResult.Name;
+                        return CreateFail(text, "Wybrany plik nie jest obrazkiem!");
                     }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
-                        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                        return View(text);
-                    }
+                    mainName = sent.Name;
+                    text.MainGraphic = mainName;
                 }
 
-                if (GraphicGalleryFiles != null)
+                gallery = _gallery.Save(GraphicGalleryFiles);
+                if (!gallery.Success)
                 {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-                    text.GraphicGallery = new List<Graphic>();
+                    _files.DeleteMainGraphic(mainName);
+                    return CreateFail(text, gallery.Error!);
+                }
+                text.GraphicGallery = gallery.Items;
 
-                    foreach (var file in GraphicGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-                            text.GraphicGallery.Add(gallery);
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            };
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                            return View(text);
-                        }
-                    }
-                }
-                if (!TextNameExist(text.TextName))
-                {
-                    _context.Add(text);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
-                    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                    return View(text);
-                }
+                _context.Add(text);
+                await _context.SaveChangesAsync();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-            ViewData["Id"] = new SelectList(_context.AppUsers, "Id", "Id", text.Id);
-            return View(text);  
+            catch
+            {
+                _files.DeleteMainGraphic(mainName);
+                if (gallery != null) _gallery.Discard(gallery);
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Texts/Edit/5
+        // Widok edycji jest dostępny także dla cudzych wpisów (podgląd); blokada następuje dopiero przy zapisie.
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -211,16 +198,22 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
-            var text = await _context.Texts.FindAsync(id);
+            var text = await _context.Texts
+                .Include(t => t.GraphicGallery)
+                .FirstOrDefaultAsync(t => t.TextId == id);
             if (text == null)
             {
                 return NotFound();
             }
             if (string.Compare(User.FindFirstValue(ClaimTypes.NameIdentifier), text.Id) == 0 || User.IsInRole("admin") || User.IsInRole("dyrektor"))
             {
-                ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
+                if (_demo.IsDemo && !_demo.CanModify(text))
+                {
+                    TempData[DemoMessages.Key] = DemoMessages.ViewOnly;
+                }
+                FillCategories(text.CategoryId);
                 ViewData["Author"] = text.Id;
-                text.GraphicGallery = _context.GraphicGallery?.Where(g => g.TextId == id).ToList();
+                text.GraphicGallery ??= new List<Graphic>();
                 return View(text);
             }
             else
@@ -230,17 +223,36 @@ namespace Szkola2.Controllers
         }
 
         // POST: Texts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Edytujemy rekord załadowany z bazy i przepisujemy tylko dozwolone pola
+        // (autor, data dodania, zdjęcie główne i DemoOwnerId nie pochodzą z formularza).
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost, ActionName("Edit")]
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Id,Content,DateAdded,MainGraphic,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Content,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
+            text.Content = HtmlCleaner.Clean(text.Content);
             if (textid != text.TextId)
             {
                 return NotFound();
+            }
+
+            var entity = await _context.Texts
+                .Include(t => t.GraphicGallery)
+                .FirstOrDefaultAsync(t => t.TextId == textid);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            if (!_demo.CanModify(entity))
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(Edit), new { id = textid });
+            }
+
+            if (!(User.FindFirstValue(ClaimTypes.NameIdentifier) == entity.Id || User.IsInRole("admin") || User.IsInRole("dyrektor")))
+            {
+                return RedirectToAction(nameof(Index));
             }
 
             if (!(text.CategoryId == 1 || text.CategoryId == 2))
@@ -248,100 +260,68 @@ namespace Szkola2.Controllers
                 ModelState.Remove("EventDate");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (TextNameExist(text.TextName, text.TextId))
-                {
-                    ViewBag.ErrorMessage = "Wpis o takiej nazwie już istnieje!";
-                    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                    ViewData["Author"] = text.Id;
-                    text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
-                    return View(text);
-                }
+                return EditFail(entity, text, null);
+            }
+
+            if (_demo.IsDemo)
+            {
+                var limitError = DemoLimits.CheckFiles(picture, GraphicGalleryFiles);
+                if (limitError != null) return EditFail(entity, text, limitError);
+            }
+
+            if (TextNameExist(text.TextName, text.TextId))
+            {
+                return EditFail(entity, text, "Wpis o takiej nazwie już istnieje!");
+            }
+
+            string? newMain = null;
+            var oldMain = entity.MainGraphic;
+            GalleryUploadResult? gallery = null;
+            try
+            {
                 if (picture != null && picture.Length > 0)
                 {
-                    ImageFileUpload imageFileResult = new(_hostEnvironment);
-                    FileSendResult fileSendResult = imageFileResult.SendFile(picture, "img", 600);
-
-                    if (fileSendResult.Success)
+                    var sent = new ImageFileUpload(_hostEnvironment).SendFile(picture, "img", 600);
+                    if (!sent.Success)
                     {
-                        text.MainGraphic = fileSendResult.Name;
+                        return EditFail(entity, text, "Wybrany plik nie jest obrazkiem!");
                     }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "Wybrany plik nie jest obrazkiem!";
-                        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                        ViewData["Author"] = text.Id;
-                        text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
-                        return View(text);
-                    }
+                    newMain = sent.Name;
                 }
-                //test graphic
-                if (GraphicGalleryFiles != null)
+
+                gallery = _gallery.Save(GraphicGalleryFiles);
+                if (!gallery.Success)
                 {
-                    ImageFileUpload imageFileUpload = new(_hostEnvironment);
-                    string folder = "gallery\\";
-
-                    text.GraphicGallery = new List<Graphic>();
-
-                    foreach (var file in GraphicGalleryFiles)
-                    {
-                        string extension = Path.GetExtension(file.FileName);
-
-                        if (imageFileUpload.FileTypeCheck(extension))
-                        {
-                            var gallery = new Graphic()
-                            {
-                                Name = file.FileName,
-                                URL = imageFileUpload.UploadImage(folder, file)
-                            };
-
-                            text.GraphicGallery.Add(gallery);
-
-                            string path = Path.Combine(_hostEnvironment.WebRootPath + gallery.URL);
-
-                            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                            {
-                                using (Image imgFile = Image.FromStream(fs))
-                                {
-                                    var miniFile = imgFile.ScaleByHeight(600);
-                                    var upload = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery\\" + gallery.URL);
-                                    miniFile.SaveAs(upload);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
-                            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-                            ViewData["Author"] = text.Id;
-                            text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
-                            return View(text);
-                        }
-                    }
+                    _files.DeleteMainGraphic(newMain);
+                    return EditFail(entity, text, gallery.Error);
                 }
-                try
-                {
-                    _context.Update(text);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TextExists(text.TextId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(List));
+
+                entity.TextName = text.TextName;
+                entity.Content = text.Content;
+                entity.CategoryId = text.CategoryId;
+                entity.EventDate = text.EventDate;
+                entity.IsActive = text.IsActive;
+                if (newMain != null) entity.MainGraphic = newMain;
+
+                entity.GraphicGallery ??= new List<Graphic>();
+                foreach (var g in gallery.Items) entity.GraphicGallery.Add(g);
+
+                await _context.SaveChangesAsync();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", text.CategoryId);
-            ViewData["Author"] = text.Id;
-            text.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == textid).ToList();
-            return View(text);
+            catch
+            {
+                _files.DeleteMainGraphic(newMain);
+                if (gallery != null) _gallery.Discard(gallery);
+                throw;
+            }
+
+            if (newMain != null) _files.DeleteMainGraphic(oldMain);
+
+            return User.IsInRole("admin") || User.IsInRole("dyrektor")
+                ? RedirectToAction(nameof(List))
+                : RedirectToAction(nameof(Index));
         }
 
         // GET: Texts/Delete/5
@@ -373,55 +353,91 @@ namespace Szkola2.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Texts'  is null.");
             }
-            var text = await _context.Texts.FindAsync(id);
-            if (text != null)
-            {
-                var MainGraphicDelete = Path.Combine(_hostEnvironment.WebRootPath + text.MainGraphic);
-                DeleteImage(MainGraphicDelete);
 
-                var ImagesToDelete = _context.GraphicGallery.Where(u => u.Id == id).ToList();
-                foreach (var image in ImagesToDelete)
-                {
-                    var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + image.URL);
-                    var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + image.URL);
-                    DeleteImage(DeleteImagePath);
-                    DeleteImage(DeleteMiniImagePath);
-                }
-                var HistoryGalleriesItemToDelete = _context.GraphicGallery.Where(i => i.TextId == id).ToList();
-                foreach (var item in HistoryGalleriesItemToDelete)
-                {
-                    _context.GraphicGallery.Remove(item);
-                }
-                _context.Texts.Remove(text);
+            var text = await _context.Texts
+                .Include(t => t.GraphicGallery)
+                .FirstOrDefaultAsync(t => t.TextId == id);
+            if (text == null)
+            {
+                return RedirectToAction(nameof(List));
             }
-            
+
+            if (!_demo.CanModify(text))
+            {
+                TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
+                return RedirectToAction(nameof(List));
+            }
+
+            var mainGraphic = text.MainGraphic;
+            var galleryUrls = (text.GraphicGallery ?? new List<Graphic>()).Select(g => g.URL).ToList();
+
+            if (text.GraphicGallery != null) _context.GraphicGallery.RemoveRange(text.GraphicGallery);
+            _context.Texts.Remove(text);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Usunięto tekst {TextId} (użytkownik {UserId}, zdjęć w galerii: {GalleryCount})",
+                id, User.FindFirstValue(ClaimTypes.NameIdentifier), galleryUrls.Count);
+
+            // pliki kasujemy dopiero po udanym zapisie w bazie
+            _files.DeleteMainGraphic(mainGraphic);
+            foreach (var url in galleryUrls) _files.DeleteGalleryImage(url);
+
             return RedirectToAction(nameof(List));
         }
 
-        public IActionResult DeleteOneImage(int Id)
+        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
+        [HttpDelete]
+        [Authorize(Roles = "admin,dyrektor,nauczyciel")]
+        public async Task<IActionResult> DeleteOneImage(int Id)
         {
-            var ImageToDelete = _context.GraphicGallery.FirstOrDefault(u => u.Id == Id);
-            var DeleteImagePath = Path.Combine(_hostEnvironment.WebRootPath + ImageToDelete.URL);
-            var DeleteMiniImagePath = Path.Combine(_hostEnvironment.WebRootPath + "\\miniGallery" + ImageToDelete.URL);
-            DeleteImage(DeleteImagePath);
-            DeleteImage(DeleteMiniImagePath);
-
-            _context.GraphicGallery.Remove(ImageToDelete);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Edit));
-        }
-        private void DeleteImage(string deleteImagePath)
-        {
-            if (System.IO.File.Exists(deleteImagePath))
+            var result = await _gallery.DeleteOneAsync(Id, User);
+            if (!result.Found)
             {
-                System.IO.File.Delete(deleteImagePath);
+                return Json(new { success = false, message = "Nie znaleziono grafiki." });
             }
+            if (result.Forbidden)
+            {
+                return Json(new { success = false, message = "Brak uprawnień do tego zdjęcia." });
+            }
+            if (!result.Allowed)
+            {
+                return Json(new { success = false, message = DemoMessages.ReadOnly });
+            }
+            return Json(new { success = true, message = "Grafika została usunięta." });
         }
-        private bool TextExists(int id)
+
+        /// <summary>Teksty ukryte ("Czy wyświetlać?" = nie) widzi tylko redakcja: autor, dyrektor i admin.</summary>
+        private bool CanSeeText(Text text)
         {
-          return (_context.Texts?.Any(e => e.TextId == id)).GetValueOrDefault();
+            return text.IsActive
+                   || User.IsInRole("admin")
+                   || User.IsInRole("dyrektor")
+                   || (User.Identity?.IsAuthenticated == true && text.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
+
+        private void FillCategories(int? selected = null)
+        {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", selected);
+        }
+
+        private IActionResult CreateFail(Text text, string message)
+        {
+            ViewBag.ErrorMessage = message;
+            FillCategories(text.CategoryId);
+            return View("Create", text);
+        }
+
+        private IActionResult EditFail(Text entity, Text posted, string? message)
+        {
+            if (message != null) ViewBag.ErrorMessage = message;
+            FillCategories(posted.CategoryId);
+            ViewData["Author"] = entity.Id;
+            posted.Id = entity.Id;
+            posted.DateAdded = entity.DateAdded;
+            posted.MainGraphic = entity.MainGraphic;
+            posted.GraphicGallery = entity.GraphicGallery ?? new List<Graphic>();
+            return View("Edit", posted);
+        }
+
         private bool TextNameExist(string? name, int? id)
         {
             return (_context.Texts?.Any(e => e.TextName == name & e.TextId != id)).GetValueOrDefault();

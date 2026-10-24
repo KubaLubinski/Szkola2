@@ -15,7 +15,9 @@ using Szkola2.Models;
 
 namespace Szkola2.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    // Wcześniej [AllowAnonymous]: każdy mógł podać dowolny adres e-mail i dostać link potwierdzający konto
+    // (oraz sprawdzić, czy konto istnieje). Konta zakłada tylko administrator, więc strona jest tylko dla niego.
+    [Authorize(Roles = "admin")]
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;

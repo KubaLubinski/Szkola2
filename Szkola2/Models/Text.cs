@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace Szkola2.Models
 {
-    public class Text
+    public class Text : IDemoOwned
     {
         [Key]
         [Display(Name = "Identyfikator")]
@@ -45,6 +45,10 @@ namespace Szkola2.Models
         [Display(Name = "Autor tekstu:")]
         public string? Id { get; set; }
 
+        /// <summary>null = treść szkoły; inaczej Id konta demo-właściciela. Nigdy nie bindować z formularza.</summary>
+        [MaxLength(450)]
+        public string? DemoOwnerId { get; set; }
+
         [ForeignKey("CategoryId")]
         public virtual Category? Category { get; set; }
 
@@ -57,4 +61,3 @@ namespace Szkola2.Models
         public virtual List<Graphic>? GraphicGallery { get; set; }
     }
 }
-

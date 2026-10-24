@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Szkola2.Models
 {
-    public class Document
+    public class Document : IDemoOwned
     {
         [Key]
         [Display(Name = "Identyfikator dokumentu")]
@@ -25,5 +25,8 @@ namespace Szkola2.Models
         [Display(Name = "Opis dokumentu:")]
         public string? Content { get; set; }
 
+        /// <summary>null = dokument szkoły; inaczej Id konta demo-właściciela. Nigdy nie bindować z formularza.</summary>
+        [MaxLength(450)]
+        public string? DemoOwnerId { get; set; }
     }
 }

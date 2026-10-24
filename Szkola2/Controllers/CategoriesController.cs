@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Szkola2.Data;
 using Szkola2.Models;
 
@@ -14,10 +15,12 @@ namespace Szkola2.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<CategoriesController> _logger;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, ILogger<CategoriesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Categories
@@ -169,7 +172,16 @@ namespace Szkola2.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
+                // komunikat z GET można ominąć wysyłając POST ręcznie, a usunięcie kategorii kasowało kaskadowo jej teksty
+                if (TextsInCategory(id))
+                {
+                    _logger.LogWarning("Odmowa usunięcia kategorii {CategoryId}: ma przypisane teksty (użytkownik {UserId})",
+                        id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    // strona usuwania pokazuje komunikat o przypisanych tekstach
+                    return RedirectToAction(nameof(Delete), new { id });
+                }
                 _context.Categories.Remove(category);
+                _logger.LogInformation("Usunięto kategorię {CategoryId} (użytkownik {UserId})", id, User.FindFirstValue(ClaimTypes.NameIdentifier));
             }
             
             await _context.SaveChangesAsync();
@@ -186,7 +198,8 @@ namespace Szkola2.Controllers
         }
         private bool TextsInCategory(int id)
         {
-            return (_context.Texts?.Any( t => t.CategoryId == id)).GetValueOrDefault();
+            // bez filtrów widoczności: ukryte teksty kont demo też blokują usunięcie (inaczej FK/kaskada)
+            return (_context.Texts?.IgnoreQueryFilters().Any(t => t.CategoryId == id)).GetValueOrDefault();
         }
     }
 }

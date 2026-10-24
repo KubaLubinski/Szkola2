@@ -9,7 +9,7 @@
     <div class="page-heading">
         <div>
             <span class="section-label section-label-lg">WYDARZENIE</span>
-            <h1>@Html.Raw(Model.EventName)</h1>
+            <h1>@Model.EventName</h1>
         </div>
     </div>
 
@@ -41,7 +41,7 @@
                         <div class="carousel-item @(i == 0 ? "active" : "")">
                             <img class="d-block img-fluid mx-auto"
                                  src="@Url.Content("~/miniGallery/" + Model.GraphicGallery[i].URL)"
-                                 alt="@Model.GraphicGallery[i].Name">
+                                 alt="@($"{Model.EventName} – zdjęcie {i + 1} z {Model.GraphicGallery.Count()}")">
                         </div>
                     }
                 </div>
@@ -65,4 +65,6 @@
     </article>
 
 </div>
+
+
 

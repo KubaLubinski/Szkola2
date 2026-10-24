@@ -1,175 +1,169 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Szkola2.Models;
 
 namespace Szkola2.Data
 {
-    public class SzkolaSeeder
+    /// <summary>
+    /// Zakłada role, kategorie i (opcjonalnie) konta początkowe. Dane kont pochodzą z konfiguracji
+    /// (user-secrets / zmienne środowiskowe), a nie z kodu – repozytorium nie zawiera danych osobowych ani haseł:
+    ///   dotnet user-secrets set "Seed:Admin:Email" "admin@szkola.example"
+    ///   dotnet user-secrets set "Seed:Admin:Password" "..."
+    ///   dotnet user-secrets set "Seed:Admin:FirstName" "Jan"
+    ///   dotnet user-secrets set "Seed:Admin:LastName" "Kowalski"
+    /// Analogicznie "Seed:Dyrektor:*" i "Seed:Nauczyciel:*". Istniejące konta nie są ruszane.
+    /// Używa RoleManager i UserManager, więc nazwy znormalizowane (NormalizedName) są ustawiane poprawnie.
+    /// </summary>
+    public static class SzkolaSeeder
     {
-        public static void Initialize(IServiceProvider serviceProvider)
-        {
-            using (var dbContext = new ApplicationDbContext
-                (serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+        private static readonly string[] Roles = { "admin", "dyrektor", "nauczyciel", "uczen", "rodzic" };
 
-                if (dbContext.Database.CanConnect())
+        // rola, której wartość jest jednocześnie nazwą sekcji w konfiguracji ("Seed:{Role}")
+        private static readonly (string Role, string Section)[] SeedAccounts =
+        {
+            ("admin", "Admin"),
+            ("dyrektor", "Dyrektor"),
+            ("nauczyciel", "Nauczyciel"),
+        };
+
+        public static async Task InitializeAsync(IServiceProvider services)
+        {
+            var db = services.GetRequiredService<ApplicationDbContext>();
+            var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("SzkolaSeeder");
+
+            if (!await db.Database.CanConnectAsync())
+            {
+                // wcześniej błąd był połykany po cichu – teraz jest widoczny w logach
+                logger.LogWarning("Seeder pominięty: brak połączenia z bazą danych.");
+                return;
+            }
+
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+            await SeedRolesAsync(services.GetRequiredService<RoleManager<IdentityRole>>());
+            await SeedUsersAsync(userManager, services.GetRequiredService<IConfiguration>(), logger);
+            await EnsureAdminExistsAsync(userManager, services.GetRequiredService<IHostEnvironment>(), logger);
+            await SeedCategoriesAsync(db);
+        }
+
+        private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            foreach (var role in Roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    SeedRoles(dbContext);
-                    SeedUsers(dbContext);
-                    SeedCategories(dbContext);
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
-        }
-
-        private static void SeedRoles(ApplicationDbContext dbContext)
-        {
-            var roleStore = new RoleStore<IdentityRole>(dbContext);
-
-            if (!dbContext.Roles.Any(r => r.Name == "admin"))
-            {
-                roleStore.CreateAsync(new IdentityRole
-                {
-                    Name = "admin",
-                    NormalizedName = "admin"
-                }).Wait();
-            }
-            if (!dbContext.Roles.Any(r => r.Name == "dyrektor"))
-            {
-                roleStore.CreateAsync(new IdentityRole
-                {
-                    Name = "dyrektor",
-                    NormalizedName = "dyrektor"
-                }).Wait();
-            }
-            if (!dbContext.Roles.Any(r => r.Name == "rodzic"))
-            {
-                roleStore.CreateAsync(new IdentityRole
-                {
-                    Name = "rodzic",
-                    NormalizedName = "rodzic"
-                }).Wait();
-            }
-            if (!dbContext.Roles.Any(r => r.Name == "uczen"))
-            {
-                roleStore.CreateAsync(new IdentityRole
-                {
-                    Name = "uczen",
-                    NormalizedName = "uczen"
-                }).Wait();
-            }
-            if (!dbContext.Roles.Any(r => r.Name == "nauczyciel"))
-            {
-                roleStore.CreateAsync(new IdentityRole
-                {
-                    Name = "nauczyciel",
-                    NormalizedName = "nauczyciel"
-                }).Wait();
             }
         }
 
-        private static void SeedUsers(ApplicationDbContext dbContext)
+        private static async Task SeedUsersAsync(UserManager<AppUser> userManager, IConfiguration config, ILogger logger)
         {
-            if (!dbContext.Users.Any(u => u.UserName == "agnieszka.bajkowska@spgoleszyn.pl"))
+            foreach (var (role, section) in SeedAccounts)
             {
-                var user = new AppUser
-                {
-                    UserName = "agnieszka.bajkowska@spgoleszyn.pl",
-                    NormalizedUserName = "agnieszka.bajkowska@spgoleszyn.pl",
-                    Email = "agnieszka.bajkowska@spgoleszyn.pl",
-                    EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    FirstName = "Agnieszka",
-                    LastName = "Bajkowska",
-                    Information = "Administrator strony",
-                    IsActive = true,
-                    CanAddTexts = true
-                };
-                var password = new PasswordHasher<AppUser>();
-                var hashed = password.HashPassword(user, "Golsp1!");
-                user.PasswordHash = hashed;
-                var userStore = new UserStore<AppUser>(dbContext);
-                userStore.CreateAsync(user).Wait();
-                userStore.AddToRoleAsync(user, "admin").Wait();
-                dbContext.SaveChanges();
-            }
+                var email = config[$"Seed:{section}:Email"];
+                var password = config[$"Seed:{section}:Password"];
+                if (string.IsNullOrWhiteSpace(email) || string.IsNullOrEmpty(password)) continue;
 
-            if (!dbContext.Users.Any(u => u.UserName == "marek.czerminski@spgoleszyn.pl"))
-            {
-                var user = new AppUser
-                {
-                    UserName = "marek.czerminski@spgoleszyn.pl",
-                    NormalizedUserName = "marek.czerminski@spgoleszyn.pl",
-                    Email = "marek.czerminski@spgoleszyn.pl",
-                    EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    FirstName = "Marek",
-                    LastName = "Czermiński",
-                    Information = "Nauczyciel informatyki w szkole podstawowej W Goleszynie",
-                    IsActive = true,
-                    CanAddTexts = true
-                };
-                var password = new PasswordHasher<AppUser>();
-                var hashed = password.HashPassword(user, "Golsp3!");
-                user.PasswordHash = hashed;
-                var userStore = new UserStore<AppUser>(dbContext);
-                userStore.CreateAsync(user).Wait();
-                userStore.AddToRoleAsync(user, "nauczyciel").Wait();
-                dbContext.SaveChanges();
-            }
+                if (await userManager.FindByEmailAsync(email) != null) continue;
 
-            if (!dbContext.Users.Any(u => u.UserName == "magdalena.pesta@spgoleszyn.pl"))
-            {
                 var user = new AppUser
                 {
-                    UserName = "magdalena.pesta@spgoleszyn.pl",
-                    NormalizedUserName = "magdalena.pesta@spgoleszyn.pl",
-                    Email = "magdalena.pesta@spgoleszyn.pl",
+                    UserName = email,
+                    Email = email,
                     EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    FirstName = "Magdalena",
-                    LastName = "Pesta",
-                    Information = "Dyrektor szkoły podstawowej W Goleszynie",
+                    LockoutEnabled = true,
+                    FirstName = config[$"Seed:{section}:FirstName"],
+                    LastName = config[$"Seed:{section}:LastName"],
+                    Information = config[$"Seed:{section}:Information"],
                     IsActive = true,
                     CanAddTexts = true
                 };
-                var password = new PasswordHasher<AppUser>();
-                var hashed = password.HashPassword(user, "Golsp2!");
-                user.PasswordHash = hashed;
-                var userStore = new UserStore<AppUser>(dbContext);
-                userStore.CreateAsync(user).Wait();
-                userStore.AddToRoleAsync(user, "dyrektor").Wait();
-                dbContext.SaveChanges();
+
+                var created = await userManager.CreateAsync(user, password);
+                if (!created.Succeeded)
+                {
+                    logger.LogError("Nie udało się utworzyć konta {Section}: {Errors}", section,
+                        string.Join("; ", created.Errors.Select(e => e.Description)));
+                    continue;
+                }
+
+                await userManager.AddToRoleAsync(user, role);
             }
         }
 
-        private static void SeedCategories(ApplicationDbContext dbContext)
+        /// <summary>
+        /// Gwarantuje, że da się wejść do panelu. Bez konta admina:
+        ///  - Development: tworzy konto admin@szkola-demo.example z losowym hasłem (pokazanym raz w logu),
+        ///  - Production: tylko ostrzega – dane konta trzeba podać w konfiguracji (Seed:Admin:*).
+        /// Konta testowe (demo) mają rolę admin, ale są tymczasowe, więc nie liczą się.
+        /// </summary>
+        private static async Task EnsureAdminExistsAsync(UserManager<AppUser> userManager, IHostEnvironment env, ILogger logger)
         {
-            if (!dbContext.Categories.Any())
+            var admins = await userManager.GetUsersInRoleAsync("admin");
+            if (admins.Any(u => !u.IsDemo)) return;
+
+            if (!env.IsDevelopment())
             {
-                var kat = new List<Category>
-                {
-                    new Category
-                    {
-                        CategoryName = "Uroczystości szkolne",
-                        IsActive = true,
-                        Description = "Relacje z aktualnych wydarzeń z życia szkoły."
-                    },
-                    new Category
-                    {
-                        CategoryName = "Relacje z wycieczek",
-                        IsActive= true,
-                        Description = "Przedstawienie wrażeń, zdjęć i wartości edukacyjnych z wycieczek poza szkołę."
-                    },
-                    new Category
-                    {
-                        CategoryName = "Ogłoszenia",
-                        IsActive = true,
-                        Description = "Najważniejsze informacje dotyczące wydarzeń szkolnycj i innych aktualności."
-                    }
-                };
-                dbContext.AddRange(kat);
-                dbContext.SaveChanges();
+                logger.LogWarning("Brak konta administratora. Ustaw Seed:Admin:Email i Seed:Admin:Password w konfiguracji.");
+                return;
             }
+
+            const string email = "admin@szkola-demo.example";
+            var password = Convert.ToBase64String(RandomNumberGenerator.GetBytes(12)) + "aA1!";
+
+            var user = new AppUser
+            {
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true,
+                LockoutEnabled = true,
+                FirstName = "Administrator",
+                LastName = "Testowy",
+                Information = "Konto deweloperskie (portfolio)",
+                IsActive = true,
+                CanAddTexts = true
+            };
+
+            var created = await userManager.CreateAsync(user, password);
+            if (!created.Succeeded)
+            {
+                logger.LogError("Nie udało się utworzyć konta deweloperskiego: {Errors}",
+                    string.Join("; ", created.Errors.Select(e => e.Description)));
+                return;
+            }
+
+            await userManager.AddToRoleAsync(user, "admin");
+            logger.LogWarning("Utworzono konto deweloperskie {Email}. Hasło wypisano tylko w konsoli (nie w pliku logów).", email);
+            Console.WriteLine($"[SEED] Hasło konta {email}: {password}");
+        }
+
+        private static async Task SeedCategoriesAsync(ApplicationDbContext db)
+        {
+            if (await db.Categories!.AnyAsync()) return;
+
+            db.Categories!.AddRange(
+                new Category
+                {
+                    CategoryName = "Uroczystości szkolne",
+                    IsActive = true,
+                    Description = "Relacje z aktualnych wydarzeń z życia szkoły."
+                },
+                new Category
+                {
+                    CategoryName = "Relacje z wycieczek",
+                    IsActive = true,
+                    Description = "Przedstawienie wrażeń, zdjęć i wartości edukacyjnych z wycieczek poza szkołę."
+                },
+                new Category
+                {
+                    CategoryName = "Ogłoszenia",
+                    IsActive = true,
+                    Description = "Najważniejsze informacje dotyczące wydarzeń szkolnych i innych aktualności."
+                });
+
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -1,16 +1,18 @@
 ﻿@* @model IEnumerable<Szkola2.Models.Text *@
+@using Szkola2.Infrastructure
 @model HomeViewModel
 
 @{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Witamy";
+    ViewData["SkipTarget"] = "content-start";   // link "Przejdź do treści" omija baner i prowadzi do aktualności
 }
 
 <div class="school-home">
 
     <!-- HERO / SLIDER -->
     <section class="home-hero">
-        <div id="schoolHero" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div id="schoolHero" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-pause="false" aria-roledescription="karuzela" aria-label="Zdjęcia szkoły">
             <div class="carousel-indicators">
                 @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
                 {
@@ -29,7 +31,9 @@
                     <div class="carousel-item @(i == 0 ? "active" : "")">
                         <img src="@Url.Content("~/img/" + Model.AdvertisingPhotos[i].Photo)"
                              class="hero-image"
-                             alt="Zdjęcie szkoły">
+                        @(i == 0 ? "fetchpriority=high" : "loading=lazy")
+                             decoding="async"
+                             alt="@($"Zdjęcie szkoły, slajd {i + 1} z {Model.AdvertisingPhotos.Count()}")">
 
                         <div class="hero-overlay"></div>
 
@@ -37,7 +41,6 @@
                         {
                             <div class="hero-content">
                                 <span class="hero-badge">
-                                    <span class="hero-badge-dot"></span>
                                     Szkoła Podstawowa w Goleszynie
                                 </span>
 
@@ -88,6 +91,12 @@
                 <span class="hero-arrow">→</span>
                 <span class="visually-hidden">Następny</span>
             </button>
+
+            <!-- WCAG 2.2.2: użytkownik może zatrzymać automatyczne przewijanie -->
+            <button type="button" class="hero-pause" id="heroPause" aria-pressed="false"
+                    aria-label="Zatrzymaj automatyczne przewijanie zdjęć">
+                <i class="bi bi-pause-fill" aria-hidden="true"></i>
+            </button>
         </div>
     </section>
 
@@ -122,7 +131,7 @@
     </section>
 
     <!-- MAIN CONTENT (UKŁAD DWUKOLUMNOWY) -->
-    <section class="home-content">
+    <section class="home-content" id="content-start" tabindex="-1">
 
         <!-- LEWA KOLUMNA: AKTUALNOŚCI -->
         <div class="news-section">
@@ -144,6 +153,7 @@
                         <div class="news-image-wrapper">
                             <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/" + item.MainGraphic)"
                                  class="news-image"
+                                 loading="lazy" decoding="async"
                                  alt="@item.TextName">
 
                             <div class="news-category">
@@ -160,20 +170,13 @@
 
                             <div class="news-author">
                                 <span class="author-avatar">
-                                    @item.User.FirstName.Substring(0, 1)
+                                    @(string.IsNullOrEmpty(item.User?.FirstName) ? "?" : item.User.FirstName[..1])
                                 </span>
-                                <span>@item.User.FirstName @item.User.LastName</span>
+                                <span>@item.User?.FirstName @item.User?.LastName</span>
                             </div>
 
                             <div class="news-description">
-                                @if (item.Content.Length <= 140)
-                                {
-                                    @Html.Raw(item.Content)
-                                }
-                                else
-                                {
-                                    @Html.Raw(item.Content.Substring(0, 140) + "...")
-                                }
+                                @TextPreview.FromHtml(item.Content, 140)
                             </div>
 
                             <a href="@Url.Action("Details", "Texts", new { id = item.TextId })" class="read-more">
@@ -200,10 +203,21 @@
                     <div>
                         <span class="section-label">Aktualna data i godzina</span>
                     </div>
-                    <div class="live-dot"></div>
                 </div>
 
-                <div id="current-date-time" class="current-date" aria-live="off">Ładowanie...</div>
+                <div id="current-date-time" class="current-date" aria-live="off">&nbsp;</div>
+                <script>
+                                    /* data i godzina od razu po wyrenderowaniu elementu – bez czekania na Day.js (ładowany na końcu strony) */
+                                    (function () {
+                                        var el = document.getElementById("current-date-time");
+                                        try {
+                                            el.textContent = new Date().toLocaleString("pl-PL", {
+                                                weekday: "long", day: "numeric", month: "long", year: "numeric",
+                                                hour: "2-digit", minute: "2-digit", second: "2-digit"
+                                            });
+                                        } catch (e) { /* zostaje pusty element – uzupełni go Day.js */ }
+                                    })();
+                </script>
 
                 <div class="clock-wrapper">
                     <div class="clock" id="clock">
@@ -330,9 +344,34 @@
 
 
 @section Scripts {
-    <script src="/js/Day.js"></script>
-    <script src="/js/Clock.js"></script>
+    <script>
+        /* Przycisk pauzy karuzeli (WCAG 2.2.2). Przy ustawieniu systemowym "ogranicz ruch" karuzela startuje zatrzymana. */
+        document.addEventListener("DOMContentLoaded", function () {
+            var hero = document.getElementById("schoolHero");
+            var button = document.getElementById("heroPause");
+            if (!hero || !button || !window.bootstrap) return;
 
+            var carousel = bootstrap.Carousel.getOrCreateInstance(hero);
+            var icon = button.querySelector("i");
+            var paused = false;
+
+            function setPaused(value) {
+                paused = value;
+                if (paused) { carousel.pause(); } else { carousel.cycle(); }
+                button.setAttribute("aria-pressed", String(paused));
+                button.setAttribute("aria-label", paused
+                    ? "Wznów automatyczne przewijanie zdjęć"
+                    : "Zatrzymaj automatyczne przewijanie zdjęć");
+                icon.className = paused ? "bi bi-play-fill" : "bi bi-pause-fill";
+            }
+
+            button.addEventListener("click", function () { setPaused(!paused); });
+
+            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                setPaused(true);
+            }
+        });
+    </script>
     <script>
         /* Rozdziela tekst z Day.js na datę i godzinę (godzina większa), bez zmian w Day.js */
         (function () {
@@ -401,135 +440,3 @@
         });
     </script>
 }
-
-@*@model HomeViewModel
-@{
-    Layout = "~/Views/Shared/_LayoutHome.cshtml";
-    ViewData["Title"] = "Witamy";
-    <div class="row ">
-    <div class="col-1">
-    </div>
-    <div class="col-md-6 col-12 index8-home">
-            <div id="carouselExample" class="carousel slide">
-                <div class="carousel-inner">
-                    @for (int i = 0; i < Model.AdvertisingPhotos.Count(); i++)
-                    {
-                        <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
-                            <img class="d-block img-fluid mx-auto rounded-3" src="@Url.Content("~/img/mini/"+Model.AdvertisingPhotos[i].Photo)">
-                        </div>
-                    }
-                </div>
-                <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        @foreach (var item in Model.LatestTexts)
-        {
-            <div class="card mt-2 head-color shadow-sm">
-                <div class="card-header">
-                    <h3 class="text-primary roboto">@item.TextName</h3>
-                </div>
-                <div class="row bg-color">
-                    <div class="col-md-4">    
-                        <img src="@Url.Content(item.MainGraphic == null ? "~/img/mini/brak.jpg" : "~/img/mini/"+item.MainGraphic)" class="img-fluid" />
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <p class="card-title text-success roboto">Autor: @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
-                            </p>
-                            <p class="card-title text-success roboto">Kategoria: @Html.DisplayFor(modelItem => item.Category.CategoryName)</p>
-                            @if (item.Content.Length <= 100)
-                            {
-                                <p class="card-text roboto">@Html.Raw(item.Content)</p>
-                            }
-                            else
-                            {
-                                <p class="card-text roboto">@Html.Raw(item.Content.Substring(0, 100) + "...")</p>
-                            }
-                            <p class="card-text"><small class="text-muted">@item.DateAdded.ToString("d")</small></p>
-                            <div class="position-relative">
-                                <a href="@Url.Action("Details", "Texts", new{id = item.TextId})" class="btn btn-outline-logoyellow position-absolute bottom-0 end-0" title="Czytaj " >Czytaj >>> </a>
-                                
-                            </div>
-                            
-                        </div> <!-- card body-->
-                    </div>
-                </div> <!-- row -->
-
-            </div> <!-- card-->
-
-        }
-
-            <div class="text-center mb-2 mt-3">
-                <a class="text-dark btn btn-outline-logoyellow" asp-area="" asp-controller="Texts" asp-action="Index">Więcej wydarzeń z życia szkoły</a>
-            </div>
-
-    </div>
-
-    <div class="col-md-4 col-12 index4-home">
-        <div class="layout_info">
-            <h3 id="current-date-time" class="text-center">Aktualna data i godzina</h3>
-            <div class="clock-container">
-                <div class="clock" id="clock">
-                    <div class="hour-hand"></div>
-                    <div class="minute-hand"></div>
-                    <div class="second-hand"></div>
-                </div>
-                <div class="calendar">
-                    <table id="calendar" class="calendar_table">
-                        <thead>
-                            <tr>
-                                <th class="calendar_th">Pon</th>
-                                <th class="calendar_th">Wt</th>
-                                <th class="calendar_th">Śr</th>
-                                <th class="calendar_th">Czw</th>
-                                <th class="calendar_th">Pt</th>
-                                <th class="calendar_th">Sob</th>
-                                <th class="calendar_th">Ndz</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        
-                        </tbody>
-                    </table>
-                </div>
-            </div>   
-        </div>
-
-        <div class="layout_info text-center">
-            <h3>Biuletyn Informacji Publicznej</h3>
-            <div>
-                <img src="/img/logo/bip.png" class="bip" title="Czytaj " alt="bip" onclick="window.location.href = `https://www.bip.gov.pl/subjects/31747,Szko%C5%82a+Podstawowa+im.+Polskich+Noblist%C3%B3w+w+Goleszynie.html`;" target="_blank" />
-            </div>
-        </div>
-            <div class="layout_info text-center">
-                <h3>Fanpage Szkoły</h3>
-                <div>
-                    <img src="/img/logo/fb-icon.png" class="bip" title="Czytaj " alt="bip" onclick="window.location.href = `https://www.facebook.com/p/Szko%C5%82a-Podstawowa-im-Polskich-Noblist%C3%B3w-w-Goleszynie-100063569227821/?_rdr`;" target="_blank" />
-                </div>
-            </div>
-        <div class="layout_info text-center">
-            <h3>Programy i projekty z których uczestniczyła szkoła</h3>
-            <div>              
-                <img src="/img/logo/erazmus.jpg" class="erazmus" title="Czytaj " alt="erazmus+" onclick="window.location.href = `https://erasmusplus.org.pl/o-programie`;" target="_blank" />
-                <img src="/img/logo/aktywna_tablica.jpg" class="inne" title="Czytaj " alt="aktywna_tablica" onclick="window.location.href = `https://www.gov.pl/web/edukacja/aktywna-tablica`;" target="_blank" />
-                <img src="/img/logo/eTwinning.png" class="inne" title="Czytaj " alt="eTwinning" onclick="window.location.href = `https://etwinning.pl/o-programie/czym-jest-etwinning`;" target="_blank" />
-                <img src="/img/logo/kulturalna.png" class="inne" title="Czytaj " alt="kulturalna szkoła" onclick="window.location.href = `https://mazovia.pl/pl/bip/komunikaty/program-kulturalna-szkola-na-mazowszu-w-2024-r.html`;" target="_blank" />
-                <img src="/img/logo/lepsza_szkoła.png" class="inne" title="Czytaj " alt="lepsza_szkoła" onclick="window.location.href = `https://ls.gwo.pl/landing`;" target="_blank" />
-                <img src="/img/logo/labolatoria.jpg" class="inne" title="Czytaj " alt="labolatoria przyszłości" onclick="window.location.href = `https://www.gov.pl/web/laboratoria/o-programie2`;" target="_blank" />      
-            </div>
-        </div>
-    </div>
-    <div class="col-1">
-    </div>
-    </div>
-}
-@section Scripts{
-    <script src="/js/Day.js"></script>
-    <script src="/js/Clock.js"> </script> 
-}*@

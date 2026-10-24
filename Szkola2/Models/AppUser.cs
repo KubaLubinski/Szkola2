@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +34,12 @@ namespace Szkola2.Models
         [Required]
         [Display(Name = "Czy konto może dodwawać nowe teksty?")]
         public bool CanAddTexts { get; set; }
+
+        /// <summary>Jednorazowe konto testowe (demo).</summary>
+        public bool IsDemo { get; set; }
+
+        /// <summary>Kiedy konto demo wygasa (UTC). Dla zwykłych kont null.</summary>
+        public DateTime? DemoExpiresAt { get; set; }
 
         public virtual List<Text>? Texts { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Szkola2.Models.ViewModels.UserViewModel>
+@model IEnumerable<Szkola2.Models.ViewModels.UserViewModel>
+@inject Szkola2.Infrastructure.IDemoContext Demo
 
 @{
     ViewData["Title"] = "Lista użytkowników";
@@ -12,9 +13,12 @@
             <h1>Lista <span>użytkowników</span></h1>
         </div>
 
-        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-school">
-            Dodaj użytkownika <span aria-hidden="true">+</span>
-        </a>
+        @if (!Demo.IsDemo)
+        {
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-school">
+                Dodaj użytkownika <span aria-hidden="true">+</span>
+            </a>
+        }
     </div>
 
     <div class="panel-card list-panel">
@@ -34,7 +38,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td class="email-col">@item.Email</td>
+                            <td class="email-col" title="@item.Email" style="max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@item.Email</td>
                             <td class="name-col">@item.FirstName</td>
                             <td class="name-col">@item.LastName</td>
                             <td>
@@ -65,3 +69,4 @@
     </div>
 
 </div>
+

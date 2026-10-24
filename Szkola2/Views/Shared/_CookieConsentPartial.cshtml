@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Http.Features
 @{
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
     var showBanner = !consentFeature?.CanTrack ?? false;
@@ -7,31 +7,25 @@
 
 @if (showBanner)
 {
-    <div id="cookieConsent" class="alert alert-info alert-dismissible fage show text-center" role="alert">
-        Ta witryna, dbając o wygodę użytkowników, korzysta z plików ciasteczek (cookies), aby umożliwić jej płynną pracę. <a asp-area="" asp-controller="Home" asp-action="Privacy">Dowiedz się więcej.</a>
-        <button id="acceptButton" type="button" class="accept-policy close btn btn-info" aria-label="Zamknij" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Zgadzam się</span>
-        </button>
-        <button id="rejectButton" type="button" class="reject-policy close btn btn-info" aria-label="Zamknij" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Nie zgadzam się</span>
-        </button>
+    <div id="cookieConsent" class="site-notice site-notice--cookie" role="alert">
+        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+        <div class="site-notice__text">
+            Ta strona wykorzystuje pliki cookie do działania.
+            <a asp-controller="Home" asp-action="Privacy">Dowiedz się więcej</a>
+        </div>
+        <div class="site-notice__actions">
+            <button type="button" class="btn btn-school btn-sm" data-cookie-string="@cookieString">Akceptuję</button>
+        </div>
     </div>
+    <script>
+        (function () {
+            var banner = document.getElementById("cookieConsent");
+            var button = banner && banner.querySelector("button[data-cookie-string]");
+            if (!button) return;
+            button.addEventListener("click", function () {
+                document.cookie = button.getAttribute("data-cookie-string");
+                banner.remove();
+            });
+        })();
+    </script>
 }
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var acceptButton = document.getElementById("acceptButton");
-        var rejectButton = document.getElementById("rejectButton");
-
-        acceptButton.addEventListener("click", function(event) {
-            var cookieString = acceptButton.getAttribute("data-cookie-string");
-            document.cookie = cookieString;
-            document.getElementById("cookieConsent").style.display = "none"; 
-        });
-    
-        rejectButton.addEventListener("click", function(event) {     
-            document.getElementById("cookieConsent").style.display = "none";
-            sessionStorage.setItem('cookiesRejected', 'true');
-        });
-    });
-</script>

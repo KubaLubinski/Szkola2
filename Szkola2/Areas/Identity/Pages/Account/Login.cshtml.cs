@@ -110,12 +110,22 @@ namespace Szkola2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Haslo, Input.RememberMe, lockoutOnFailure: false);
+                // konto wyłączone przez administratora ("Czy konto jest aktywne?") nie może się zalogować
+                // (wcześniej flaga IsActive nie była sprawdzana przy logowaniu)
+                var candidate = await _signInManager.UserManager.FindByNameAsync(Input.Email)
+                                ?? await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                if (candidate != null && !candidate.IsActive)
+                {
+                    _logger.LogWarning("Próba logowania na wyłączone konto {UserId} z adresu {Ip}", candidate.Id, HttpContext.Connection.RemoteIpAddress);
+                    ModelState.AddModelError(string.Empty, "Nieprawidłowy login lub hasło.");
+                    return Page();
+                }
+
+                // lockoutOnFailure: true - po serii błędnych haseł konto jest blokowane (ustawienia w Program.cs)
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Haslo, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("Zalogowano użytkownika {UserId}", candidate?.Id);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -124,12 +134,14 @@ namespace Szkola2.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("Konto {UserId} zablokowane po serii błędnych haseł (adres {Ip})", candidate?.Id, HttpContext.Connection.RemoteIpAddress);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    // bez adresu e-mail w logu: wpisany login bywa hasłem lub cudzymi danymi
+                    _logger.LogWarning("Nieudane logowanie (konto {UserId}) z adresu {Ip}", candidate?.Id ?? "nieznane", HttpContext.Connection.RemoteIpAddress);
+                    ModelState.AddModelError(string.Empty, "Nieprawidłowy login lub hasło.");
                     return Page();
                 }
             }
