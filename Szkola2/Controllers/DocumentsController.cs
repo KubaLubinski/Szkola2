@@ -121,7 +121,7 @@ namespace Szkola2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Documents/Edit/5  (podgląd dozwolony także dla cudzych dokumentów)
+        // GET: Documents/Edit/5
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Edit(int? id)
         {

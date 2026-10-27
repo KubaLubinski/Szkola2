@@ -5,10 +5,7 @@ using Szkola2.Models;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Job Hangfire (co 10 min): kasuje wygasłe konta demo razem z ich treściami, zdjęciami i dokumentami.
-    /// Działa bez zalogowanego użytkownika, więc filtry widoczności trzeba wyłączyć (IgnoreQueryFilters).
-    /// </summary>
+    /// <summary>Usuwa wygasłe konta demo wraz z ich treściami i plikami.</summary>
     public class DemoCleanupJob
     {
         private readonly ApplicationDbContext _db;
@@ -99,7 +96,6 @@ namespace Szkola2.Infrastructure
             if (!result.Succeeded)
                 throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
 
-            // pliki kasujemy dopiero, gdy baza została posprzątana
             foreach (var name in mainGraphics) _files.DeleteMainGraphic(name);
             foreach (var url in galleryUrls) _files.DeleteGalleryImage(url);
             foreach (var name in documentFiles) _files.DeleteDocument(name);

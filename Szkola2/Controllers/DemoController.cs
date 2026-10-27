@@ -43,7 +43,7 @@ namespace Szkola2.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // limit startów z jednego adresu IP (za proxy trzeba włączyć UseForwardedHeaders)
+            // limit startów z jednego IP
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
             var cacheKey = "demo-start:" + ip;
             _cache.TryGetValue(cacheKey, out int starts);

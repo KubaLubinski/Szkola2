@@ -59,8 +59,6 @@ namespace Szkola2.Controllers
         }
 
         // POST: History/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -88,12 +86,12 @@ namespace Szkola2.Controllers
                         }
                         else
                         {
-                            // usuwamy zdjęcia zapisane wcześniej w tej samej partii
+                            // usuń już zapisane zdjęcia
                             foreach (var uploaded in history.GraphicGallery) _files.DeleteGalleryImage(uploaded.URL);
                             ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
                             return View(history);
                         }
-                    } 
+                    }
                 }
                 if (!TextNameExist(history.TextName))
                 {
@@ -129,8 +127,6 @@ namespace Szkola2.Controllers
         }
 
         // POST: History/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -170,7 +166,7 @@ namespace Szkola2.Controllers
                         }
                         else
                         {
-                            // usuwamy zdjęcia zapisane wcześniej w tej samej partii
+                            // usuń już zapisane zdjęcia
                             foreach (var uploaded in history.GraphicGallery) _files.DeleteGalleryImage(uploaded.URL);
                             ViewBag.ErrorMessage = "Jeden z wybranych plików nie jest obrazkiem!";
                             history.GraphicGallery = _context.GraphicGallery?.Where(g => g.EventId == id).ToList();
@@ -230,7 +226,6 @@ namespace Szkola2.Controllers
                 return Problem("Entity set 'ApplicationDbContext.History'  is null.");
             }
 
-            // konto testowe nie może niczego usuwać (wcześniej pliki były kasowane z dysku, zanim zapis do bazy został odrzucony)
             if (_demo.IsDemo)
             {
                 TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
@@ -243,7 +238,6 @@ namespace Szkola2.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // wcześniej: Where(u => u.Id == id) - kasowało pliki cudzych zdjęć o tym samym numerze
             var images = await _context.GraphicGallery!.Where(g => g.HistoryId == id).ToListAsync();
             var urls = images.Select(g => g.URL).ToList();
 
@@ -251,7 +245,6 @@ namespace Szkola2.Controllers
             _context.History.Remove(history);
             await _context.SaveChangesAsync();
 
-            // pliki dopiero po udanym zapisie
             foreach (var url in urls) _files.DeleteGalleryImage(url);
             return RedirectToAction(nameof(Index));
         }
@@ -263,8 +256,6 @@ namespace Szkola2.Controllers
 
         }
 
-        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
-        // Wcześniej: brak autoryzacji, dowolna metoda HTTP (także GET) i wyjątek, gdy grafika nie istnieje.
         [HttpDelete]
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> DeleteOneImage(int Id)

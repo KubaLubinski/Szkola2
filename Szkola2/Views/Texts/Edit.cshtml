@@ -21,7 +21,6 @@
     <form asp-action="Edit" enctype="multipart/form-data" class="panel-card panel-narrow">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="TextId" />
-        <input type="hidden" asp-for="DateAdded" />
         <input type="hidden" asp-for="Id" value="@ViewBag.Author" />
         <input type="hidden" asp-for="MainGraphic" />
 
@@ -61,6 +60,12 @@
                 <label asp-for="CategoryId" class="form-label fw-bold"></label>
                 <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="DateAdded" class="form-label fw-bold"></label>
+                <input asp-for="DateAdded" class="form-control" />
+                <span asp-validation-for="DateAdded" class="text-danger"></span>
             </div>
 
             <div class="form-field">

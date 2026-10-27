@@ -1,0 +1,17 @@
+name: Testy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x   # ta sama wersja co TargetFramework w Szkola2.csproj
+      - name: Testy
+        run: dotnet test Szkola2.Tests/Szkola2.Tests.csproj --verbosity normal

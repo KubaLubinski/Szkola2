@@ -47,10 +47,7 @@ namespace Szkola2.Infrastructure
             };
         }
 
-        /// <summary>
-        /// Sprawdza początek pliku, żeby np. plik HTML lub exe z rozszerzeniem .pdf nie trafił na serwer.
-        /// PDF: "%PDF", DOCX: archiwum ZIP ("PK"), DOC: nagłówek OLE (D0 CF 11 E0), TXT: bez bajtów zerowych.
-        /// </summary>
+        /// <summary>Sprawdza początek pliku (PDF: %PDF, DOCX: PK, DOC: nagłówek OLE, TXT: bez bajtów zerowych).</summary>
         private static bool ContentMatchesExtension(IFormFile file, string extension)
         {
             byte[] head = new byte[8192];

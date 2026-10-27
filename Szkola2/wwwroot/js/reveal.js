@@ -1,5 +1,3 @@
-/* Animacja pojawiania się elementów na podstronach (jak na stronie głównej).
-   Dodaje .reveal wybranym blokom, a .animate-in gdy wjadą w widok. */
 (function () {
     var SELECTORS = [
         ".page-heading", ".panel-card",
@@ -8,7 +6,6 @@
         ".history-entry", ".event-card"
     ].join(", ");
 
-    // elementy, które mają już własną animację ze strony głównej / listy aktualności
     var SKIP = ".info-card, .news-card, .quick-card, .section-heading";
 
     function init() {
@@ -20,7 +17,6 @@
         });
         if (!items.length) return;
 
-        // kolejne rodzeństwo pojawia się z lekkim opóźnieniem (max 6 kroków)
         var perParent = new Map();
         var observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {

@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /Szkola2/wwwroot/gallery/f1aa3f85-ff1c-4036-a81f-59e90c70894c_obraz-przedstawiajacy-gorskie-jezioro-z-gora-w-tle_188544-9126.avif
 /Szkola2/appsettings.Production.json
+   *.sql
+   logs/

@@ -124,7 +124,7 @@ namespace Szkola2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: PastSchoolEvents/Edit/5  (podgląd dozwolony także dla cudzych wpisów)
+        // GET: PastSchoolEvents/Edit/5
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -312,7 +312,6 @@ namespace Szkola2.Controllers
             return View(events);
         }
 
-        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
         [HttpDelete]
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> DeleteOneImage(int Id)

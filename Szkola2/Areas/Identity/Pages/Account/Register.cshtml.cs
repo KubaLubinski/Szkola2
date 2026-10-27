@@ -149,7 +149,6 @@ namespace Szkola2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            // konto testowe może obejrzeć formularz, ale nie założy użytkownika
             if (_demo.IsDemo)
             {
                 TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
@@ -158,7 +157,6 @@ namespace Szkola2.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            // rola musi istnieć i nie może być ani "admin", ani "demo" (lista w formularzu to tylko podpowiedź - serwer sprawdza sam)
             var allowedRoles = _roleManager.Roles.Where(r => r.Name != "admin" && r.Name != "demo").Select(r => r.Name).ToList();
             if (!allowedRoles.Contains(Input.UserRole))
             {

@@ -1,16 +1,8 @@
-/*
- * "Czytaj dalej" na wąskich ekranach.
- * Użycie: <div data-readmore="150"> ...długa treść HTML... </div>
- * Na ekranie <= 768 px treść jest ucinana po N słowach (domyślnie 150),
- * pod nią pojawia się przycisk "Czytaj dalej" / "Zwiń".
- * Działa też dla treści w rozwijanych panelach Bootstrapa (liczy po ich otwarciu).
- */
 (function () {
     var DEFAULT_WORDS = 150;
-    var MIN_HIDDEN_PX = 80; // nie ucinaj, jeśli ukrywane byłoby mniej niż tyle
+    var MIN_HIDDEN_PX = 80;
     var mq = window.matchMedia('(max-width: 768px)');
 
-    // Zwraca prostokąt ostatniego dozwolonego słowa albo null, gdy tekst jest krótszy.
     function limitWordRect(el, limit) {
         var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
         var count = 0;
@@ -28,7 +20,7 @@
                     range.setEnd(node, m.index + m[0].length);
                     lastRect = range.getBoundingClientRect();
                 } else if (count === limit + 1) {
-                    return lastRect; // istnieje jeszcze co najmniej jedno słowo
+                    return lastRect;
                 }
             }
         }
@@ -46,12 +38,12 @@
     }
 
     function apply(el) {
-        if (el._rmState && el._rmState.expanded) return; // użytkownik rozwinął - nie ruszaj
+        if (el._rmState && el._rmState.expanded) return;
 
         clear(el);
 
         if (!mq.matches) return;
-        if (el.getClientRects().length === 0) return; // ukryty (np. zwinięty panel)
+        if (el.getClientRects().length === 0) return;
 
         var limit = parseInt(el.getAttribute('data-readmore'), 10) || DEFAULT_WORDS;
         var rect = limitWordRect(el, limit);
@@ -89,7 +81,6 @@
         el.insertAdjacentElement('afterend', btn);
         el._rmBtn = btn;
 
-        // Spóźnione ładowanie obrazków zmienia wysokości - policz ponownie
         el.querySelectorAll('img').forEach(function (img) {
             if (!img.complete && !img._rmBound) {
                 img._rmBound = true;
@@ -105,14 +96,12 @@
     document.addEventListener('DOMContentLoaded', function () { applyAll(); });
     window.addEventListener('load', function () { applyAll(); });
 
-    // Zmiana szerokości okna / obrót telefonu
     if (mq.addEventListener) {
         mq.addEventListener('change', function () { applyAll(); });
     } else if (mq.addListener) {
         mq.addListener(function () { applyAll(); });
     }
 
-    // Treść w rozwijanych panelach (Bootstrap collapse/accordion)
     document.addEventListener('shown.bs.collapse', function (e) {
         applyAll(e.target);
     });

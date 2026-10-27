@@ -36,7 +36,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Index()
         {
-              return _context.AdvertisingPhotos != null ? 
+              return _context.AdvertisingPhotos != null ?
                           View(await _context.AdvertisingPhotos.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.AdvertisingPhotos'  is null.");
         }
@@ -51,7 +51,7 @@ namespace Szkola2.Controllers
             }
 
             var advertisingPhoto = await _context.AdvertisingPhotos
-                
+
                 .FirstOrDefaultAsync(m => m.PhotoId == id);
             if (advertisingPhoto == null)
             {
@@ -69,15 +69,11 @@ namespace Szkola2.Controllers
         }
 
         // POST: AdvertisingPhotoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhotoId,Photo")] AdvertisingPhoto advertisingPhoto, IFormFile photo)
         {
-            // konto testowe nie może zmieniać slidera; blokada musi być PRZED zapisem pliku,
-            // bo inaczej wgrywane zdjęcia zostawałyby na dysku mimo odrzuconego zapisu w bazie
             if (_demo.IsDemo)
             {
                 TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
@@ -129,14 +125,11 @@ namespace Szkola2.Controllers
             {
                 return NotFound();
             }
-            // advertisingPhoto.Photo = _context.AdvertisingPhotos.ToList(); <-- nie wiem jak
-            
+
             return View(advertisingPhoto);
         }
 
         // POST: AdvertisingPhotoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -153,7 +146,7 @@ namespace Szkola2.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // nazwa pliku musi wskazywać istniejący plik w wwwroot/img (bez ścieżek typu ../)
+            // tylko istniejący plik z wwwroot/img
             var photoName = advertisingPhoto.Photo;
             if (string.IsNullOrWhiteSpace(photoName)
                 || photoName != Path.GetFileName(photoName)
@@ -227,7 +220,6 @@ namespace Szkola2.Controllers
                 _context.AdvertisingPhotos.Remove(advertisingPhoto);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Usunięto zdjęcie slidera {PhotoId} (użytkownik {UserId})", id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-                // plik kasujemy dopiero po udanym zapisie w bazie (wcześniej zostawał na dysku)
                 _files.DeleteMainGraphic(fileName);
             }
 

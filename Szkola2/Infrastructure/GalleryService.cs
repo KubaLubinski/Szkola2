@@ -16,13 +16,13 @@ namespace Szkola2.Infrastructure
     {
         public bool Found { get; set; }
         public bool Allowed { get; set; }
-        /// <summary>true, gdy użytkownik nie ma uprawnień do zdjęć tego wpisu (np. nauczyciel i cudzy tekst).</summary>
+        /// <summary>Brak uprawnień do zdjęć tego wpisu.</summary>
         public bool Forbidden { get; set; }
         public int? TextId { get; set; }
         public int? EventId { get; set; }
     }
 
-    /// <summary>Wspólna obsługa galerii zdjęć dla tekstów i wpisów kalendarium.</summary>
+    /// <summary>Galeria zdjęć tekstów i wydarzeń.</summary>
     public class GalleryService
     {
         private readonly IWebHostEnvironment _env;
@@ -41,7 +41,7 @@ namespace Szkola2.Infrastructure
             _logger = logger;
         }
 
-        /// <summary>Zapisuje pliki na dysku (oryginał + miniatura). Przy błędzie sprząta to, co zdążył zapisać.</summary>
+        /// <summary>Zapisuje oryginał i miniaturę; przy błędzie usuwa to, co zdążył zapisać.</summary>
         public GalleryUploadResult Save(IFormFileCollection? files)
         {
             var result = new GalleryUploadResult();
@@ -53,7 +53,7 @@ namespace Szkola2.Infrastructure
             {
                 if (file.Length == 0) continue;
 
-                // sprawdza typ i zawartość, zmniejsza zdjęcie (max 1920 px), kasuje metadane i tworzy miniaturę
+                // walidacja, zmniejszenie, miniatura
                 if (!upload.TryUploadGalleryImage(file, out var url, out var error))
                 {
                     _logger.LogWarning("Odrzucono plik galerii ({Length} B): {Error}", file.Length, error);
@@ -66,18 +66,14 @@ namespace Szkola2.Infrastructure
             return result;
         }
 
-        /// <summary>Kasuje z dysku pliki zapisane przez Save (gdy dalsza operacja się nie powiodła).</summary>
+        /// <summary>Usuwa pliki zapisane przez Save.</summary>
         public void Discard(GalleryUploadResult result)
         {
             foreach (var g in result.Items) _files.DeleteGalleryImage(g.URL);
             result.Items.Clear();
         }
 
-        /// <summary>
-        /// Usuwa jedno zdjęcie z galerii tekstu lub wydarzenia. Kontrole:
-        /// tekst – autor albo admin/dyrektor; wydarzenie – tylko admin/dyrektor; konto demo – tylko własne wpisy.
-        /// (Wcześniej każdy nauczyciel mógł usunąć dowolne zdjęcie, znając jego numer.)
-        /// </summary>
+        /// <summary>Usuwa zdjęcie. Tekst: autor, admin lub dyrektor; wydarzenie: admin lub dyrektor; konto demo: tylko własne wpisy.</summary>
         public async Task<GraphicDeleteResult> DeleteOneAsync(int id, ClaimsPrincipal user)
         {
             var g = await _db.GraphicGallery
@@ -85,7 +81,7 @@ namespace Szkola2.Infrastructure
                 .Include(x => x.PastEvent)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            // rodzic niewidoczny dla bieżącego użytkownika (np. cudzy wpis demo) = traktujemy jak brak zdjęcia
+            // brak widocznego rodzica = brak zdjęcia
             if (g == null
                 || (g.TextId != null && g.Texts == null)
                 || (g.EventId != null && g.PastEvent == null))

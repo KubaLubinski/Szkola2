@@ -2,10 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Zapis zdjęć wgrywanych przez formularze. Każde zdjęcie jest sprawdzane (czy to naprawdę obraz),
-    /// zmniejszane do max 1920 px szerokości, pozbawiane metadanych i zapisywane razem z miniaturą.
-    /// </summary>
+    /// <summary>Zapis zdjęć z formularzy: walidacja, zmniejszenie, miniatura.</summary>
     public class ImageFileUpload
     {
         private const string InvalidImageMessage = "Wybrany plik nie jest poprawnym obrazkiem.";
@@ -26,7 +23,7 @@ namespace Szkola2.Infrastructure
             };
         }
 
-        /// <summary>Oryginał do wwwroot/{destination}, miniatura (wysokość {height}) do wwwroot/{destination}/mini.</summary>
+        /// <summary>Oryginał do wwwroot/{destination}, miniatura do wwwroot/{destination}/mini.</summary>
         public FileSendResult SendFile(IFormFile picture, string destination, int height)
             => Send(picture, destination, "mini", height);
 
@@ -70,10 +67,7 @@ namespace Szkola2.Infrastructure
             return result;
         }
 
-        /// <summary>
-        /// Zdjęcie do galerii: oryginał do wwwroot/gallery, miniatura do wwwroot/miniGallery/gallery.
-        /// Zwraca adres w formie "/gallery/{plik}" (widoki dopisują go do "~/miniGallery/").
-        /// </summary>
+        /// <summary>Zdjęcie do galerii: oryginał w wwwroot/gallery, miniatura w wwwroot/miniGallery/gallery.</summary>
         public bool TryUploadGalleryImage(IFormFile file, out string? url, out string? error)
         {
             url = null;
@@ -107,7 +101,7 @@ namespace Szkola2.Infrastructure
             return true;
         }
 
-        /// <summary>Bezpieczna część nazwy pliku: tylko litery, cyfry, '_' i '-' (bez ścieżek i znaków specjalnych).</summary>
+        /// <summary>Bezpieczna część nazwy pliku (litery, cyfry, _ i -).</summary>
         private static string SafeStem(string originalName)
         {
             var last = originalName.Replace('\\', '/').Split('/').Last();

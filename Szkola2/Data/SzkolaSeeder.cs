@@ -34,7 +34,6 @@ namespace Szkola2.Data
 
             if (!await db.Database.CanConnectAsync())
             {
-                // wcześniej błąd był połykany po cichu – teraz jest widoczny w logach
                 logger.LogWarning("Seeder pominięty: brak połączenia z bazą danych.");
                 return;
             }

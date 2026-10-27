@@ -33,7 +33,6 @@ namespace Szkola2.Controllers
         // GET: Texts
         public async Task<IActionResult> Index(string Fraza, string Autor, int? Kategoria, int PageNumber = 1)
         {
-            // numer strony z adresu URL: wartość <= 0 dawała ujemny Skip i błąd 500
             if (PageNumber < 1) PageNumber = 1;
 
             var SelectedTexts = _context.Texts?
@@ -118,7 +117,6 @@ namespace Szkola2.Controllers
         }
 
         // POST: Texts/Create
-        // DemoOwnerId, Id (autor) i DateAdded ustawiamy po stronie serwera - nie są bindowane z formularza.
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -190,7 +188,6 @@ namespace Szkola2.Controllers
         }
 
         // GET: Texts/Edit/5
-        // Widok edycji jest dostępny także dla cudzych wpisów (podgląd); blokada następuje dopiero przy zapisie.
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -223,12 +220,10 @@ namespace Szkola2.Controllers
         }
 
         // POST: Texts/Edit/5
-        // Edytujemy rekord załadowany z bazy i przepisujemy tylko dozwolone pola
-        // (autor, data dodania, zdjęcie główne i DemoOwnerId nie pochodzą z formularza).
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Content,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
+        public async Task<IActionResult> Edit(int textid, [Bind("TextId,TextName,Content,DateAdded,CategoryId,EventDate,IsActive")] Text text, IFormFile? picture, IFormFileCollection? GraphicGalleryFiles)
         {
             text.Content = HtmlCleaner.Clean(text.Content);
             if (textid != text.TextId)
@@ -300,6 +295,8 @@ namespace Szkola2.Controllers
 
                 entity.TextName = text.TextName;
                 entity.Content = text.Content;
+                // zmieniamy dzień, godzina dodania zostaje
+                entity.DateAdded = text.DateAdded.Date + entity.DateAdded.TimeOfDay;
                 entity.CategoryId = text.CategoryId;
                 entity.EventDate = text.EventDate;
                 entity.IsActive = text.IsActive;
@@ -377,14 +374,12 @@ namespace Szkola2.Controllers
             _logger.LogInformation("Usunięto tekst {TextId} (użytkownik {UserId}, zdjęć w galerii: {GalleryCount})",
                 id, User.FindFirstValue(ClaimTypes.NameIdentifier), galleryUrls.Count);
 
-            // pliki kasujemy dopiero po udanym zapisie w bazie
             _files.DeleteMainGraphic(mainGraphic);
             foreach (var url in galleryUrls) _files.DeleteGalleryImage(url);
 
             return RedirectToAction(nameof(List));
         }
 
-        // Wywoływane przez DeleteImage.js: $.ajax({ type: "DELETE" }) i oczekuje JSON { success, message }.
         [HttpDelete]
         [Authorize(Roles = "admin,dyrektor,nauczyciel")]
         public async Task<IActionResult> DeleteOneImage(int Id)
@@ -405,7 +400,7 @@ namespace Szkola2.Controllers
             return Json(new { success = true, message = "Grafika została usunięta." });
         }
 
-        /// <summary>Teksty ukryte ("Czy wyświetlać?" = nie) widzi tylko redakcja: autor, dyrektor i admin.</summary>
+        /// <summary>Ukryte teksty widzi tylko redakcja.</summary>
         private bool CanSeeText(Text text)
         {
             return text.IsActive
@@ -432,7 +427,7 @@ namespace Szkola2.Controllers
             FillCategories(posted.CategoryId);
             ViewData["Author"] = entity.Id;
             posted.Id = entity.Id;
-            posted.DateAdded = entity.DateAdded;
+            if (posted.DateAdded == default) posted.DateAdded = entity.DateAdded;
             posted.MainGraphic = entity.MainGraphic;
             posted.GraphicGallery = entity.GraphicGallery ?? new List<Graphic>();
             return View("Edit", posted);

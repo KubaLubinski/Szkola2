@@ -110,8 +110,6 @@ namespace Szkola2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // konto wyłączone przez administratora ("Czy konto jest aktywne?") nie może się zalogować
-                // (wcześniej flaga IsActive nie była sprawdzana przy logowaniu)
                 var candidate = await _signInManager.UserManager.FindByNameAsync(Input.Email)
                                 ?? await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                 if (candidate != null && !candidate.IsActive)
@@ -121,7 +119,6 @@ namespace Szkola2.Areas.Identity.Pages.Account
                     return Page();
                 }
 
-                // lockoutOnFailure: true - po serii błędnych haseł konto jest blokowane (ustawienia w Program.cs)
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Haslo, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
@@ -139,7 +136,6 @@ namespace Szkola2.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    // bez adresu e-mail w logu: wpisany login bywa hasłem lub cudzymi danymi
                     _logger.LogWarning("Nieudane logowanie (konto {UserId}) z adresu {Ip}", candidate?.Id ?? "nieznane", HttpContext.Connection.RemoteIpAddress);
                     ModelState.AddModelError(string.Empty, "Nieprawidłowy login lub hasło.");
                     return Page();

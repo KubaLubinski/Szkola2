@@ -2,10 +2,7 @@ using Hangfire.Dashboard;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Panel Hangfire tylko dla zalogowanego administratora (nie dla konta testowego, które też ma rolę admin).
-    /// Domyślny filtr Hangfire wpuszcza każde żądanie lokalne - za reverse proxy na tym samym serwerze to ryzykowne.
-    /// </summary>
+    /// <summary>Panel Hangfire tylko dla admina (nie dla konta demo).</summary>
     public class HangfireAdminFilter : IDashboardAuthorizationFilter
     {
         public bool Authorize(DashboardContext context)

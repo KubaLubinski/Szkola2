@@ -5,11 +5,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Wspólna obróbka zdjęć (SixLabors.ImageSharp): weryfikacja, że plik naprawdę jest obrazem,
-    /// obrót zgodnie z EXIF, usunięcie metadanych (m.in. lokalizacji GPS), zmniejszenie i zapis.
-    /// Działa na Windows i Linux (w przeciwieństwie do System.Drawing).
-    /// </summary>
+    /// <summary>Obróbka zdjęć (ImageSharp): weryfikacja, obrót wg EXIF, usunięcie metadanych, zmniejszenie.</summary>
     public static class ImageProcessing
     {
         public const int MaxWidth = 1920;
@@ -22,7 +18,7 @@ namespace Szkola2.Infrastructure
         public static bool IsSupportedExtension(string? extension) =>
             extension?.ToLowerInvariant() is ".jpg" or ".jpeg" or ".png" or ".gif";
 
-        /// <summary>Wczytuje obraz. InvalidDataException, gdy plik nie jest poprawnym obrazem lub jest zbyt duży.</summary>
+        /// <summary>Wczytuje obraz; InvalidDataException, gdy to nie obraz lub jest za duży.</summary>
         public static Image Load(Stream input)
         {
             try
@@ -83,10 +79,7 @@ namespace Szkola2.Infrastructure
             Encode(image, Path.GetExtension(path), fs, jpegQuality);
         }
 
-        /// <summary>
-        /// Zapisuje zdjęcie w dwóch wersjach: oryginał ograniczony do MaxWidth oraz miniaturę o wysokości miniHeight
-        /// (miniatura nie jest powiększana, jeśli zdjęcie jest mniejsze).
-        /// </summary>
+        /// <summary>Zapisuje oryginał (do MaxWidth) i miniaturę (bez powiększania).</summary>
         public static void SaveOriginalAndMini(Stream input, string originalPath, string miniPath, int miniHeight = MiniHeight)
         {
             using var image = Load(input);
@@ -94,7 +87,7 @@ namespace Szkola2.Infrastructure
             Normalize(image, MaxWidth);
             Save(image, originalPath);
 
-            // miniatura mieści się w MiniWidth x miniHeight (proporcje zachowane, bez powiększania)
+            // miniatura mieści się w MiniWidth x miniHeight, bez powiększania
             double scale = Math.Min(1.0, Math.Min(MiniWidth / (double)image.Width,
                                                   miniHeight > 0 ? miniHeight / (double)image.Height : 1.0));
             if (scale < 1.0)

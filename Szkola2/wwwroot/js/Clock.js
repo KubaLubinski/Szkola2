@@ -8,9 +8,9 @@
     const minuteHand = document.querySelector('.minute-hand');
     const secondHand = document.querySelector('.second-hand');
 
-    const hourRotation = (hours % 12) * 30 + minutes / 2; // 360 degrees / 12 hours = 30 degrees per hour
-    const minuteRotation = minutes * 6; // 360 degrees / 60 minutes = 6 degrees per minute
-    const secondRotation = seconds * 6; // 360 degrees / 60 seconds = 6 degrees per second
+    const hourRotation = (hours % 12) * 30 + minutes / 2;
+    const minuteRotation = minutes * 6;
+    const secondRotation = seconds * 6;
 
     hourHand.style.transform = `rotate(${hourRotation}deg)`;
     minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
@@ -24,7 +24,7 @@ function updateClocks() {
     const minutes = now.getMinutes();
     const seconds = now.getSeconds();
     const day = now.getDate();
-    const month = now.getMonth() + 1; // Dodaj 1, ponieważ styczeń zaczyna się od 0
+    const month = now.getMonth() + 1;
     const year = now.getFullYear();
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;

@@ -20,6 +20,7 @@ using static Szkola2.Controllers.JobsController;
 // Logger startowy: łapie błędy z samego początku działania aplikacji, zanim wczyta się pełna konfiguracja.
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
+    .WriteTo.Debug()
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +34,10 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.Console()
+    .WriteTo.Debug()   // okno "Dane wyjściowe" w Visual Studio (przy IIS Express konsoli nie ma)
     .WriteTo.File(
-        path: "logs/szkola-.log",
+        // pełna ścieżka w folderze projektu: względna "logs/" zależy od katalogu, z którego uruchomiono proces
+        path: Path.Combine(context.HostingEnvironment.ContentRootPath, "logs", "szkola-.log"),
         rollingInterval: RollingInterval.Day,
         retainedFileCountLimit: 14,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}"));
@@ -46,16 +49,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
-    {
-        options.SignIn.RequireConfirmedAccount = true;
-        // hasła kont personelu: min. 10 znaków (domyślnie ASP.NET wymaga tylko 6)
-        options.Password.RequiredLength = 10;
-        options.User.RequireUniqueEmail = true;
-        // blokada po serii błędnych haseł (działa po włączeniu lockoutOnFailure w Login.cshtml.cs)
-        options.Lockout.AllowedForNewUsers = true;
-        options.Lockout.MaxFailedAccessAttempts = 5;
-        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-    })
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    // hasła kont personelu: min. 10 znaków (domyślnie ASP.NET wymaga tylko 6)
+    options.Password.RequiredLength = 10;
+    options.User.RequireUniqueEmail = true;
+    // blokada po serii błędnych haseł (działa po włączeniu lockoutOnFailure w Login.cshtml.cs)
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 // Ciasteczka niezbędne do działania (logowanie, tokeny formularzy, komunikaty) nie wymagają zgody -
@@ -132,10 +135,11 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<DemoExceptionFilter>();
 });
 builder.Services.AddHangfire((sp, config) =>
-    {
-        config.UseSqlServerStorage(connectionString);
-    });
-builder.Services.AddHangfireServer();
+{
+    config.UseSqlServerStorage(connectionString);
+});
+// mało wątków: hosting z małą ilością RAM (np. 256 MB)
+builder.Services.AddHangfireServer(options => options.WorkerCount = builder.Configuration.GetValue("Hangfire:WorkerCount", 2));
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -158,6 +162,11 @@ recurringJobs.AddOrUpdate<DemoCleanupJob>("DemoCleanup", job => job.RunAsync(), 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    // tworzy/aktualizuje tabele przy starcie; włącz w konfiguracji: "Database:MigrateOnStart": true
+    if (app.Configuration.GetValue<bool>("Database:MigrateOnStart"))
+    {
+        await services.GetRequiredService<ApplicationDbContext>().Database.MigrateAsync();
+    }
     await SzkolaSeeder.InitializeAsync(services);
 }
 

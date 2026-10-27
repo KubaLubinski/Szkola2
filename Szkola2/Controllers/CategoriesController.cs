@@ -27,7 +27,7 @@ namespace Szkola2.Controllers
         [Authorize(Roles = "admin,dyrektor")]
         public async Task<IActionResult> Index()
         {
-              return _context.Categories != null ? 
+              return _context.Categories != null ?
                           View(await _context.Categories.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
         }
@@ -59,8 +59,6 @@ namespace Szkola2.Controllers
         }
 
         // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -101,8 +99,6 @@ namespace Szkola2.Controllers
         }
 
         // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "admin,dyrektor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -172,18 +168,16 @@ namespace Szkola2.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                // komunikat z GET można ominąć wysyłając POST ręcznie, a usunięcie kategorii kasowało kaskadowo jej teksty
                 if (TextsInCategory(id))
                 {
                     _logger.LogWarning("Odmowa usunięcia kategorii {CategoryId}: ma przypisane teksty (użytkownik {UserId})",
                         id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-                    // strona usuwania pokazuje komunikat o przypisanych tekstach
                     return RedirectToAction(nameof(Delete), new { id });
                 }
                 _context.Categories.Remove(category);
                 _logger.LogInformation("Usunięto kategorię {CategoryId} (użytkownik {UserId})", id, User.FindFirstValue(ClaimTypes.NameIdentifier));
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -198,7 +192,7 @@ namespace Szkola2.Controllers
         }
         private bool TextsInCategory(int id)
         {
-            // bez filtrów widoczności: ukryte teksty kont demo też blokują usunięcie (inaczej FK/kaskada)
+            // bez filtrów widoczności
             return (_context.Texts?.IgnoreQueryFilters().Any(t => t.CategoryId == id)).GetValueOrDefault();
         }
     }

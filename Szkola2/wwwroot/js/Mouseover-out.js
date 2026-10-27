@@ -3,16 +3,13 @@
     tooltip.innerText = text;
     tooltip.classList.add('show');
 
-    // Pobierz pozycję myszki
     var rect = element.getBoundingClientRect();
     var mouseX = rect.left + window.scrollX;
     var mouseY = rect.top + window.scrollY;
 
-    // Ustaw przesunięcie w poziomie i pionie
-    var offsetX = 45; // Przesunięcie w poziomie
-    var offsetY = 45; // Przesunięcie w pionie
+    var offsetX = 45;
+    var offsetY = 45;
 
-    // Ustaw pozycję dymku podpowiedzi
     tooltip.style.left = (mouseX + offsetX) + 'px';
     tooltip.style.top = (mouseY + offsetY) + 'px';
 }

@@ -11,14 +11,12 @@ namespace Szkola2.Data
     {
         private readonly IHttpContextAccessor? _accessor;
 
-        // accessor jest opcjonalny: SzkolaSeeder tworzy kontekst ręcznie, bez DI
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor? accessor = null)
             : base(options)
         {
             _accessor = accessor;
         }
 
-        /// <summary>Id zalogowanego konta demo, albo null (zwykły użytkownik, gość, Hangfire).</summary>
         public string? CurrentDemoOwnerId => DemoClaims.GetDemoUserId(_accessor?.HttpContext?.User);
 
         public DbSet<Category>? Categories { get; set; }
@@ -75,10 +73,7 @@ namespace Szkola2.Data
                 .HasOne(e => e.PastEvent)
                 .WithMany(g => g.GraphicGallery);
 
-            // --- Konta demo: widoczność treści ---
-            // Zwykły użytkownik / gość / job widzi tylko DemoOwnerId == null.
-            // Konto demo widzi treść szkoły + wyłącznie własne rekordy.
-            // UWAGA: DbSet.Find/FindAsync NIE stosuje filtrów – w kodzie używamy FirstOrDefaultAsync.
+            // --- Konta demo---
             modelbuilder.Entity<Text>().HasQueryFilter(e => e.DemoOwnerId == null || e.DemoOwnerId == CurrentDemoOwnerId);
             modelbuilder.Entity<Document>().HasQueryFilter(e => e.DemoOwnerId == null || e.DemoOwnerId == CurrentDemoOwnerId);
             modelbuilder.Entity<PastSchoolEvent>().HasQueryFilter(e => e.DemoOwnerId == null || e.DemoOwnerId == CurrentDemoOwnerId);
@@ -88,7 +83,6 @@ namespace Szkola2.Data
             modelbuilder.Entity<PastSchoolEvent>().HasIndex(e => e.DemoOwnerId);
         }
 
-        // --- Konta demo: siatka bezpieczeństwa przy zapisie ---
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             EnforceDemoRules();
@@ -101,12 +95,6 @@ namespace Szkola2.Data
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        /// <summary>
-        /// Gdy zapisuje konto demo, każda zmieniana encja musi być jego własna.
-        /// Dozwolone: własne IDemoOwned (nowe rekordy dostają znacznik automatycznie),
-        /// zdjęcia własnych rekordów, własny wiersz AppUser (tylko modyfikacja).
-        /// Wszystko inne (kategorie, historia, role, cudzy użytkownik...) kończy się DemoReadOnlyException.
-        /// </summary>
         private void EnforceDemoRules()
         {
             var demoId = CurrentDemoOwnerId;
@@ -164,7 +152,6 @@ namespace Szkola2.Data
                     && parentEntry.Property(nameof(IDemoOwned.DemoOwnerId)).OriginalValue as string == demoId;
             }
 
-            // brak załadowanego rodzica – sprawdzamy po kluczu obcym
             if (graphic.TextId != null)
                 return Set<Text>().IgnoreQueryFilters().Any(t => t.TextId == graphic.TextId && t.DemoOwnerId == demoId);
             if (graphic.EventId != null)

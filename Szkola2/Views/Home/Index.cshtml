@@ -1,16 +1,15 @@
-﻿@* @model IEnumerable<Szkola2.Models.Text *@
-@using Szkola2.Infrastructure
+﻿@using Szkola2.Infrastructure
 @model HomeViewModel
 
 @{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Witamy";
-    ViewData["SkipTarget"] = "content-start";   // link "Przejdź do treści" omija baner i prowadzi do aktualności
+    ViewData["SkipTarget"] = "content-start";
 }
 
 <div class="school-home">
 
-    <!-- HERO / SLIDER -->
+    <!-- Slider -->
     <section class="home-hero">
         <div id="schoolHero" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-pause="false" aria-roledescription="karuzela" aria-label="Zdjęcia szkoły">
             <div class="carousel-indicators">
@@ -92,7 +91,6 @@
                 <span class="visually-hidden">Następny</span>
             </button>
 
-            <!-- WCAG 2.2.2: użytkownik może zatrzymać automatyczne przewijanie -->
             <button type="button" class="hero-pause" id="heroPause" aria-pressed="false"
                     aria-label="Zatrzymaj automatyczne przewijanie zdjęć">
                 <i class="bi bi-pause-fill" aria-hidden="true"></i>
@@ -100,7 +98,7 @@
         </div>
     </section>
 
-    <!-- QUICK LINKS (3 Dopasowane Karty) -->
+    <!-- Szybkie linki -->
     <section class="quick-links-3">
         <a asp-controller="Texts" asp-action="Index" class="quick-card">
             <div class="quick-icon news-icon">📰</div>
@@ -130,10 +128,10 @@
         </a>
     </section>
 
-    <!-- MAIN CONTENT (UKŁAD DWUKOLUMNOWY) -->
+    <!-- Treść i sidebar -->
     <section class="home-content" id="content-start" tabindex="-1">
 
-        <!-- LEWA KOLUMNA: AKTUALNOŚCI -->
+        <!-- Aktualności -->
         <div class="news-section">
             <div class="section-heading">
                 <div>
@@ -194,10 +192,10 @@
             </div>
         </div>
 
-        <!-- PRAWA KOLUMNA: SIDEBAR (ZEGAR + BIP + FB + PROJEKTY OBOK AKTUALNOŚCI) -->
+        <!-- Sidebar -->
         <aside class="home-sidebar">
 
-            <!-- ZEGAR I KALENDARZ -->
+            <!-- Zegar i kalendarz -->
             <div class="info-card clock-card" id="school-calendar">
                 <div class="info-card-header">
                     <div>
@@ -207,7 +205,6 @@
 
                 <div id="current-date-time" class="current-date" aria-live="off">&nbsp;</div>
                 <script>
-                                    /* data i godzina od razu po wyrenderowaniu elementu – bez czekania na Day.js (ładowany na końcu strony) */
                                     (function () {
                                         var el = document.getElementById("current-date-time");
                                         try {
@@ -215,7 +212,7 @@
                                                 weekday: "long", day: "numeric", month: "long", year: "numeric",
                                                 hour: "2-digit", minute: "2-digit", second: "2-digit"
                                             });
-                                        } catch (e) { /* zostaje pusty element – uzupełni go Day.js */ }
+                                        } catch (e) { }
                                     })();
                 </script>
 
@@ -260,7 +257,7 @@
                 </div>
             </div>
 
-            <!-- FACEBOOK -->
+            <!-- Facebook -->
             <div class="info-card external-card">
                 <div class="external-icon facebook-icon">f</div>
                 <div class="external-content">
@@ -270,7 +267,7 @@
                 </div>
             </div>
 
-            <!-- KARTA Z PROJEKTAMI (OBOK AKTUALNOŚCI, POD BIP/FB) -->
+            <!-- Projekty -->
             <div class="info-card projects-sidebar-card" id="projects">
                 <div class="info-card-header">
                     <div>
@@ -345,7 +342,6 @@
 
 @section Scripts {
     <script>
-        /* Przycisk pauzy karuzeli (WCAG 2.2.2). Przy ustawieniu systemowym "ogranicz ruch" karuzela startuje zatrzymana. */
         document.addEventListener("DOMContentLoaded", function () {
             var hero = document.getElementById("schoolHero");
             var button = document.getElementById("heroPause");
@@ -373,7 +369,6 @@
         });
     </script>
     <script>
-        /* Rozdziela tekst z Day.js na datę i godzinę (godzina większa), bez zmian w Day.js */
         (function () {
             var el = document.getElementById("current-date-time");
             if (!el) return;
@@ -396,7 +391,6 @@
             new MutationObserver(function () {
                 var t = el.querySelector(".dt-time");
                 if (t && el.textContent === (el.querySelector(".dt-date").textContent + t.textContent)) return;
-                /* Day.js nadpisał tekst — formatujemy jeszcze raz */
                 format();
             }).observe(el, { childList: true, characterData: true, subtree: true });
             format();
@@ -406,7 +400,6 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
-            /* Animacje pojawiania się elementów - DODANO .project-full-card */
             const animatedElements = document.querySelectorAll(
                 ".quick-card, .news-card, .info-card, .project-card, .project-full-card, .section-heading"
             );
@@ -427,7 +420,6 @@
                 observer.observe(element);
             });
 
-            /* Delikatny efekt parallax dla hero */
             const hero = document.querySelector(".home-hero");
             window.addEventListener("scroll", function () {
                 if (!hero) return;

@@ -6,7 +6,7 @@
 
 <div class="school-home">
 
-    <!-- NAGŁÓWEK STRONY -->
+    <!-- Nagłówek -->
     <div class="section-heading">
         <div>
             <span class="section-label section-label-lg">CO SŁYCHAĆ?</span>
@@ -16,7 +16,7 @@
 
     <div class="texts-layout">
 
-        <!-- WYSZUKIWARKA -->
+        <!-- Wyszukiwarka -->
         <aside class="texts-filter info-card">
             <div class="info-card-header">
                 <div>
@@ -43,7 +43,7 @@
             }
         </aside>
 
-        <!-- LISTA TEKSTÓW (1 KARTA NA WIERSZ) -->
+        <!-- Lista tekstów -->
         <div class="texts-list">
             @if (Model.TextsView.TextCount > 0)
             {
@@ -92,7 +92,7 @@
         </div>
     </div>
 
-    <!-- STRONNICOWANIE -->
+    <!-- Stronicowanie -->
     <nav aria-label="Nawigacja między stronami">
         <ul class="pagination justify-content-center texts-pagination">
             @if (Model.TextsView.PageNumber > 1)
@@ -121,7 +121,7 @@
 
 </div>
 
-<!-- Animacja pojawiania się (karty mają w CSS opacity:0 do czasu dodania .animate-in) -->
+<!-- Animacja kart -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const elements = document.querySelectorAll(".news-card, .info-card, .section-heading");

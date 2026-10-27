@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Szkola2.Controllers
 {
-    // Wcześniej kontroler nie miał żadnego [Authorize] - każdy mógł zmieniać dane i role użytkowników.
     [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
@@ -31,10 +30,9 @@ namespace Szkola2.Controllers
 
         public async Task<IActionResult> UsersList()
         {
-            // konta demo są niewidoczne dla prawdziwych użytkowników; konto demo widzi tylko siebie spośród kont demo
+            // konta demo widoczne tylko dla ich właściciela
             var myDemoId = _demo.UserId;
 
-            // konta demo pokazujemy tylko ich właścicielowi; zwykli użytkownicy zawsze (także bez przypisanej roli - lewe złączenie)
             var query = _context.AppUsers!.AsQueryable();
             query = myDemoId == null
                 ? query.Where(u => EF.Property<bool?>(u, nameof(AppUser.IsDemo)) != true)
@@ -55,7 +53,7 @@ namespace Szkola2.Controllers
                                    Role = role == null ? null : role.Name
                                }).ToListAsync();
 
-            // jeden wiersz na użytkownika (konto demo ma kilka ról, a złączenie z rolami dawało kilka wierszy)
+            // jeden wiersz na użytkownika
             var rows = users
                 .GroupBy(u => u.Id)
                 .Select(g =>
@@ -72,7 +70,7 @@ namespace Szkola2.Controllers
                 {
                     if (row.Id == myDemoId)
                     {
-                        // adres konta demo to długi losowy ciąg - pokazujemy krótką etykietę
+                        // krótka etykieta zamiast długiego adresu konta demo
                         row.Email = "Twoje konto testowe";
                         row.Role = "konto testowe";
                     }
@@ -134,7 +132,6 @@ namespace Szkola2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(UserViewModel model)
         {
-            // konto demo może oglądać ten widok, ale niczego tu nie zapisze
             if (_demo.IsDemo)
             {
                 TempData[DemoMessages.Key] = DemoMessages.ReadOnly;
@@ -164,11 +161,10 @@ namespace Szkola2.Controllers
             user.LastName = model.LastName;
             user.Information = model.Information;
             user.CanAddTexts = model.CanAddTexts;
-            // administrator nie może wyłączyć własnego konta (zablokowałby sobie dostęp do panelu)
+            // admin nie wyłączy własnego konta
             user.IsActive = isSelf && isAdminAccount ? true : model.IsActive;
 
-            // Rolę zmieniamy tylko u kont nie-administratorskich i tylko na istniejącą rolę z listy.
-            // Lista w formularzu nie zawiera "admin", więc zapis konta admina zmieniłby mu rolę na pierwszą z listy.
+            // rola tylko u kont nie-adminów, z listy z formularza
             if (!isAdminAccount && !string.IsNullOrEmpty(model.Role) && !currentRoles.Contains(model.Role))
             {
                 var allowed = await _context.Roles.AnyAsync(r => r.Name == model.Role && r.Name != "admin");
@@ -179,7 +175,7 @@ namespace Szkola2.Controllers
                     return View(model);
                 }
 
-                // najpierw dodajemy nową rolę, dopiero potem zdejmujemy stare – konto nigdy nie zostaje bez roli
+                // najpierw nowa rola, potem usunięcie starych
                 var added = await _userManager.AddToRoleAsync(user, model.Role);
                 if (!added.Succeeded)
                 {

@@ -3,11 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Krótki podgląd treści HTML jako zwykły tekst. Wcześniej widoki obcinały gotowy HTML (Substring),
-    /// co mogło przeciąć znacznik w połowie i "połknąć" resztę strony.
-    /// Wynik trzeba wypisać przez @ (zakodowany), nie przez Html.Raw.
-    /// </summary>
+    /// <summary>Podgląd treści HTML jako zwykły tekst. Wypisywać przez @, nie Html.Raw.</summary>
     public static partial class TextPreview
     {
         public static string FromHtml(string? html, int maxLength)

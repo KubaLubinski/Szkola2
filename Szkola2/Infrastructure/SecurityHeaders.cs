@@ -1,9 +1,6 @@
 namespace Szkola2.Infrastructure
 {
-    /// <summary>
-    /// Nagłówki bezpieczeństwa dla każdej odpowiedzi. CSP dopuszcza skrypty/style inline, bo strona ich używa
-    /// (docelowo warto przejść na nonce i wyciągnąć skrypty do plików – wtedy można usunąć 'unsafe-inline').
-    /// </summary>
+    /// <summary>Nagłówki bezpieczeństwa; CSP dopuszcza inline, bo strona go używa.</summary>
     public static class SecurityHeaders
     {
         private const string ContentSecurityPolicy =

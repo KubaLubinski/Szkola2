@@ -24,7 +24,7 @@ namespace Szkola2.Controllers
             var latestTexts = await _context.Texts
                                 .Include(t => t.Category)
                                 .Include(t => t.User)
-                                .Where(t => t.IsActive)   // ukryte teksty nie mogą trafiać na stronę główną
+                                .Where(t => t.IsActive)
                                 .OrderByDescending(t => t.DateAdded)
                                 .Take(6)
                                 .ToListAsync();

@@ -7,7 +7,7 @@ using Szkola2.Models;
 
 namespace Szkola2.Infrastructure
 {
-    /// <summary>Nazwy claimów oznaczających konto demo (dodawane przy tworzeniu konta).</summary>
+    /// <summary>Nazwy claimów konta demo.</summary>
     public static class DemoClaims
     {
         public const string IsDemo = "szkola:demo";
@@ -50,7 +50,7 @@ namespace Szkola2.Infrastructure
 
         public static readonly string[] DocumentExtensions = { ".pdf", ".docx", ".doc", ".txt" };
 
-        /// <summary>Zwraca komunikat błędu albo null, gdy pliki mieszczą się w limitach konta demo.</summary>
+        /// <summary>Zwraca błąd albo null, gdy pliki mieszczą się w limitach.</summary>
         public static string? CheckFiles(IFormFile? main, IFormFileCollection? gallery)
         {
             if (main != null && main.Length > MaxFileBytes)
@@ -72,7 +72,7 @@ namespace Szkola2.Infrastructure
         }
     }
 
-    /// <summary>Rzucany przez ApplicationDbContext, gdy konto demo próbuje zapisać nie swoje dane.</summary>
+    /// <summary>Próba zapisu cudzych danych przez konto demo.</summary>
     public class DemoReadOnlyException : InvalidOperationException
     {
         public DemoReadOnlyException() : base(DemoMessages.ReadOnly) { }
@@ -83,7 +83,7 @@ namespace Szkola2.Infrastructure
         bool IsDemo { get; }
         string? UserId { get; }
         DateTime? ExpiresUtc { get; }
-        /// <summary>Zwykły użytkownik: zawsze true. Konto demo: tylko dla własnych rekordów.</summary>
+        /// <summary>Zwykły użytkownik: zawsze true. Konto demo: tylko własne rekordy.</summary>
         bool CanModify(IDemoOwned entity);
     }
 
@@ -101,7 +101,7 @@ namespace Szkola2.Infrastructure
             => !IsDemo || (entity.DemoOwnerId != null && entity.DemoOwnerId == UserId);
     }
 
-    /// <summary>Zamienia DemoReadOnlyException na czytelny komunikat i powrót na poprzednią stronę.</summary>
+    /// <summary>Komunikat i powrót na poprzednią stronę zamiast błędu dla konta demo.</summary>
     public class DemoExceptionFilter : IExceptionFilter
     {
         private readonly ITempDataDictionaryFactory _tempData;

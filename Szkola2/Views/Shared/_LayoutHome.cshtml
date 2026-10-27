@@ -2,12 +2,10 @@
 <html lang="pl">
 <head>
     <script>
-            /* Zapobiega białemu błyskowi: ciemne tło ustawiane zanim strona się narysuje */
             (function () {
                 try {
                     var dark = localStorage.getItem("darkMode") === "true";
                     if (dark) document.documentElement.classList.add('dark-pre');
-                    /* rozmiar tekstu (zapisywany przez Font-size.js) przywracany od razu, żeby strona nie "skakała" po załadowaniu */
                     var fs = parseInt(localStorage.getItem("siteFontScale"), 10);
                     if (fs >= 80 && fs <= 150) document.documentElement.style.fontSize = fs + "%";
                 } catch (e) { }
@@ -18,7 +16,6 @@
     <title>@ViewData["Title"] - Szkola2</title>
     <meta name="description" content="@(ViewData["Description"] ?? "Strona Szkoły Podstawowej im. Polskich Noblistów w Goleszynie: aktualności, wydarzenia, historia szkoły, dokumenty i kontakt.")" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- style spoza strony (toastr, ikony) ładowane bez blokowania pierwszego wyrenderowania -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Szkola2.styles.css" asp-append-version="true" />
@@ -31,25 +28,21 @@
 <body>
     <a class="skip-link" href="#@(ViewData["SkipTarget"] ?? "main-content")">Przejdź do treści</a>
     <script>
-        /* tryb ciemny: klasa na <body> od razu, zanim strona się narysuje (Light-darkmode.js dopiero na końcu strony) */
         if (document.documentElement.classList.contains('dark-pre')) document.body.classList.add('dark-theme');
     </script>
-    <!-- PASEK NAWIGACJI (Stały kolor, bez przezroczystości, wyróżniony) -->
+    <!-- Pasek nawigacji -->
     <nav id="navbar" class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 sticky-top" style="background-color: #f1f3f5; z-index: 1030;">
         <div class="container-fluid px-3">
 
-            <!-- LOGO -->
             <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/img/logo/logo_szkoly.png" alt="Logo Szkoły Podstawowej" height="40" />
             </a>
 
-            <!-- PRZYCISK MOBILNY -->
             <button class="navbar-toggler height" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Przełącz nawigację">
                 <span class="bi bi-stack"></span>
             </button>
 
-            <!-- ELEMENTY MENU -->
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
 
                 <ul class="navbar-nav flex-grow-1 align-items-sm-center">
@@ -63,7 +56,7 @@
                         <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Documents" asp-action="Index">Dokumenty</a>
                     </li>
 
-                    <!-- KALENDARIUM -->
+                    <!-- Kalendarium -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark fw-medium" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Kalendarium
@@ -71,7 +64,7 @@
                         <ul class="dropdown-menu dropdown-color shadow-sm border-0 bg-white">
                             @{
                                 int currentYear = DateTime.Now.Year;
-                                for (int year = currentYear; year >= currentYear - 3; year--)
+                                for (int year = currentYear - 1; year >= currentYear - 3; year--)
                                 {
                                     int yearm = year + 1;
                                     <li class="nav-item">
@@ -86,7 +79,7 @@
                         <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Contact">Kontakt</a>
                     </li>
 
-                    <!-- ADMINISTRACJA -->
+                    <!-- Administracja -->
                     @if ((User.IsInRole("admin")) || (User.IsInRole("dyrektor")) || (User.IsInRole("nauczyciel")) || (User.IsInRole("uczen")))
                     {
                         <li class="nav-item dropdown">
@@ -115,7 +108,7 @@
                     }
                 </ul>
 
-                <!-- NARZĘDZIA DOSTĘPNOŚCI -->
+                <!-- Narzędzia dostępności -->
                 <div class="nav-tools">
                     <button type="button" class="transparent-button" title="Powiększ rozmiar tekstu" onclick="increaseFontSize()">
                         <span class="bi bi-zoom-in"></span>
@@ -133,7 +126,7 @@
                     </button>
                 </div>
 
-                <!-- CZĘŚĆ LOGOWANIA -->
+                <!-- Logowanie -->
                 <div class="ms-sm-2 nav-login">
                     <partial name="_LoginPartial" />
                 </div>
@@ -142,7 +135,7 @@
         </div>
     </nav>
 
-    <!-- TREŚĆ GŁÓWNA STRONY -->
+    <!-- Treść -->
     <div class="container my-4 page-content">
 
         <partial name="_CookieConsentPartial" />
@@ -152,7 +145,7 @@
         </main>
     </div>
 
-    <!-- STOPKA -->
+    <!-- Stopka -->
     <footer class="footer site-footer border-top text-muted">
         <div class="container site-footer-inner">
             <div class="site-footer-copy">
@@ -170,7 +163,7 @@
         </div>
     </footer>
 
-    <!-- SKRYPTY -->
+    <!-- Skrypty -->
     <script src="/js/Day.js" asp-append-version="true"></script>
     <script src="/js/Clock.js" asp-append-version="true"></script>
     <script src="/js/Light-darkmode.js" asp-append-version="true"></script>
@@ -180,8 +173,6 @@
     <script src="/js/site.js" asp-append-version="true"></script>
     <script src="/js/navbar-fit.js" asp-append-version="true"></script>
     <script>
-    /* Animacja pojawiania się elementów na podstronach (jak na stronie głównej).
-       Dodaje .reveal wybranym blokom, a .animate-in gdy wjadą w widok. */
     (function () {
         var SELECTORS = [
             ".page-heading", ".panel-card",
@@ -190,7 +181,6 @@
             ".history-entry", ".event-card"
         ].join(", ");
 
-        // elementy, które mają już własną animację ze strony głównej / listy aktualności
         var SKIP = ".info-card, .news-card, .quick-card, .section-heading";
 
         function init() {
@@ -202,7 +192,6 @@
             });
             if (!items.length) return;
 
-            // kolejne rodzeństwo pojawia się z lekkim opóźnieniem (max 6 kroków)
             var perParent = new Map();
             var observer = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
